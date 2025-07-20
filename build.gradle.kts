@@ -1,21 +1,14 @@
+group = "com.github.tanokun"
+version = "1.0.0-SNAPSHOT"
+
 plugins {
-    kotlin("jvm") version "2.1.0"
+    id("org.jetbrains.kotlin.jvm") version "2.2.0"
 }
 
-group = "com.github.tanokun"
-version = "1.0-SNAPSHOT"
+kotlin {
+    jvmToolchain(22)
+}
 
 repositories {
     mavenCentral()
-}
-
-dependencies {
-    testImplementation(kotlin("test"))
-}
-
-tasks.test {
-    useJUnitPlatform()
-}
-kotlin {
-    jvmToolchain(23)
 }
