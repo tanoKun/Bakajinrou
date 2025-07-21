@@ -17,11 +17,12 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+    compileOnly(libs.paper)
 
     implementation(project(":Bakajinrou-API"))
 
-    testImplementation("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+    testImplementation(libs.paper)
+    testImplementation(libs.mockk)
     testImplementation(kotlin("test"))
 }
 

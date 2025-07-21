@@ -2,18 +2,18 @@ package com.github.tanokun.bakajinrou.plugin.formatter
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.Position
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.CitizenPosition
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.FortunePosition
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.KnightPosition
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.MediumPosition
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.idiot.IdiotAsFortunePosition
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.idiot.IdiotAsKnightPosition
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.idiot.IdiotAsMediumPosition
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.idiot.IdiotPosition
 import com.github.tanokun.bakajinrou.bukkit.position.fox.FoxPosition
 import com.github.tanokun.bakajinrou.bukkit.position.wolf.MadmanPosition
 import com.github.tanokun.bakajinrou.bukkit.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
+import com.github.tanokun.bakajinrou.plugin.position.citizen.CitizenPosition
+import com.github.tanokun.bakajinrou.plugin.position.citizen.FortunePosition
+import com.github.tanokun.bakajinrou.plugin.position.citizen.KnightPosition
+import com.github.tanokun.bakajinrou.plugin.position.citizen.MediumPosition
+import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotAsFortunePosition
+import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotAsKnightPosition
+import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotAsMediumPosition
+import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotPosition
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor

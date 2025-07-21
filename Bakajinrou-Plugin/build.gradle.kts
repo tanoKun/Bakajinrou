@@ -8,10 +8,9 @@ version = projectVersion
 
 plugins {
     kotlin("jvm")
-    id("com.gradleup.shadow") version "9.0.0-rc1"
-    id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
-    id("io.papermc.paperweight.userdev") version "1.7.7"
-    id("xyz.jpenilla.run-paper") version "2.3.1"
+    alias(libs.plugins.bukkit)
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.paperweight)
 }
 
 kotlin {
@@ -26,25 +25,19 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.0")
+    paperweight.paperDevBundle(libs.versions.paper)
 
-    paperweight.paperDevBundle("1.21-R0.1-SNAPSHOT")
+    compileOnly(libs.protocollib)
+    compileOnly(libs.commandapi)
 
-    compileOnly("com.comphenix.protocol:ProtocolLib:5.3.0")
-
-    compileOnly("dev.jorel:commandapi-bukkit-core:10.1.1")
-
-    implementation("xyz.xenondevs.invui:invui:1.44")
-    implementation("xyz.xenondevs.invui:invui-kotlin:1.44")
+    implementation(libs.bundles.invui)
 
     implementation(project(":Bakajinrou-API"))
     implementation(project(":Bakajinrou-Bukkit"))
 
-    testImplementation("org.mockbukkit.mockbukkit:mockbukkit-v1.21:4.39.0")
-    testImplementation("io.mockk:mockk:1.13.2")
+    testImplementation(libs.bundles.mocks)
 
-    testImplementation("dev.jorel:commandapi-bukkit-core:10.1.1")
-    testImplementation("dev.jorel:commandapi-bukkit-test-toolkit:10.1.1")
+    testImplementation(libs.bundles.commandapi)
     testImplementation(kotlin("test"))
 }
 

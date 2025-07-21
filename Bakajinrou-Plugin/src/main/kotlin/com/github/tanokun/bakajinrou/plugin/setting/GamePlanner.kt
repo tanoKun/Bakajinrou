@@ -1,24 +1,24 @@
 package com.github.tanokun.bakajinrou.plugin.setting
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
-import com.github.tanokun.bakajinrou.api.finishing.GameFinishDecider
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.bukkit.controller.JinrouGameController
+import com.github.tanokun.bakajinrou.bukkit.finishing.JinrouGameFinishDecider
 import com.github.tanokun.bakajinrou.bukkit.logger.BodyHandler
 import com.github.tanokun.bakajinrou.bukkit.logger.GameActionLogger
 import com.github.tanokun.bakajinrou.bukkit.position.BukkitPlayerProviderByServer
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.CitizenPosition
+import com.github.tanokun.bakajinrou.bukkit.scheduler.JinrouGameScheduler
 import com.github.tanokun.bakajinrou.bukkit.scheduler.schedule.TimeSchedule
 import com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
+import com.github.tanokun.bakajinrou.plugin.position.citizen.CitizenPosition
 import com.github.tanokun.bakajinrou.plugin.schedule.GameSchedules
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import kotlin.random.Random
 
-typealias FinishDeciderProvider = () -> GameFinishDecider
+typealias FinishDeciderProvider = () -> JinrouGameFinishDecider
 typealias LoggerProvider = () -> GameActionLogger
-typealias GameSchedulerProvider = (Long, List<TimeSchedule>, Plugin) -> GameScheduler
+typealias GameSchedulerProvider = (Long, List<TimeSchedule>, Plugin) -> JinrouGameScheduler
 typealias BodyHandlerProvider = () -> BodyHandler
 typealias GameSchedulePlannerProvider = () -> GameSchedules
 

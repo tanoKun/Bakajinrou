@@ -52,4 +52,9 @@ data class Participant(
 
         return true
     }
+
+    /**
+     * 陣営を比較します。
+     */
+    inline fun <reified T: Position> isPosition() = position is T
 }

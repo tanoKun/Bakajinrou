@@ -1,12 +1,13 @@
-package com.github.tanokun.bakajinrou.bukkit.finishing.finisher
+package com.github.tanokun.bakajinrou.plugin.finisher
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.bukkit.position.fox.FoxPosition
+import com.github.tanokun.bakajinrou.bukkit.position.wolf.MadmanPosition
+import com.github.tanokun.bakajinrou.bukkit.position.wolf.WolfPosition
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 
-class FoxSideFinisher(
+class WolfSideFinisher(
     private val participants: List<Participant>
 ): EachSideFinisher() {
     override fun notifyFinish() {
@@ -15,16 +16,13 @@ class FoxSideFinisher(
 
             showVictorySideTitle(
                 player = bukkitPlayer,
-                text = Component.text("妖狐の勝利")
+                text = Component.text("人狼の勝利")
                     .decorate(TextDecoration.BOLD)
-                    .color(TextColor.color(0x800080))
+                    .color(TextColor.color(0x8B0000))
             )
 
-            if (participant.isFox()) sendVictoryMessage(bukkitPlayer)
+            if (participant.isPosition<WolfPosition>() || participant.isPosition<MadmanPosition>()) sendVictoryMessage(bukkitPlayer)
             else sendLoseMessage(bukkitPlayer)
         }
     }
 }
-
-fun Participant.isFox(): Boolean =
-    this.position is FoxPosition

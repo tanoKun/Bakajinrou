@@ -1,29 +1,42 @@
 package com.github.tanokun.bakajinrou.bukkit.finishing
 
 import com.github.tanokun.bakajinrou.api.ParticipantStates
-import com.github.tanokun.bakajinrou.api.finishing.GameFinishDecider
-import com.github.tanokun.bakajinrou.api.finishing.GameFinisher
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.bukkit.finishing.finisher.*
+import com.github.tanokun.bakajinrou.bukkit.position.citizen.CitizensPosition
+import com.github.tanokun.bakajinrou.bukkit.position.fox.FoxPosition
+import com.github.tanokun.bakajinrou.bukkit.position.wolf.WolfPosition
 
-class JinrouGameFinishDecider: GameFinishDecider {
-    override fun decide(participants: List<Participant>): GameFinisher? {
+class JinrouGameFinishDecider(
+    val citizenSideFinisher: (List<Participant>) -> GameFinisher,
+    val wolfSideFinisher: (List<Participant>) -> GameFinisher,
+    val foxSideFinisher: (List<Participant>) -> GameFinisher
+) {
+    /**
+     * @param participants 全参加者
+     *
+     * [participants] の役職から、勝利条件を満たす参加者が存在する場合、
+     * その陣営のフィニッシャーを返します。
+     *
+     * @return 勝利条件を満たしている陣営のフィニッシャー
+     */
+    fun decide(participants: List<Participant>): GameFinisher? {
+
         val survivors = participants.filter { it.state == ParticipantStates.SURVIVED }
-        val citizens = survivors.filter(Participant::isCitizensSide)
-        val wolfs = survivors.filter(Participant::isWolf)
-        val fox = survivors.filter(Participant::isFox)
+        val citizens = survivors.map { it.position }.filterIsInstance<CitizensPosition>()
+        val wolfs = survivors.map { it.position }.filterIsInstance<WolfPosition>()
+        val fox = survivors.map { it.position }.filterIsInstance<FoxPosition>()
 
         //村人勝利
         if (wolfs.isEmpty() && fox.isEmpty())
-            return CitizenSideFinisher(participants)
+            return citizenSideFinisher(participants)
 
         //人狼勝利
         if (citizens.isEmpty() && fox.isEmpty())
-            return WolfSideFinisher(participants)
+            return wolfSideFinisher(participants)
 
         //妖狐勝利
         if (wolfs.isEmpty() || citizens.isEmpty())
-            return FoxSideFinisher(participants)
+            return foxSideFinisher(participants)
 
         return null
     }

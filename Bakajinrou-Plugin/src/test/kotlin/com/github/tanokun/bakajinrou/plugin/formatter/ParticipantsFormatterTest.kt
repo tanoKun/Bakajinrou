@@ -1,17 +1,17 @@
 package com.github.tanokun.bakajinrou.plugin.formatter
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.CitizenPosition
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.FortunePosition
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.KnightPosition
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.MediumPosition
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.idiot.IdiotAsFortunePosition
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.idiot.IdiotAsKnightPosition
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.idiot.IdiotAsMediumPosition
-import com.github.tanokun.bakajinrou.bukkit.position.fox.FoxPosition
-import com.github.tanokun.bakajinrou.bukkit.position.wolf.MadmanPosition
-import com.github.tanokun.bakajinrou.bukkit.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
+import com.github.tanokun.bakajinrou.plugin.position.citizen.CitizenPosition
+import com.github.tanokun.bakajinrou.plugin.position.citizen.FortunePosition
+import com.github.tanokun.bakajinrou.plugin.position.citizen.KnightPosition
+import com.github.tanokun.bakajinrou.plugin.position.citizen.MediumPosition
+import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotAsFortunePosition
+import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotAsKnightPosition
+import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotAsMediumPosition
+import com.github.tanokun.bakajinrou.plugin.position.fox.FoxThirdPosition
+import com.github.tanokun.bakajinrou.plugin.position.wolf.MadmanSecondPosition
+import com.github.tanokun.bakajinrou.plugin.position.wolf.WolfSecondPosition
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
@@ -172,10 +172,10 @@ class ParticipantsFormatterTest {
     }
 
     fun createParticipants() = listOf(
-        Participant(wolf1UniqueId, WolfPosition, noneProvider),
-        Participant(wolf2UniqueId, WolfPosition, noneProvider),
-        Participant(madman1UniqueId, MadmanPosition, noneProvider),
-        Participant(madman2UniqueId, MadmanPosition, noneProvider),
+        Participant(wolf1UniqueId, WolfSecondPosition, noneProvider),
+        Participant(wolf2UniqueId, WolfSecondPosition, noneProvider),
+        Participant(madman1UniqueId, MadmanSecondPosition, noneProvider),
+        Participant(madman2UniqueId, MadmanSecondPosition, noneProvider),
 
         Participant(fortune1UniqueId, FortunePosition, noneProvider),
         Participant(idiotAsFortune1UniqueId, IdiotAsFortunePosition, noneProvider),
@@ -186,7 +186,7 @@ class ParticipantsFormatterTest {
         Participant(knight1UniqueId, KnightPosition, noneProvider),
         Participant(idiotAsKnight1UniqueId, IdiotAsKnightPosition, noneProvider),
 
-        Participant(fox1UniqueId, FoxPosition, noneProvider),
+        Participant(fox1UniqueId, FoxThirdPosition, noneProvider),
 
         Participant(citizen1UniqueId, CitizenPosition, noneProvider),
         Participant(citizen2UniqueId, CitizenPosition, noneProvider),

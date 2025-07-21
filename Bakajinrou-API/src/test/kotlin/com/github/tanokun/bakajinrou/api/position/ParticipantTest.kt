@@ -9,10 +9,7 @@ import org.junit.jupiter.api.Test
 import java.util.*
 
 class ParticipantTest {
-    object TempPosition: Position {
-
-        override fun doAtStarting() = Unit
-    }
+    object TempPosition: Position { override fun doAtStarting() = Unit }
     
     val nonPlayerProvider = { throw IllegalStateException("") }
 

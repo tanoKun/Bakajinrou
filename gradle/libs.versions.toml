@@ -1,0 +1,28 @@
+[versions]
+paper = "1.21-R0.1-SNAPSHOT"
+commandapi = "10.1.1"
+invui = "1.44"
+mockk = "1.14.5"
+mockbukkit = "4.39.0"
+protocollib = "5.3.0"
+
+[libraries]
+paper = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
+commandapi = { module = "dev.jorel:commandapi-bukkit-core", version.ref = "commandapi" }
+commandapi-toolkit = { module = "dev.jorel:commandapi-bukkit-test-toolkit", version.ref = "commandapi" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+mockkbukkit = { module = "org.mockbukkit.mockbukkit:mockbukkit-v1.21", version.ref = "mockbukkit" }
+protocollib = { module = "com.comphenix.protocol:ProtocolLib", version.ref = "protocollib" }
+invui = { module = "xyz.xenondevs.invui:invui", version.ref = "invui" }
+invui-kotlin = { module = "xyz.xenondevs.invui:invui-kotlin", version.ref = "invui" }
+
+[bundles]
+commandapi = ["commandapi", "commandapi-toolkit"]
+invui = ["invui", "invui-kotlin"]
+mocks = ["mockk", "mockkbukkit"]
+
+[plugins]
+versions = { id = "com.github.ben-manes.versions", version = "0.45.0" }
+shadow = { id = "com.gradleup.shadow", version = "9.0.0-rc1" }
+bukkit = { id = "net.minecrell.plugin-yml.bukkit", version = "0.6.0" }
+paperweight = { id = "io.papermc.paperweight.userdev", version = "1.7.7" }

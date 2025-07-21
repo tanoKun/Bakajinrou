@@ -18,9 +18,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+    compileOnly(libs.paper)
 
-    testImplementation("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+    testImplementation(libs.paper)
     testImplementation(kotlin("test"))
 }
 

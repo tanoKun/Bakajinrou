@@ -1,10 +1,7 @@
-package com.github.tanokun.bakajinrou.bukkit.finishing.finisher
+package com.github.tanokun.bakajinrou.plugin.finisher
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.CitizenPosition
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.FortunePosition
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.MediumPosition
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.idiot.IdiotPosition
+import com.github.tanokun.bakajinrou.bukkit.position.citizen.CitizensPosition
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -23,14 +20,8 @@ class CitizenSideFinisher(
                     .color(TextColor.color(0x00FF00))
             )
 
-            if (participant.isCitizensSide()) sendVictoryMessage(bukkitPlayer)
+            if (participant.isPosition<CitizensPosition>()) sendVictoryMessage(bukkitPlayer)
             else sendLoseMessage(bukkitPlayer)
         }
     }
 }
-
-fun Participant.isCitizensSide(): Boolean =
-    this.position is FortunePosition
-        || this.position is MediumPosition
-        || this.position is CitizenPosition
-        || this.position is IdiotPosition

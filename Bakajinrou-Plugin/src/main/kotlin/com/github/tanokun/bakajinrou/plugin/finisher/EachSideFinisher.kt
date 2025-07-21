@@ -1,6 +1,6 @@
-package com.github.tanokun.bakajinrou.bukkit.finishing.finisher
+package com.github.tanokun.bakajinrou.plugin.finisher
 
-import com.github.tanokun.bakajinrou.api.finishing.GameFinisher
+import com.github.tanokun.bakajinrou.bukkit.finishing.GameFinisher
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.title.Title

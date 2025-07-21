@@ -2,8 +2,8 @@ package com.github.tanokun.bakajinrou.plugin.schedule
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.ParticipantStates
-import com.github.tanokun.bakajinrou.bukkit.finishing.finisher.isFox
-import com.github.tanokun.bakajinrou.bukkit.finishing.finisher.isWolf
+import com.github.tanokun.bakajinrou.bukkit.position.fox.FoxPosition
+import com.github.tanokun.bakajinrou.bukkit.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.formatter.ParticipantsFormatter
 import net.kyori.adventure.text.Component
@@ -56,7 +56,7 @@ class GameSchedules(
     }
 
     /**
-     * 残り時間5分の発光お知らせを全ての参加者に表示します。
+     * 残り時間3分の発光お知らせを全ての参加者に表示します。
      *
      * @see growCitizens
      */
@@ -65,7 +65,7 @@ class GameSchedules(
             val bukkitPlayer = it.bukkitPlayerProvider() ?: return@forEach
 
             bukkitPlayer.sendMessage(
-                Component.text("[人狼] 残り5分間から、定期発光が始まります。")
+                Component.text("[人狼] 残り3分間から、定期発光が始まります。")
                     .decorate(TextDecoration.BOLD)
                     .color(TextColor.color(0x00FF00))
             )
@@ -79,7 +79,7 @@ class GameSchedules(
      */
     fun growCitizens() {
         jinrouGame.participants
-            .filterNot { it.isWolf() || it.isFox() }
+            .filterNot { it.isPosition<WolfPosition>() || it.isPosition<FoxPosition>() }
             .forEach {
                 val bukkitPlayer = it.bukkitPlayerProvider() ?: return@forEach
 

@@ -4,10 +4,13 @@ import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.bukkit.controller.JinrouGameController
 import com.github.tanokun.bakajinrou.bukkit.finishing.JinrouGameFinishDecider
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.CitizenPosition
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.MediumPosition
-import com.github.tanokun.bakajinrou.bukkit.position.fox.FoxPosition
-import com.github.tanokun.bakajinrou.bukkit.position.wolf.WolfPosition
+import com.github.tanokun.bakajinrou.plugin.finisher.CitizenSideFinisher
+import com.github.tanokun.bakajinrou.plugin.finisher.FoxSideFinisher
+import com.github.tanokun.bakajinrou.plugin.finisher.WolfSideFinisher
+import com.github.tanokun.bakajinrou.plugin.position.citizen.CitizenPosition
+import com.github.tanokun.bakajinrou.plugin.position.citizen.MediumPosition
+import com.github.tanokun.bakajinrou.plugin.position.fox.FoxThirdPosition
+import com.github.tanokun.bakajinrou.plugin.position.wolf.WolfSecondPosition
 import io.mockk.mockk
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -87,10 +90,10 @@ class FinishGameByKillingTest {
     }
 
     fun createGame(): JinrouGameController {
-        val wolf = Participant(wolf.uniqueId, WolfPosition) { wolf }
+        val wolf = Participant(wolf.uniqueId, WolfSecondPosition) { wolf }
         val citizen = Participant(citizen.uniqueId, CitizenPosition) { citizen }
         val medium = Participant(medium.uniqueId, MediumPosition) { medium }
-        val fox = Participant(fox.uniqueId, FoxPosition) { fox }
+        val fox = Participant(fox.uniqueId, FoxThirdPosition) { fox }
 
         val game = JinrouGame(
             participants = listOf(wolf, citizen, medium, fox)
@@ -98,7 +101,11 @@ class FinishGameByKillingTest {
 
         return JinrouGameController(
             game = game,
-            finishDecider = JinrouGameFinishDecider(),
+            finishDecider = JinrouGameFinishDecider(
+                citizenSideFinisher = { CitizenSideFinisher(it) },
+                wolfSideFinisher = { WolfSideFinisher(it) },
+                foxSideFinisher = { FoxSideFinisher(it) }
+            ),
             logger = mockk(relaxed = true),
             scheduler = mockk(relaxed = true),
             bodyHandler = mockk(relaxed = true)
