@@ -1,7 +1,5 @@
-package com.github.tanokun.bakajinrou.bukkit.finishing
+package com.github.tanokun.bakajinrou.api.finishing
 
-import com.github.tanokun.bakajinrou.api.finishing.GameFinisher
-import com.github.tanokun.bakajinrou.api.finishing.JinrouGameFinishDecider
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizensPosition
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
