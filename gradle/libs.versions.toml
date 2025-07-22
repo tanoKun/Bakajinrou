@@ -5,6 +5,7 @@ invui = "1.44"
 mockk = "1.14.5"
 mockbukkit = "4.39.0"
 protocollib = "5.3.0"
+junit = "5.12.2"
 
 [libraries]
 paper = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
@@ -15,11 +16,15 @@ mockkbukkit = { module = "org.mockbukkit.mockbukkit:mockbukkit-v1.21", version.r
 protocollib = { module = "com.comphenix.protocol:ProtocolLib", version.ref = "protocollib" }
 invui = { module = "xyz.xenondevs.invui:invui", version.ref = "invui" }
 invui-kotlin = { module = "xyz.xenondevs.invui:invui-kotlin", version.ref = "invui" }
+junit-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit" }
+junit-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit" }
+
 
 [bundles]
 commandapi = ["commandapi", "commandapi-toolkit"]
 invui = ["invui", "invui-kotlin"]
 mocks = ["mockk", "mockkbukkit"]
+junit = ["junit-api", "junit-params"]
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version = "9.0.0-rc1" }
