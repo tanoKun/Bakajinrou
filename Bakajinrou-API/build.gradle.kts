@@ -18,6 +18,8 @@ repositories {
 }
 
 dependencies {
+    testImplementation(libs.bundles.junit)
+    testImplementation(libs.mockk)
     testImplementation(kotlin("test"))
 }
 

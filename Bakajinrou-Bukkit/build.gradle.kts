@@ -21,6 +21,7 @@ dependencies {
 
     implementation(project(":Bakajinrou-API"))
 
+    testImplementation(libs.bundles.junit)
     testImplementation(libs.paper)
     testImplementation(libs.mockk)
     testImplementation(kotlin("test"))
