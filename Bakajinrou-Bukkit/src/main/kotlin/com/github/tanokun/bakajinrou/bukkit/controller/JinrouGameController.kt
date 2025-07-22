@@ -1,8 +1,11 @@
 package com.github.tanokun.bakajinrou.bukkit.controller
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.api.attack.AttackResult
+import com.github.tanokun.bakajinrou.api.attack.AttackVerifier
 import com.github.tanokun.bakajinrou.api.finishing.GameFinisher
 import com.github.tanokun.bakajinrou.api.finishing.JinrouGameFinishDecider
+import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.bukkit.logger.BodyHandler
 import com.github.tanokun.bakajinrou.bukkit.logger.GameActionLogger
 import com.github.tanokun.bakajinrou.bukkit.scheduler.GameScheduler
@@ -31,6 +34,17 @@ class JinrouGameController(
             finish(finisher)
         }
     }
+
+    fun onAttack(by: AttackVerifier, toPlayer: Participant, vararg onAttacks: Pair<AttackResult, () -> Unit>) {
+        val attackResult = by.verify(to = toPlayer)
+
+        onAttacks
+            .filter { it.first == attackResult }
+            .forEach {
+                it.second.invoke()
+            }
+    }
+
 
     fun finish(finisher: GameFinisher) {
         finisher.notifyFinish()
