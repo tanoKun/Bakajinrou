@@ -1,10 +1,13 @@
 package com.github.tanokun.bakajinrou.bukkit.finishing
 
+import com.github.tanokun.bakajinrou.api.finishing.GameFinisher
+import com.github.tanokun.bakajinrou.api.finishing.JinrouGameFinishDecider
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.CitizensPosition
-import com.github.tanokun.bakajinrou.bukkit.position.fox.FoxPosition
-import com.github.tanokun.bakajinrou.bukkit.position.wolf.MadmanPosition
-import com.github.tanokun.bakajinrou.bukkit.position.wolf.WolfPosition
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizensPosition
+import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
+import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
+import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
+import com.github.tanokun.bakajinrou.api.participant.protection.Protection
 import io.mockk.mockk
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -12,8 +15,6 @@ import java.util.*
 import kotlin.test.assertTrue
 
 class FinisherDecidedSideTest {
-    val noneProvider =  { throw IllegalStateException("") }
-
     val citizenSideFinisherMock = mockk<GameFinisher>()
     val wolfSideFinisherMock = mockk<GameFinisher>()
     val foxSideFinisherMock = mockk<GameFinisher>()
@@ -94,11 +95,11 @@ class FinisherDecidedSideTest {
     private fun createParticipants(
         isDeadCitizen1: Boolean, isDeadCitizen2: Boolean, isDeadFox: Boolean, isDeadWolf: Boolean, isDeadMadman: Boolean,
     ) = listOf(
-        Participant(UUID.randomUUID(), mockk<CitizensPosition>(), noneProvider).apply { if (isDeadCitizen1) dead() },
-        Participant(UUID.randomUUID(), mockk<CitizensPosition>(), noneProvider).apply { if (isDeadCitizen2) dead() },
-        Participant(UUID.randomUUID(), mockk<FoxPosition>(), noneProvider).apply { if (isDeadFox) dead() },
-        Participant(UUID.randomUUID(), mockk<WolfPosition>(), noneProvider).apply { if (isDeadWolf) dead() },
-        Participant(UUID.randomUUID(), mockk<MadmanPosition>(), noneProvider).apply { if (isDeadMadman) dead() },
+        Participant(UUID.randomUUID(), mockk<CitizensPosition>(), mockk<Protection>()).apply { if (isDeadCitizen1) dead() },
+        Participant(UUID.randomUUID(), mockk<CitizensPosition>(), mockk<Protection>()).apply { if (isDeadCitizen2) dead() },
+        Participant(UUID.randomUUID(), mockk<FoxPosition>(), mockk<Protection>()).apply { if (isDeadFox) dead() },
+        Participant(UUID.randomUUID(), mockk<WolfPosition>(), mockk<Protection>()).apply { if (isDeadWolf) dead() },
+        Participant(UUID.randomUUID(), mockk<MadmanPosition>(), mockk<Protection>()).apply { if (isDeadMadman) dead() },
     )
 
 }

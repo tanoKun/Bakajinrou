@@ -1,9 +1,10 @@
 package com.github.tanokun.bakajinrou.plugin
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.api.finishing.JinrouGameFinishDecider
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.protection.Protection
 import com.github.tanokun.bakajinrou.bukkit.controller.JinrouGameController
-import com.github.tanokun.bakajinrou.bukkit.finishing.JinrouGameFinishDecider
 import com.github.tanokun.bakajinrou.plugin.finisher.CitizenSideFinisher
 import com.github.tanokun.bakajinrou.plugin.finisher.FoxSideFinisher
 import com.github.tanokun.bakajinrou.plugin.finisher.WolfSideFinisher
@@ -90,10 +91,10 @@ class FinishGameByKillingTest {
     }
 
     fun createGame(): JinrouGameController {
-        val wolf = Participant(wolf.uniqueId, WolfSecondPosition) { wolf }
-        val citizen = Participant(citizen.uniqueId, CitizenPosition) { citizen }
-        val medium = Participant(medium.uniqueId, MediumPosition) { medium }
-        val fox = Participant(fox.uniqueId, FoxThirdPosition) { fox }
+        val wolf = Participant(wolf.uniqueId, WolfSecondPosition, mockk<Protection>())
+        val citizen = Participant(citizen.uniqueId, CitizenPosition, mockk<Protection>())
+        val medium = Participant(medium.uniqueId, MediumPosition, mockk<Protection>())
+        val fox = Participant(fox.uniqueId, FoxThirdPosition, mockk<Protection>())
 
         val game = JinrouGame(
             participants = listOf(wolf, citizen, medium, fox)

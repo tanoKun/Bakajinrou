@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.bukkit.finishing
+package com.github.tanokun.bakajinrou.api.finishing
 
 interface GameFinisher {
 

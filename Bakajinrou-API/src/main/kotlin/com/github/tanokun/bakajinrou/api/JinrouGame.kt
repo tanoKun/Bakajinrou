@@ -10,18 +10,18 @@ class JinrouGame(
     /**
      * @see Participant.dead
      */
-    fun changeToDead(uuid: UUID): Boolean = getParticipant(uuid).dead()
+    fun changeToDead(uniqueId: UUID): Boolean = getParticipant(uniqueId).dead()
 
     /**
      * @see Participant.survived
      */
-    fun changeToSurvived(uuid: UUID): Boolean = getParticipant(uuid).survived()
+    fun changeToSurvived(uniqueId: UUID): Boolean = getParticipant(uniqueId).survived()
 
     /**
      * @see Participant.suspended
      */
-    fun changeToSuspended(uuid: UUID): Boolean = getParticipant(uuid).suspended()
+    fun changeToSuspended(uniqueId: UUID): Boolean = getParticipant(uniqueId).suspended()
 
-    private fun getParticipant(uuid: UUID): Participant =
-        participants.firstOrNull { it.uniqueId == uuid } ?: throw IllegalArgumentException("存在しない参加者UUID: $uuid")
+    private fun getParticipant(uniqueId: UUID): Participant =
+        participants.firstOrNull { it.uniqueId == uniqueId } ?: throw IllegalArgumentException("存在しない参加者UUID: $uniqueId")
 }

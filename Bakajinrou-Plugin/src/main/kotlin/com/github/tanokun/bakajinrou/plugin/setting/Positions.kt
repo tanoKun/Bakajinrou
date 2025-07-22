@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.setting
 
-import com.github.tanokun.bakajinrou.api.participant.Position
+import com.github.tanokun.bakajinrou.api.participant.position.Position
 import com.github.tanokun.bakajinrou.plugin.position.citizen.FortunePosition
 import com.github.tanokun.bakajinrou.plugin.position.citizen.KnightPosition
 import com.github.tanokun.bakajinrou.plugin.position.citizen.MediumPosition

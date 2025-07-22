@@ -1,10 +1,10 @@
-package com.github.tanokun.bakajinrou.bukkit.finishing
+package com.github.tanokun.bakajinrou.api.finishing
 
 import com.github.tanokun.bakajinrou.api.ParticipantStates
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.bukkit.position.citizen.CitizensPosition
-import com.github.tanokun.bakajinrou.bukkit.position.fox.FoxPosition
-import com.github.tanokun.bakajinrou.bukkit.position.wolf.WolfPosition
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizensPosition
+import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
+import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 
 class JinrouGameFinishDecider(
     val citizenSideFinisher: (List<Participant>) -> GameFinisher,

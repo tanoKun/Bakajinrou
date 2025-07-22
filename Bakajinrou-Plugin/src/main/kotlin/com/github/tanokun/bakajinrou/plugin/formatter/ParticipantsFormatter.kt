@@ -1,10 +1,10 @@
 package com.github.tanokun.bakajinrou.plugin.formatter
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.participant.Position
-import com.github.tanokun.bakajinrou.bukkit.position.fox.FoxPosition
-import com.github.tanokun.bakajinrou.bukkit.position.wolf.MadmanPosition
-import com.github.tanokun.bakajinrou.bukkit.position.wolf.WolfPosition
+import com.github.tanokun.bakajinrou.api.participant.position.Position
+import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
+import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
+import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.position.citizen.CitizenPosition
 import com.github.tanokun.bakajinrou.plugin.position.citizen.FortunePosition
@@ -18,6 +18,7 @@ import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
+import org.bukkit.entity.Player
 
 /**
  * ```
@@ -28,7 +29,8 @@ import net.kyori.adventure.text.format.TextDecoration
  */
 class ParticipantsFormatter(
     private val participants: List<Participant>,
-    private val nameCache: BukkitPlayerNameCache
+    private val nameCache: BukkitPlayerNameCache,
+    private val playerProvider: (Participant) -> Player?
 ) {
     fun formatWolf(
         playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, NamedTextColor.DARK_RED) }
@@ -92,7 +94,7 @@ class ParticipantsFormatter(
             } ?: Component.empty()
 
     private fun defaultPlayerNameComponent(participant: Participant, textColor: TextColor): Component {
-        val playerName = participant.bukkitPlayerProvider()?.name ?: nameCache.get(participant.uniqueId) ?: "unknownPlayer"
+        val playerName = playerProvider(participant)?.name ?: nameCache.get(participant.uniqueId) ?: "unknownPlayer"
 
         return Component.text(playerName, textColor)
             .decorate(TextDecoration.BOLD)

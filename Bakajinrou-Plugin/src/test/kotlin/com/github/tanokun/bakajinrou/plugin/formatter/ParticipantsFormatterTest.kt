@@ -1,6 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.formatter
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.protection.Protection
 import com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.position.citizen.CitizenPosition
 import com.github.tanokun.bakajinrou.plugin.position.citizen.FortunePosition
@@ -12,6 +13,7 @@ import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotAsMedium
 import com.github.tanokun.bakajinrou.plugin.position.fox.FoxThirdPosition
 import com.github.tanokun.bakajinrou.plugin.position.wolf.MadmanSecondPosition
 import com.github.tanokun.bakajinrou.plugin.position.wolf.WolfSecondPosition
+import io.mockk.mockk
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
@@ -22,8 +24,6 @@ import java.util.*
 import kotlin.test.assertEquals
 
 class ParticipantsFormatterTest {
-    val noneProvider =  { null }
-
     private val wolf1UniqueId = UUID.randomUUID()
     private val wolf2UniqueId = UUID.randomUUID()
 
@@ -50,7 +50,8 @@ class ParticipantsFormatterTest {
     fun formatWolfTest() {
         val formatter = ParticipantsFormatter(
             participants = createParticipants(),
-            createCaches()
+            nameCache = createCaches(),
+            playerProvider = { null }
         )
 
         val expected = Component.text("《 人狼 》", NamedTextColor.DARK_RED)
@@ -68,7 +69,8 @@ class ParticipantsFormatterTest {
     fun formatMadmanTest() {
         val formatter = ParticipantsFormatter(
             participants = createParticipants(),
-            createCaches()
+            nameCache = createCaches(),
+            playerProvider = { null }
         )
 
         val expected = Component.text("《 狂人 》", NamedTextColor.RED)
@@ -86,7 +88,8 @@ class ParticipantsFormatterTest {
     fun formatFortuneTest() {
         val formatter = ParticipantsFormatter(
             participants = createParticipants(),
-            createCaches()
+            nameCache = createCaches(),
+            playerProvider = { null }
         )
 
         val expected = Component.text("《 占い師 》", TextColor.color(0x87cefa))
@@ -104,7 +107,8 @@ class ParticipantsFormatterTest {
     fun formatMediumTest() {
         val formatter = ParticipantsFormatter(
             participants = createParticipants(),
-            createCaches()
+            nameCache = createCaches(),
+            playerProvider = { null }
         )
 
         val expected = Component.text("《 霊媒師 》", TextColor.color(0xff00ff))
@@ -123,7 +127,8 @@ class ParticipantsFormatterTest {
     fun formatKnightTest() {
         val formatter = ParticipantsFormatter(
             participants = createParticipants(),
-            createCaches()
+            nameCache = createCaches(),
+            playerProvider = { null }
         )
 
         val expected = Component.text("《 騎士 》", TextColor.color(0x00ff7f))
@@ -141,7 +146,8 @@ class ParticipantsFormatterTest {
     fun formatFoxTest() {
         val formatter = ParticipantsFormatter(
             participants = createParticipants(),
-            createCaches()
+            nameCache = createCaches(),
+            playerProvider = { null }
         )
 
         val expected = Component.text("《 妖狐 》", NamedTextColor.DARK_PURPLE)
@@ -157,7 +163,8 @@ class ParticipantsFormatterTest {
     fun formatCitizenTest() {
         val formatter = ParticipantsFormatter(
             participants = createParticipants(),
-            createCaches()
+            nameCache = createCaches(),
+            playerProvider = { null }
         )
 
         val expected = Component.text("《 村人 》", NamedTextColor.BLUE)
@@ -172,24 +179,24 @@ class ParticipantsFormatterTest {
     }
 
     fun createParticipants() = listOf(
-        Participant(wolf1UniqueId, WolfSecondPosition, noneProvider),
-        Participant(wolf2UniqueId, WolfSecondPosition, noneProvider),
-        Participant(madman1UniqueId, MadmanSecondPosition, noneProvider),
-        Participant(madman2UniqueId, MadmanSecondPosition, noneProvider),
+        Participant(wolf1UniqueId, WolfSecondPosition, mockk<Protection>()),
+        Participant(wolf2UniqueId, WolfSecondPosition, mockk<Protection>()),
+        Participant(madman1UniqueId, MadmanSecondPosition, mockk<Protection>()),
+        Participant(madman2UniqueId, MadmanSecondPosition, mockk<Protection>()),
 
-        Participant(fortune1UniqueId, FortunePosition, noneProvider),
-        Participant(idiotAsFortune1UniqueId, IdiotAsFortunePosition, noneProvider),
+        Participant(fortune1UniqueId, FortunePosition, mockk<Protection>()),
+        Participant(idiotAsFortune1UniqueId, IdiotAsFortunePosition, mockk<Protection>()),
 
-        Participant(medium1UniqueId, MediumPosition, noneProvider),
-        Participant(idiotAsMedium1UniqueId, IdiotAsMediumPosition, noneProvider),
+        Participant(medium1UniqueId, MediumPosition, mockk<Protection>()),
+        Participant(idiotAsMedium1UniqueId, IdiotAsMediumPosition, mockk<Protection>()),
 
-        Participant(knight1UniqueId, KnightPosition, noneProvider),
-        Participant(idiotAsKnight1UniqueId, IdiotAsKnightPosition, noneProvider),
+        Participant(knight1UniqueId, KnightPosition, mockk<Protection>()),
+        Participant(idiotAsKnight1UniqueId, IdiotAsKnightPosition, mockk<Protection>()),
 
-        Participant(fox1UniqueId, FoxThirdPosition, noneProvider),
+        Participant(fox1UniqueId, FoxThirdPosition, mockk<Protection>()),
 
-        Participant(citizen1UniqueId, CitizenPosition, noneProvider),
-        Participant(citizen2UniqueId, CitizenPosition, noneProvider),
+        Participant(citizen1UniqueId, CitizenPosition, mockk<Protection>()),
+        Participant(citizen2UniqueId, CitizenPosition, mockk<Protection>()),
     )
 
     fun createCaches() = BukkitPlayerNameCache().apply {

@@ -20,7 +20,7 @@ import org.bukkit.entity.Player
 import java.util.*
 
 
-class BodyPacket(server: Server, body: Player, ) {
+class BodyPacket(server: Server, body: Player) {
     private val dummy = ServerPlayer(
         (server as CraftServer).server, (body.world as CraftWorld).handle, (body as CraftPlayer).profile, body.handle.clientInformation()
     ).apply {

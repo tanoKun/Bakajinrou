@@ -1,12 +1,14 @@
 package com.github.tanokun.bakajinrou.api.participant
 
 import com.github.tanokun.bakajinrou.api.ParticipantStates
+import com.github.tanokun.bakajinrou.api.participant.position.Position
+import com.github.tanokun.bakajinrou.api.participant.protection.Protection
 import java.util.*
 
 data class Participant(
     val uniqueId: UUID,
     val position: Position,
-    val bukkitPlayerProvider: BukkitPlayerProvider
+    private val protection: Protection
 ) {
     var state: ParticipantStates = ParticipantStates.SURVIVED
         private set
@@ -52,6 +54,13 @@ data class Participant(
 
         return true
     }
+
+    /**
+     * プレイヤーが何らかの理由で攻撃を無効かできるか
+     *
+     * @return 防御できる理由
+     */
+    fun hasProtection() = protection.hasProtection()
 
     /**
      * 陣営を比較します。

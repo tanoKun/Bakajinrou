@@ -1,18 +1,18 @@
 package com.github.tanokun.bakajinrou.bukkit.controller
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
-import com.github.tanokun.bakajinrou.bukkit.finishing.GameFinisher
-import com.github.tanokun.bakajinrou.bukkit.finishing.JinrouGameFinishDecider
+import com.github.tanokun.bakajinrou.api.finishing.GameFinisher
+import com.github.tanokun.bakajinrou.api.finishing.JinrouGameFinishDecider
 import com.github.tanokun.bakajinrou.bukkit.logger.BodyHandler
 import com.github.tanokun.bakajinrou.bukkit.logger.GameActionLogger
-import com.github.tanokun.bakajinrou.bukkit.scheduler.JinrouGameScheduler
+import com.github.tanokun.bakajinrou.bukkit.scheduler.GameScheduler
 import java.util.*
 
 class JinrouGameController(
     private val game: JinrouGame,
     private val finishDecider: JinrouGameFinishDecider,
     private val logger: GameActionLogger,
-    private val scheduler: JinrouGameScheduler,
+    private val scheduler: GameScheduler,
     private val bodyHandler: BodyHandler
 ) {
     init {

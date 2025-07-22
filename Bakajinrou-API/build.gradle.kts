@@ -18,9 +18,6 @@ repositories {
 }
 
 dependencies {
-    compileOnly(libs.paper)
-
-    testImplementation(libs.paper)
     testImplementation(kotlin("test"))
 }
 
