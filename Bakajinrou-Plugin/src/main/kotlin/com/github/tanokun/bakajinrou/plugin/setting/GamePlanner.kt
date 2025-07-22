@@ -1,16 +1,16 @@
 package com.github.tanokun.bakajinrou.plugin.setting
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.api.finishing.JinrouGameFinishDecider
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.bukkit.controller.JinrouGameController
-import com.github.tanokun.bakajinrou.bukkit.finishing.JinrouGameFinishDecider
 import com.github.tanokun.bakajinrou.bukkit.logger.BodyHandler
 import com.github.tanokun.bakajinrou.bukkit.logger.GameActionLogger
-import com.github.tanokun.bakajinrou.bukkit.position.BukkitPlayerProviderByServer
-import com.github.tanokun.bakajinrou.bukkit.scheduler.JinrouGameScheduler
+import com.github.tanokun.bakajinrou.bukkit.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.bukkit.scheduler.schedule.TimeSchedule
 import com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.position.citizen.CitizenPosition
+import com.github.tanokun.bakajinrou.plugin.protection.PlayerProtection
 import com.github.tanokun.bakajinrou.plugin.schedule.GameSchedules
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
@@ -18,7 +18,7 @@ import kotlin.random.Random
 
 typealias FinishDeciderProvider = () -> JinrouGameFinishDecider
 typealias LoggerProvider = () -> GameActionLogger
-typealias GameSchedulerProvider = (Long, List<TimeSchedule>, Plugin) -> JinrouGameScheduler
+typealias GameSchedulerProvider = (Long, List<TimeSchedule>, Plugin) -> GameScheduler
 typealias BodyHandlerProvider = () -> BodyHandler
 typealias GameSchedulePlannerProvider = () -> GameSchedules
 
@@ -69,9 +69,8 @@ class GamePlanner(
                 val position = positionType.candidatePositions.random(random)
 
                 val uniqueId = shuffled[index].uniqueId
-                val getBukkitPlayer = BukkitPlayerProviderByServer(uniqueId)
 
-                participants.add(Participant(uniqueId, position, getBukkitPlayer))
+                participants.add(Participant(uniqueId, position, PlayerProtection(uniqueId)))
 
                 index++
             }
@@ -79,9 +78,8 @@ class GamePlanner(
 
         for (index in index..shuffled.lastIndex) {
             val uniqueId = shuffled[index].uniqueId
-            val getBukkitPlayer = BukkitPlayerProviderByServer(uniqueId)
 
-            participants.add(Participant(uniqueId, CitizenPosition, getBukkitPlayer))
+            participants.add(Participant(uniqueId, CitizenPosition, PlayerProtection(uniqueId)))
         }
 
         return participants
