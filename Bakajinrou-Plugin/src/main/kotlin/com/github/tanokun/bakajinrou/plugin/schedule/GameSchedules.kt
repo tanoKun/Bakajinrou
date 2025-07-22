@@ -2,14 +2,16 @@ package com.github.tanokun.bakajinrou.plugin.schedule
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.ParticipantStates
-import com.github.tanokun.bakajinrou.bukkit.position.fox.FoxPosition
-import com.github.tanokun.bakajinrou.bukkit.position.wolf.WolfPosition
+import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
+import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.formatter.ParticipantsFormatter
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.potion.PotionEffect
@@ -32,7 +34,7 @@ class GameSchedules(
         }
 
         jinrouGame.participants.forEach {
-            val bukkitPlayer = it.bukkitPlayerProvider() ?: return@forEach
+            val bukkitPlayer = getBukkitPlayer(it) ?: return@forEach
 
             bukkitPlayer.sendActionBar(
                 Component.text(formattedTime)
@@ -49,7 +51,7 @@ class GameSchedules(
         jinrouGame.participants
             .filter { it.state == ParticipantStates.SURVIVED }
             .forEach {
-            val bukkitPlayer = it.bukkitPlayerProvider() ?: return@forEach
+            val bukkitPlayer = getBukkitPlayer(it) ?: return@forEach
 
             bukkitPlayer.inventory.addItem(ItemStack(Material.QUARTZ))
         }
@@ -62,7 +64,7 @@ class GameSchedules(
      */
     fun notifyParticipantsOfGrowing() {
         jinrouGame.participants.forEach {
-            val bukkitPlayer = it.bukkitPlayerProvider() ?: return@forEach
+            val bukkitPlayer = getBukkitPlayer(it) ?: return@forEach
 
             bukkitPlayer.sendMessage(
                 Component.text("[人狼] 残り3分間から、定期発光が始まります。")
@@ -81,7 +83,7 @@ class GameSchedules(
         jinrouGame.participants
             .filterNot { it.isPosition<WolfPosition>() || it.isPosition<FoxPosition>() }
             .forEach {
-                val bukkitPlayer = it.bukkitPlayerProvider() ?: return@forEach
+                val bukkitPlayer = getBukkitPlayer(it) ?: return@forEach
 
                 val growingEffect = PotionEffect(PotionEffectType.GLOWING, 5, 1, false, false)
                 bukkitPlayer.addPotionEffect(growingEffect)
@@ -98,13 +100,15 @@ class GameSchedules(
      * @see ParticipantsFormatter
      */
     fun notifyWolfsAndFox(bukkitPlayerNameCache: BukkitPlayerNameCache) {
-        val formatter = ParticipantsFormatter(jinrouGame.participants, bukkitPlayerNameCache)
+        val formatter = ParticipantsFormatter(jinrouGame.participants, bukkitPlayerNameCache) { Bukkit.getPlayer(it.uniqueId) }
 
         jinrouGame.participants.forEach {
-            val bukkitPlayer = it.bukkitPlayerProvider() ?: return@forEach
+            val bukkitPlayer = getBukkitPlayer(it) ?: return@forEach
 
             bukkitPlayer.sendMessage(formatter.formatWolf())
             bukkitPlayer.sendMessage(formatter.formatFox())
         }
     }
+
+    private fun getBukkitPlayer(participant: Participant) = Bukkit.getPlayer(participant.uniqueId)
 }

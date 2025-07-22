@@ -1,5 +1,6 @@
 package com.github.tanokun.bakajinrou.bukkit.scheduler.schedule
 
+import com.github.tanokun.bakajinrou.bukkit.scheduler.CallbackOnSchedule
 import kotlin.time.Duration
 
 /**
@@ -8,8 +9,8 @@ import kotlin.time.Duration
  * @throws IllegalArgumentException 呼び出し間隔が一秒以下の時
  */
 data class EveryTimeSchedule(
-        val everyTime: Duration,
-        override val callback: (Long) -> Unit
+    val everyTime: Duration,
+    override val callback: CallbackOnSchedule
 ): TimeSchedule {
     private val everyTimeSeconds = everyTime.inWholeSeconds
 
@@ -24,4 +25,4 @@ data class EveryTimeSchedule(
     }
 }
 
-infix fun Duration.every(callback: (Long) -> Unit): TimeSchedule = EveryTimeSchedule(this, callback)
+infix fun Duration.every(callback: CallbackOnSchedule): TimeSchedule = EveryTimeSchedule(this, callback)

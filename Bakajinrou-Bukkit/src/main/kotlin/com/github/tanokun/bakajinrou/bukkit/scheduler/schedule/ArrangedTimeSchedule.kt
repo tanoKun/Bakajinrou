@@ -1,13 +1,14 @@
 package com.github.tanokun.bakajinrou.bukkit.scheduler.schedule
 
+import com.github.tanokun.bakajinrou.bukkit.scheduler.CallbackOnSchedule
 import kotlin.time.Duration
 
 /**
  * 特定の残り時間の時、コールバック関数を呼び出します。
  */
 data class ArrangedTimeSchedule(
-        val arrangedTime: Duration,
-        override val callback: (Long) -> Unit
+    val arrangedTime: Duration,
+    override val callback: CallbackOnSchedule
 ): TimeSchedule {
     private val arrangedTimeSeconds = arrangedTime.inWholeSeconds
 
@@ -16,4 +17,4 @@ data class ArrangedTimeSchedule(
     }
 }
 
-infix fun Duration.arranged(callback: (Long) -> Unit): TimeSchedule = ArrangedTimeSchedule(this, callback)
+infix fun Duration.arranged(callback: CallbackOnSchedule): TimeSchedule = ArrangedTimeSchedule(this, callback)
