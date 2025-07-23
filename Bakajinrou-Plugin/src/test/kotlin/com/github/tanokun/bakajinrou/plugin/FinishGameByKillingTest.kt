@@ -1,7 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
-import com.github.tanokun.bakajinrou.api.finishing.JinrouGameFinishDecider
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.protection.Protection
 import com.github.tanokun.bakajinrou.bukkit.controller.JinrouGameController
@@ -98,16 +97,14 @@ class FinishGameByKillingTest {
 
     fun createGame(): JinrouGameController {
         val game = JinrouGame(
-            participants = listOf(wolf, citizen, medium, fox)
+            participants = listOf(wolf, citizen, medium, fox),
+            citizenSideFinisher = { CitizenSideFinisher(it) },
+            wolfSideFinisher = { WolfSideFinisher(it) },
+            foxSideFinisher = { FoxSideFinisher(it) }
         )
 
         return JinrouGameController(
             game = game,
-            finishDecider = JinrouGameFinishDecider(
-                citizenSideFinisher = { CitizenSideFinisher(it) },
-                wolfSideFinisher = { WolfSideFinisher(it) },
-                foxSideFinisher = { FoxSideFinisher(it) }
-            ),
             logger = mockk(relaxed = true),
             scheduler = mockk(relaxed = true),
             bodyHandler = mockk(relaxed = true)

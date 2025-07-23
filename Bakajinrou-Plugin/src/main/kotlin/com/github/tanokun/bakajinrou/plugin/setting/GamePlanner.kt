@@ -1,7 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.setting
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
-import com.github.tanokun.bakajinrou.api.finishing.JinrouGameFinishDecider
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.bukkit.controller.JinrouGameController
 import com.github.tanokun.bakajinrou.bukkit.logger.BodyHandler
@@ -16,7 +15,7 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import kotlin.random.Random
 
-typealias FinishDeciderProvider = () -> JinrouGameFinishDecider
+typealias JinrouGameProvider = (List<Participant>) -> JinrouGame
 typealias LoggerProvider = () -> GameActionLogger
 typealias GameSchedulerProvider = (Long, List<TimeSchedule>, Plugin) -> GameScheduler
 typealias BodyHandlerProvider = () -> BodyHandler
@@ -24,7 +23,7 @@ typealias GameSchedulePlannerProvider = () -> GameSchedules
 
 class GamePlanner(
     private val random: Random,
-    private val finishDeciderProvider: FinishDeciderProvider,
+    private val jinrouGameProvider: JinrouGameProvider,
     private val loggerProvider: LoggerProvider,
     private val gameSchedulerProvider: GameSchedulerProvider,
     private val bodyHandlerProvider: BodyHandlerProvider,
@@ -49,14 +48,13 @@ class GamePlanner(
         val selectedMap = selectedMap ?: throw IllegalStateException("マップが選択されていません。")
 
         if (getMinimumRequired() > candidates.size) throw IllegalStateException("現在の参加人数では、選択されている役職が多すぎます。")
-        val jinrouGame = JinrouGame(participants = placePositions())
 
-        val finishDecider = finishDeciderProvider()
+        val jinrouGame = jinrouGameProvider(placePositions())
         val logger = loggerProvider()
         val scheduler = gameSchedulerProvider(selectedMap.startTime, selectedMap.createSchedules(gameSchedulePlanner(), bukkitPlayerNameCache), plugin)
         val bodyHandler = bodyHandlerProvider()
 
-        return JinrouGameController(jinrouGame, finishDecider, logger, scheduler, bodyHandler)
+        return JinrouGameController(jinrouGame, logger, scheduler, bodyHandler)
     }
 
     private fun placePositions(): List<Participant> {

@@ -12,13 +12,12 @@ import java.util.*
 
 class JinrouGameController(
     private val game: JinrouGame,
-    private val finishDecider: JinrouGameFinishDecider,
     private val logger: GameActionLogger,
     private val scheduler: GameScheduler,
     private val bodyHandler: BodyHandler
 ) {
     init {
-        require(finishDecider.decide(game.participants) == null) {
+        require(game.judge() == null) {
             "始めるにあたって、不十分な役職配布です。"
         }
     }
@@ -29,7 +28,7 @@ class JinrouGameController(
         logger.logKillParticipantToSpectator(victim, by)
         bodyHandler.createBody(victim)
 
-        finishDecider.decide(game.participants)?.let { finisher ->
+        game.judge()?.let { finisher ->
             finish(finisher)
         }
     }

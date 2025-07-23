@@ -13,7 +13,7 @@ class GamePlannerTest {
     fun cannotPlayWhenShortageOfParticipants() {
         val gamePlanner = GamePlanner(
             random = Random(0),
-            finishDeciderProvider = { mockk() },
+            jinrouGameProvider = { mockk() },
             loggerProvider = { mockk() },
             gameSchedulerProvider = { _, _, _ -> mockk() },
             bodyHandlerProvider = { mockk() },
@@ -32,7 +32,7 @@ class GamePlannerTest {
     fun cannotPlayWhenNoSelectedMap() {
         val gamePlanner = GamePlanner(
             random = Random(0),
-            finishDeciderProvider = { mockk() },
+            jinrouGameProvider = { mockk() },
             loggerProvider = { mockk() },
             gameSchedulerProvider = { _, _, _ -> mockk() },
             bodyHandlerProvider = { mockk() },

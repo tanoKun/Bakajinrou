@@ -59,9 +59,7 @@ class GameSchedulesTest {
     @Test
     @DisplayName("アクションバーに表示される時間のテスト")
     fun showLeftTimeToActionbarTest() {
-        val participants = createParticipants()
-
-        val gameSchedules = GameSchedules(JinrouGame(participants))
+        val gameSchedules = GameSchedules(jinrouGame = createJinrouGame())
         gameSchedules.showLeftTime(231)
 
         players.forEach { player ->
@@ -90,9 +88,7 @@ class GameSchedulesTest {
     @Test
     @DisplayName("妖狐、人狼は発光せず、村陣営と狂人のみ発光")
     fun doNotGrowWolfsAndFoxButCitizensAndMadman() {
-        val participants = createParticipants()
-
-        val gameSchedules = GameSchedules(JinrouGame(participants))
+        val gameSchedules = GameSchedules(jinrouGame = createJinrouGame())
         gameSchedules.growCitizens()
 
         assertFalse(wolf.hasPotionEffect(PotionEffectType.GLOWING), "人狼は発光を持たない")
@@ -103,13 +99,18 @@ class GameSchedulesTest {
 
     }
 
-    fun createParticipants(): List<Participant> {
+    fun createJinrouGame(): JinrouGame {
         val wolf = Participant(wolf.uniqueId, WolfSecondPosition, mockk<Protection>())
         val madman = Participant(madman.uniqueId, MadmanSecondPosition, mockk<Protection>())
         val citizen = Participant(citizen.uniqueId, CitizenPosition, mockk<Protection>())
         val medium = Participant(medium.uniqueId, MediumPosition, mockk<Protection>())
         val fox = Participant(fox.uniqueId, FoxThirdPosition, mockk<Protection>())
 
-        return listOf(wolf, madman, citizen, medium, fox)
+        return JinrouGame(
+            participants = listOf(wolf, madman, citizen, medium, fox),
+            citizenSideFinisher = { mockk() },
+            wolfSideFinisher = { mockk() },
+            foxSideFinisher = { mockk() }
+        )
     }
 }
