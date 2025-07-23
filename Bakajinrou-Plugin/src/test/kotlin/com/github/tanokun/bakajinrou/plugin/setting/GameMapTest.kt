@@ -1,7 +1,8 @@
 package com.github.tanokun.bakajinrou.plugin.setting
 
 import com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
-import com.github.tanokun.bakajinrou.plugin.schedule.GameSchedules
+import com.github.tanokun.bakajinrou.plugin.setting.map.GameSchedules
+import com.github.tanokun.bakajinrou.plugin.setting.map.GameMap
 import io.mockk.*
 import org.bukkit.Location
 import org.junit.jupiter.api.DisplayName
@@ -14,7 +15,8 @@ class GameMapTest {
     fun doScheduleCreatedByMapTest() {
         val startTime = 400L
 
-        val map = GameMap(spawnLocation = mockk<Location>(),
+        val map = GameMap(
+            spawnLocation = mockk<Location>(),
             lobbyLocation = mockk<Location>(),
             startTime = startTime,
             delayToGiveQuartz = 90.seconds,

@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.schedule
+package com.github.tanokun.bakajinrou.plugin.setting.map
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.ParticipantStates
@@ -97,10 +97,11 @@ class GameSchedules(
      *
      * @param bukkitPlayerNameCache プレイヤー名のキャッシュ
      *
-     * @see ParticipantsFormatter
+     * @see com.github.tanokun.bakajinrou.plugin.formatter.ParticipantsFormatter
      */
     fun notifyWolfsAndFox(bukkitPlayerNameCache: BukkitPlayerNameCache) {
-        val formatter = ParticipantsFormatter(jinrouGame.participants, bukkitPlayerNameCache) { Bukkit.getPlayer(it.uniqueId) }
+        val formatter =
+            ParticipantsFormatter(jinrouGame.participants, bukkitPlayerNameCache) { Bukkit.getPlayer(it.uniqueId) }
 
         jinrouGame.participants.forEach {
             val bukkitPlayer = getBukkitPlayer(it) ?: return@forEach

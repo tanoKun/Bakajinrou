@@ -8,6 +8,7 @@ import com.github.tanokun.bakajinrou.plugin.position.citizen.MediumPosition
 import com.github.tanokun.bakajinrou.plugin.position.fox.FoxThirdPosition
 import com.github.tanokun.bakajinrou.plugin.position.wolf.MadmanSecondPosition
 import com.github.tanokun.bakajinrou.plugin.position.wolf.WolfSecondPosition
+import com.github.tanokun.bakajinrou.plugin.setting.map.GameSchedules
 import io.mockk.mockk
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
