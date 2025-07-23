@@ -21,26 +21,32 @@ import org.junit.jupiter.api.DisplayName
 import org.mockbukkit.mockbukkit.MockBukkit
 import org.mockbukkit.mockbukkit.ServerMock
 import org.mockbukkit.mockbukkit.entity.PlayerMock
+import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 
 class FinishGameByKillingTest {
     private lateinit var server: ServerMock
+
+    private lateinit var wolfPlayerMock: PlayerMock
+    private lateinit var citizenPlayerMock: PlayerMock
+    private lateinit var mediumPlayerMock: PlayerMock
+    private lateinit var foxPlayerMock: PlayerMock
     
-    private lateinit var wolf: PlayerMock
-    private lateinit var citizen: PlayerMock
-    private lateinit var medium: PlayerMock
-    private lateinit var fox: PlayerMock
+    private val wolf by lazy { Participant(wolfPlayerMock.uniqueId, WolfSecondPosition, mockk<Protection>()) }
+    private val citizen by lazy { Participant(citizenPlayerMock.uniqueId, CitizenPosition, mockk<Protection>()) }
+    private val medium by lazy { Participant(mediumPlayerMock.uniqueId, MediumPosition, mockk<Protection>()) }
+    private val fox by lazy { Participant(foxPlayerMock.uniqueId, FoxThirdPosition, mockk<Protection>()) }
 
     @BeforeEach
     fun setUp() {
         server = MockBukkit.mock()
 
-        wolf = server.addPlayer()
-        citizen = server.addPlayer()
-        medium = server.addPlayer()
-        fox = server.addPlayer()
+        wolfPlayerMock = server.addPlayer()
+        citizenPlayerMock = server.addPlayer()
+        mediumPlayerMock = server.addPlayer()
+        foxPlayerMock = server.addPlayer()
     }
 
     @AfterEach
@@ -53,13 +59,13 @@ class FinishGameByKillingTest {
     fun finishGameByKillingLastWolfWithoutFoxTest() {
         val gameController = createGame()
 
-        gameController.killed(victim = fox.uniqueId, by = citizen.uniqueId)
-        gameController.killed(victim = wolf.uniqueId, by = citizen.uniqueId)
+        gameController.killed(victim = fox, by = citizen)
+        gameController.killed(victim = wolf, by = citizen)
 
-        assertLose(wolf)
-        assertVictory(citizen)
-        assertVictory(medium)
-        assertLose(fox)
+        assertLose(wolfPlayerMock)
+        assertVictory(citizenPlayerMock)
+        assertVictory(mediumPlayerMock)
+        assertLose(foxPlayerMock)
     }
 
     @Test
@@ -67,14 +73,14 @@ class FinishGameByKillingTest {
     fun finishGameByKillingLastCitizenWithoutFoxTest() {
         val gameController = createGame()
 
-        gameController.killed(victim = fox.uniqueId, by = wolf.uniqueId)
-        gameController.killed(victim = citizen.uniqueId, by = wolf.uniqueId)
-        gameController.killed(victim = medium.uniqueId, by = wolf.uniqueId)
+        gameController.killed(victim = fox, by = wolf)
+        gameController.killed(victim = citizen, by = wolf)
+        gameController.killed(victim = medium, by = wolf)
 
-        assertVictory(wolf)
-        assertLose(citizen)
-        assertLose(medium)
-        assertLose(fox)
+        assertVictory(wolfPlayerMock)
+        assertLose(citizenPlayerMock)
+        assertLose(mediumPlayerMock)
+        assertLose(foxPlayerMock)
     }
 
     @Test
@@ -82,20 +88,15 @@ class FinishGameByKillingTest {
     fun finishGameByKillingLastCitizenWithFoxTest() {
         val gameController = createGame()
 
-        gameController.killed(victim = wolf.uniqueId, by = fox.uniqueId)
+        gameController.killed(victim = wolf, by = fox)
 
-        assertLose(wolf)
-        assertLose(citizen)
-        assertLose(medium)
-        assertVictory(fox)
+        assertLose(wolfPlayerMock)
+        assertLose(citizenPlayerMock)
+        assertLose(mediumPlayerMock)
+        assertVictory(foxPlayerMock)
     }
 
     fun createGame(): JinrouGameController {
-        val wolf = Participant(wolf.uniqueId, WolfSecondPosition, mockk<Protection>())
-        val citizen = Participant(citizen.uniqueId, CitizenPosition, mockk<Protection>())
-        val medium = Participant(medium.uniqueId, MediumPosition, mockk<Protection>())
-        val fox = Participant(fox.uniqueId, FoxThirdPosition, mockk<Protection>())
-
         val game = JinrouGame(
             participants = listOf(wolf, citizen, medium, fox)
         )
