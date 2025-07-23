@@ -4,7 +4,6 @@ import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.attack.AttackResult
 import com.github.tanokun.bakajinrou.api.attack.AttackVerifier
 import com.github.tanokun.bakajinrou.api.finishing.GameFinisher
-import com.github.tanokun.bakajinrou.api.finishing.JinrouGameFinishDecider
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.bukkit.logger.BodyHandler
 import com.github.tanokun.bakajinrou.bukkit.logger.GameActionLogger
@@ -24,8 +23,8 @@ class JinrouGameController(
         }
     }
 
-    fun killed(victim: UUID, by: UUID) {
-        game.changeToDead(victim)
+    fun killed(victim: Participant, by: Participant) {
+        victim.dead()
 
         logger.logKillParticipantToSpectator(victim, by)
         bodyHandler.createBody(victim)
@@ -35,8 +34,8 @@ class JinrouGameController(
         }
     }
 
-    fun onAttack(by: AttackVerifier, toPlayer: Participant, vararg onAttacks: Pair<AttackResult, () -> Unit>) {
-        val attackResult = by.verify(to = toPlayer)
+    fun onAttack(by: AttackVerifier, to: Participant, vararg onAttacks: Pair<AttackResult, () -> Unit>) {
+        val attackResult = by.verify(to = to)
 
         onAttacks
             .filter { it.first == attackResult }
