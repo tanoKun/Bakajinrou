@@ -10,7 +10,7 @@ import com.github.tanokun.bakajinrou.api.participant.protection.Protection
 import io.mockk.mockk
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import java.util.UUID
+import java.util.*
 import kotlin.test.assertTrue
 
 class JinrouGameDecidedSideTest {

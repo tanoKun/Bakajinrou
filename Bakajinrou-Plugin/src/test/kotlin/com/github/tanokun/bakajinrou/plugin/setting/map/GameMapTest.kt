@@ -1,12 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.setting.map
 
 import com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
-import io.mockk.Runs
-import io.mockk.confirmVerified
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import org.bukkit.Location
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
