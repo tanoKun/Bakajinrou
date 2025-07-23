@@ -12,5 +12,5 @@ plugins {
 rootProject.name = "Bakajinrou"
 
 include("Bakajinrou-API")
-include("Bakajinrou-Bukkit")
+include("Bakajinrou-Game")
 include("Bakajinrou-Plugin")

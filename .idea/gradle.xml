@@ -10,7 +10,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/Bakajinrou-API" />
-            <option value="$PROJECT_DIR$/Bakajinrou-Bukkit" />
+            <option value="$PROJECT_DIR$/Bakajinrou-Game" />
             <option value="$PROJECT_DIR$/Bakajinrou-Plugin" />
           </set>
         </option>

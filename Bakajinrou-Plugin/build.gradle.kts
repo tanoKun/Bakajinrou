@@ -33,7 +33,7 @@ dependencies {
     implementation(libs.bundles.invui)
 
     implementation(project(":Bakajinrou-API"))
-    implementation(project(":Bakajinrou-Bukkit"))
+    implementation(project(":Bakajinrou-Game"))
 
     testImplementation(libs.bundles.mocks)
 
