@@ -1,6 +1,7 @@
 package com.github.tanokun.bakajinrou.bukkit.controller
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.api.ParticipantStates
 import com.github.tanokun.bakajinrou.api.attack.AttackResult
 import com.github.tanokun.bakajinrou.api.attack.AttackVerifier
 import com.github.tanokun.bakajinrou.api.finishing.GameFinisher
@@ -25,6 +26,8 @@ class JinrouGameController(
         val victim = game.getParticipant(victim) ?: return
         val attacker = game.getParticipant(by) ?: return
 
+        if (victim.state != ParticipantStates.SURVIVED) return
+
         victim.dead()
 
         logger.logKillParticipantToSpectator(victim.uniqueId, attacker.uniqueId)
@@ -36,9 +39,13 @@ class JinrouGameController(
     }
 
     fun onAttack(by: AttackVerifier, to: UUID, vararg onAttacks: Pair<AttackResult, () -> Unit>) {
-        val attacker = game.getParticipant(to) ?: return
+        val victim = game.getParticipant(to) ?: return
 
-        val attackResult = by.verify(to = attacker)
+        val attackResult =
+            if (victim.state != ParticipantStates.SURVIVED)
+                AttackResult.INVALID_ATTACK
+            else
+                by.verify(to = victim)
 
         onAttacks
             .filter { it.first == attackResult }
