@@ -5,8 +5,6 @@ import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizensPosition
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
 import java.util.*
 
 class JinrouGame(
