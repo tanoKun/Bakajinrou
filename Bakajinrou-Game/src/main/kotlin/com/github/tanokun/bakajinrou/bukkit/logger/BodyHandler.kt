@@ -1,6 +1,5 @@
 package com.github.tanokun.bakajinrou.bukkit.logger
 
-import com.github.tanokun.bakajinrou.api.participant.Participant
 import java.util.*
 
 interface BodyHandler {
@@ -8,7 +7,7 @@ interface BodyHandler {
     /**
      * [of]に適するプレイヤーの死体を作成します。
      */
-    fun createBody(of: Participant)
+    fun createBody(of: UUID)
 
     /**
      * 全ての死体を削除します。

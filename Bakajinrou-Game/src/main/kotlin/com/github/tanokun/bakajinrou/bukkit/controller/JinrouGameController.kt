@@ -4,10 +4,10 @@ import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.attack.AttackResult
 import com.github.tanokun.bakajinrou.api.attack.AttackVerifier
 import com.github.tanokun.bakajinrou.api.finishing.GameFinisher
-import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.bukkit.logger.BodyHandler
 import com.github.tanokun.bakajinrou.bukkit.logger.GameActionLogger
 import com.github.tanokun.bakajinrou.bukkit.scheduler.GameScheduler
+import java.util.*
 
 class JinrouGameController(
     private val game: JinrouGame,
@@ -21,19 +21,24 @@ class JinrouGameController(
         }
     }
 
-    fun killed(victim: Participant, by: Participant) {
+    fun killed(victim: UUID, by: UUID) {
+        val victim = game.getParticipant(victim) ?: return
+        val attacker = game.getParticipant(by) ?: return
+
         victim.dead()
 
-        logger.logKillParticipantToSpectator(victim, by)
-        bodyHandler.createBody(victim)
+        logger.logKillParticipantToSpectator(victim.uniqueId, attacker.uniqueId)
+        bodyHandler.createBody(victim.uniqueId)
 
         game.judge()?.let { finisher ->
             finish(finisher)
         }
     }
 
-    fun onAttack(by: AttackVerifier, to: Participant, vararg onAttacks: Pair<AttackResult, () -> Unit>) {
-        val attackResult = by.verify(to = to)
+    fun onAttack(by: AttackVerifier, to: UUID, vararg onAttacks: Pair<AttackResult, () -> Unit>) {
+        val attacker = game.getParticipant(to) ?: return
+
+        val attackResult = by.verify(to = attacker)
 
         onAttacks
             .filter { it.first == attackResult }
@@ -41,7 +46,6 @@ class JinrouGameController(
                 it.second.invoke()
             }
     }
-
 
     fun finish(finisher: GameFinisher) {
         finisher.notifyFinish()
