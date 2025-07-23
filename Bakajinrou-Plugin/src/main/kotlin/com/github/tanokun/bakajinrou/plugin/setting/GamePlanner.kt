@@ -10,7 +10,8 @@ import com.github.tanokun.bakajinrou.bukkit.scheduler.schedule.TimeSchedule
 import com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.position.citizen.CitizenPosition
 import com.github.tanokun.bakajinrou.plugin.protection.PlayerProtection
-import com.github.tanokun.bakajinrou.plugin.schedule.GameSchedules
+import com.github.tanokun.bakajinrou.plugin.setting.map.GameSchedules
+import com.github.tanokun.bakajinrou.plugin.setting.map.GameMap
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 import kotlin.random.Random
