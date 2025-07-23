@@ -1,7 +1,6 @@
 package com.github.tanokun.bakajinrou.bukkit.logger
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import java.util.*
 
 interface GameActionLogger {
     /**

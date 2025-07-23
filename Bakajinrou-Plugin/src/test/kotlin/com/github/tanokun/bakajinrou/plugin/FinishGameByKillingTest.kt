@@ -20,7 +20,6 @@ import org.junit.jupiter.api.DisplayName
 import org.mockbukkit.mockbukkit.MockBukkit
 import org.mockbukkit.mockbukkit.ServerMock
 import org.mockbukkit.mockbukkit.entity.PlayerMock
-import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

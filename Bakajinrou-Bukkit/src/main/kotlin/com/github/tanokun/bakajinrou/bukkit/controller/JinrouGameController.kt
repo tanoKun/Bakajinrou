@@ -8,7 +8,6 @@ import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.bukkit.logger.BodyHandler
 import com.github.tanokun.bakajinrou.bukkit.logger.GameActionLogger
 import com.github.tanokun.bakajinrou.bukkit.scheduler.GameScheduler
-import java.util.*
 
 class JinrouGameController(
     private val game: JinrouGame,
