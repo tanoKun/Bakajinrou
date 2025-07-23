@@ -4,7 +4,6 @@ import com.github.tanokun.bakajinrou.bukkit.scheduler.schedule.TimeSchedule
 import com.github.tanokun.bakajinrou.bukkit.scheduler.schedule.arranged
 import com.github.tanokun.bakajinrou.bukkit.scheduler.schedule.every
 import com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
-import com.github.tanokun.bakajinrou.plugin.setting.map.GameSchedules
 import org.bukkit.Location
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
