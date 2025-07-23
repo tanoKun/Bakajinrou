@@ -57,8 +57,8 @@ class FinishGameByKillingTest {
     fun finishGameByKillingLastWolfWithoutFoxTest() {
         val gameController = createGame()
 
-        gameController.killed(victim = fox, by = citizen)
-        gameController.killed(victim = wolf, by = citizen)
+        gameController.killed(victim = fox.uniqueId, by = citizen.uniqueId)
+        gameController.killed(victim = wolf.uniqueId, by = citizen.uniqueId)
 
         assertLose(wolfPlayerMock)
         assertVictory(citizenPlayerMock)
@@ -71,9 +71,9 @@ class FinishGameByKillingTest {
     fun finishGameByKillingLastCitizenWithoutFoxTest() {
         val gameController = createGame()
 
-        gameController.killed(victim = fox, by = wolf)
-        gameController.killed(victim = citizen, by = wolf)
-        gameController.killed(victim = medium, by = wolf)
+        gameController.killed(victim = fox.uniqueId, by = wolf.uniqueId)
+        gameController.killed(victim = citizen.uniqueId, by = wolf.uniqueId)
+        gameController.killed(victim = medium.uniqueId, by = wolf.uniqueId)
 
         assertVictory(wolfPlayerMock)
         assertLose(citizenPlayerMock)
@@ -86,7 +86,7 @@ class FinishGameByKillingTest {
     fun finishGameByKillingLastCitizenWithFoxTest() {
         val gameController = createGame()
 
-        gameController.killed(victim = wolf, by = fox)
+        gameController.killed(victim = wolf.uniqueId, by = fox.uniqueId)
 
         assertLose(wolfPlayerMock)
         assertLose(citizenPlayerMock)
