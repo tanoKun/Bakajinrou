@@ -38,7 +38,7 @@ class JinrouGameController(
         }
     }
 
-    fun onAttack(by: AttackVerifier, to: UUID, vararg onAttacks: Pair<AttackResult, () -> Unit>) {
+    fun onAttack(by: AttackVerifier, to: UUID, onAttack: (AttackResult) -> Unit) {
         val victim = game.getParticipant(to) ?: return
 
         val attackResult =
@@ -47,11 +47,7 @@ class JinrouGameController(
             else
                 by.verify(to = victim)
 
-        onAttacks
-            .filter { it.first == attackResult }
-            .forEach {
-                it.second.invoke()
-            }
+        onAttack(attackResult)
     }
 
     fun finish(finisher: GameFinisher) {
