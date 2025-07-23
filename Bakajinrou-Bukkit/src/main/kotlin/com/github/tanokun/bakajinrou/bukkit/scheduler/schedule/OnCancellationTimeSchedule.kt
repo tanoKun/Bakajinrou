@@ -6,7 +6,7 @@ class OnCancellationTimeSchedule(
     override val callback: CallbackOnSchedule
 ) : TimeSchedule {
 
-    override fun tryCall(startSeconds: Long, leftSeconds: Long) = callback(startSeconds)
+    override fun tryCall(startSeconds: Long, leftSeconds: Long) = callback(leftSeconds)
 }
 
 fun onCancellation(callback: CallbackOnSchedule): TimeSchedule = OnCancellationTimeSchedule(callback)
