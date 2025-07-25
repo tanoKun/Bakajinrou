@@ -1,13 +1,13 @@
-package com.github.tanokun.bakajinrou.bukkit.controller
+package com.github.tanokun.bakajinrou.game.controller
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.ParticipantStates
 import com.github.tanokun.bakajinrou.api.attack.AttackResult
 import com.github.tanokun.bakajinrou.api.attack.AttackVerifier
 import com.github.tanokun.bakajinrou.api.finishing.GameFinisher
-import com.github.tanokun.bakajinrou.bukkit.logger.BodyHandler
-import com.github.tanokun.bakajinrou.bukkit.logger.GameActionLogger
-import com.github.tanokun.bakajinrou.bukkit.scheduler.GameScheduler
+import com.github.tanokun.bakajinrou.game.logger.BodyHandler
+import com.github.tanokun.bakajinrou.game.logger.GameActionLogger
+import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import java.util.*
 
 class JinrouGameController(
@@ -53,5 +53,10 @@ class JinrouGameController(
     fun finish(finisher: GameFinisher) {
         finisher.notifyFinish()
         scheduler.cancel()
+    }
+
+    fun launch() {
+        scheduler.launch()
+        game.participants.forEach { it.position.doAtStarting(it.uniqueId) }
     }
 }

@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.bukkit.logger
+package com.github.tanokun.bakajinrou.game.logger
 
 import java.util.*
 

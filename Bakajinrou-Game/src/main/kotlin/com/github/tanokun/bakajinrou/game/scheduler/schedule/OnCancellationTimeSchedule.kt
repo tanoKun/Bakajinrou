@@ -1,7 +1,10 @@
-package com.github.tanokun.bakajinrou.bukkit.scheduler.schedule
+package com.github.tanokun.bakajinrou.game.scheduler.schedule
 
-import com.github.tanokun.bakajinrou.bukkit.scheduler.CallbackOnSchedule
+import com.github.tanokun.bakajinrou.game.scheduler.CallbackOnSchedule
 
+/**
+ * スケジューラーが時間切れ、強制キャンセルされた場合に呼び出されます。
+ */
 class OnCancellationTimeSchedule(
     override val callback: CallbackOnSchedule
 ) : TimeSchedule {

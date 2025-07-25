@@ -1,14 +1,17 @@
-package com.github.tanokun.bakajinrou.bukkit.scheduler
+package com.github.tanokun.bakajinrou.game.scheduler
 
-import com.github.tanokun.bakajinrou.bukkit.scheduler.schedule.OnCancellationTimeSchedule
-import com.github.tanokun.bakajinrou.bukkit.scheduler.schedule.TimeSchedule
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.OnCancellationTimeSchedule
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.OnLaunchingTimeSchedule
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.TimeSchedule
 import kotlin.reflect.KClass
 
 abstract class GameScheduler(
     private val startTime: Long,
-    private val timeSchedules: List<TimeSchedule>,
+    schedules: List<TimeSchedule>,
 ): Runnable {
     private var leftTime: Long = startTime
+
+    private val schedules = schedules.toMutableList()
 
     init {
         if (startTime < 0) throw IllegalArgumentException("スケジューラーは1秒以上動かせる必要があります。")
@@ -37,8 +40,19 @@ abstract class GameScheduler(
      */
     abstract fun isActive(): Boolean
 
+    /**
+     * スケジュールの追加を行います
+     *
+     * @throws IllegalStateException 起動後にスケジュールを入れてしまった場合
+     */
+    fun addSchedule(schedule: TimeSchedule) {
+        if (isActive()) throw IllegalStateException("起動後にスケジュールは追加できません")
+
+        schedules.add(schedule)
+    }
+
     protected fun <E: TimeSchedule> tryCall(e: KClass<E>) {
-        timeSchedules
+        schedules
             .filterIsInstance(e.java)
             .forEach { it.tryCall(startSeconds = startTime, leftSeconds = leftTime) }
     }
@@ -46,8 +60,9 @@ abstract class GameScheduler(
     override fun run() {
         if (!isActive()) throw IllegalStateException("このスケジューラーはアクティブではありません。")
 
-        timeSchedules
+        schedules
             .filterNot { it is OnCancellationTimeSchedule }
+            .filterNot { it is OnLaunchingTimeSchedule }
             .forEach { it.tryCall(startSeconds = startTime, leftSeconds = leftTime) }
 
         leftTime--

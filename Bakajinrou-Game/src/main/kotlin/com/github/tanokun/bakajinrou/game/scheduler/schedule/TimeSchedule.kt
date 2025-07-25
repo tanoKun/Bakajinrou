@@ -1,6 +1,6 @@
-package com.github.tanokun.bakajinrou.bukkit.scheduler.schedule
+package com.github.tanokun.bakajinrou.game.scheduler.schedule
 
-import com.github.tanokun.bakajinrou.bukkit.scheduler.CallbackOnSchedule
+import com.github.tanokun.bakajinrou.game.scheduler.CallbackOnSchedule
 
 /**
  * タイムスケジュールに従って、コールバック関数を実行します。
