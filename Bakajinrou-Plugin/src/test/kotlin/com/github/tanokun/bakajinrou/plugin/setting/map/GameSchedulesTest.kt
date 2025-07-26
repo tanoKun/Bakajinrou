@@ -93,7 +93,7 @@ class GameSchedulesTest {
 
         assertFalse(wolf.hasPotionEffect(PotionEffectType.GLOWING), "人狼は発光を持たない")
         assertTrue(madman.hasPotionEffect(PotionEffectType.GLOWING), "狂人は発光を持つ")
-        assertTrue(citizen.hasPotionEffect(PotionEffectType.GLOWING), "村人は発光を持つ")
+        assertTrue(citizen.hasPotionEffect(PotionEffectType.GLOWING), "市民は発光を持つ")
         assertTrue(medium.hasPotionEffect(PotionEffectType.GLOWING), "霊媒師は発光を持つ")
         assertFalse(fox.hasPotionEffect(PotionEffectType.GLOWING), "妖狐は発光を持たない")
 
