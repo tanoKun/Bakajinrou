@@ -1,13 +1,16 @@
 package com.github.tanokun.bakajinrou.plugin.schedule
 
-import com.github.tanokun.bakajinrou.bukkit.scheduler.CallbackOnSchedule
-import com.github.tanokun.bakajinrou.bukkit.scheduler.schedule.onCancellation
+import com.github.tanokun.bakajinrou.game.scheduler.CallbackOnSchedule
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.every
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.onCancellation
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.onLaunching
 import io.mockk.mockk
 import io.mockk.verify
 import org.bukkit.plugin.Plugin
 import org.junit.jupiter.api.*
 import org.mockbukkit.mockbukkit.MockBukkit
 import org.mockbukkit.mockbukkit.ServerMock
+import kotlin.time.Duration.Companion.seconds
 
 class JinrouGameSchedulerTest {
     private lateinit var server: ServerMock
@@ -130,6 +133,50 @@ class JinrouGameSchedulerTest {
 
         scheduler.launch()
         server.scheduler.performTicks(100)
+
+        verify(exactly = 1) { callbackMock(any()) }
+    }
+
+    @Test
+    @DisplayName("1秒単位でのスケジューリング")
+    fun onCalledEverySeconds() {
+        val callbackMock = mockk<CallbackOnSchedule>(relaxed = true)
+
+        val schedule = listOf(
+            1.seconds every callbackMock
+        )
+
+        val scheduler = JinrouGameScheduler(
+            startTime = 10,
+            timeSchedules = schedule,
+            bukkitScheduler = server.scheduler,
+            plugin = plugin
+        )
+
+        scheduler.launch()
+        server.scheduler.performTicks(40)
+
+        verify(exactly = 2) { callbackMock(any()) }
+    }
+
+    @Test
+    @DisplayName("開始時のスケジュール")
+    fun onCalledLaunchingSchedule() {
+        val callbackMock = mockk<CallbackOnSchedule>(relaxed = true)
+
+        val schedule = listOf(
+            onLaunching(callbackMock)
+        )
+
+        val scheduler = JinrouGameScheduler(
+            startTime = 10,
+            timeSchedules = schedule,
+            bukkitScheduler = server.scheduler,
+            plugin = plugin
+        )
+
+        scheduler.launch()
+        server.scheduler.performTicks(40)
 
         verify(exactly = 1) { callbackMock(any()) }
     }
