@@ -1,8 +1,11 @@
 package com.github.tanokun.bakajinrou.plugin.position.citizen
 
+import com.github.tanokun.bakajinrou.api.participant.position.Prefix
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizensPosition
+import java.util.*
 
 object CitizenPosition: CitizensPosition {
-    override fun doAtStarting() {
-    }
+    override val prefix: Prefix = Prefix(revealedPrefix = "市民", defaultPrefix = "市民")
+
+    override fun doAtStarting(uniqueId: UUID) {}
 }
