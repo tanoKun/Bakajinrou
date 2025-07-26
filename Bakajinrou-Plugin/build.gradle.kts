@@ -22,6 +22,7 @@ repositories {
     maven("https://repo.xenondevs.xyz/releases")
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.dmulloy2.net/repository/public/")
+    maven("https://maven.nostal.ink/repository/maven-public/")
 }
 
 dependencies {
@@ -31,6 +32,7 @@ dependencies {
     compileOnly(libs.commandapi)
 
     implementation(libs.bundles.invui)
+    implementation(libs.adventurekt)
 
     implementation(project(":Bakajinrou-API"))
     implementation(project(":Bakajinrou-Game"))
