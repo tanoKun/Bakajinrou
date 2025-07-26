@@ -21,10 +21,12 @@ import java.util.*
 
 
 class BodyPacket(server: Server, body: Player) {
+    private val randomUuid = UUID.randomUUID()
+
     private val dummy = ServerPlayer(
         (server as CraftServer).server, (body.world as CraftWorld).handle, (body as CraftPlayer).profile, body.handle.clientInformation()
     ).apply {
-        this.uuid = UUID.randomUUID()
+        this.uuid = randomUuid
         this.setPos(body.location.x, body.location.y, body.location.z)
         yRot = body.location.yaw.toFloat()
         xRot = body.location.pitch.toFloat()
@@ -48,7 +50,6 @@ class BodyPacket(server: Server, body: Player) {
 
         hiddenNameTag(to.handle)
     }
-
     private fun hiddenNameTag(to: ServerPlayer) {
         val dummyTeam = PlayerTeam(Scoreboard(), "hidden_team_${dummy.id}").apply {
             setNameTagVisibility(Visibility.NEVER)
@@ -63,7 +64,7 @@ class BodyPacket(server: Server, body: Player) {
     }
 
     private fun createAddEntityPacket(dummy: ServerPlayer) = ClientboundAddEntityPacket(
-        dummy.id, dummy.uuid, dummy.x, dummy.y, dummy.z, dummy.xRot, dummy.yRot,
+        dummy.id, randomUuid, dummy.x, dummy.y, dummy.z, dummy.xRot, dummy.yRot,
         EntityType.PLAYER,
         BuiltInRegistries.ENTITY_TYPE.getId(EntityType.PLAYER),
         dummy.deltaMovement,
