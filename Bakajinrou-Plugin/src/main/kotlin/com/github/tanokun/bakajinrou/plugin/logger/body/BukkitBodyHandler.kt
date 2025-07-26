@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.logger.body
 
-import com.github.tanokun.bakajinrou.bukkit.logger.BodyHandler
+import com.github.tanokun.bakajinrou.game.logger.BodyHandler
 import java.util.*
 
 class BukkitBodyHandler: BodyHandler {
