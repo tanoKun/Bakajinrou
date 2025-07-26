@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.game.scheduler
 
-import com.github.tanokun.bakajinrou.game.scheduler.schedule.OnCancellationTimeSchedule
-import com.github.tanokun.bakajinrou.game.scheduler.schedule.OnLaunchingTimeSchedule
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.OnCancellationByOvertimeSchedule
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.OnlyOnceSchedule
 import com.github.tanokun.bakajinrou.game.scheduler.schedule.TimeSchedule
 import kotlin.reflect.KClass
 
@@ -61,12 +61,14 @@ abstract class GameScheduler(
         if (!isActive()) throw IllegalStateException("このスケジューラーはアクティブではありません。")
 
         schedules
-            .filterNot { it is OnCancellationTimeSchedule }
-            .filterNot { it is OnLaunchingTimeSchedule }
+            .filterNot { it is OnlyOnceSchedule }
             .forEach { it.tryCall(startSeconds = startTime, leftSeconds = leftTime) }
 
         leftTime--
 
-        if (leftTime <= 0) cancel()
+        if (leftTime <= 0) {
+            tryCall(OnCancellationByOvertimeSchedule::class)
+            cancel()
+        }
     }
 }
