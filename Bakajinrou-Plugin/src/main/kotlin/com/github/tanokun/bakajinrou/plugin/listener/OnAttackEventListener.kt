@@ -2,7 +2,7 @@ package com.github.tanokun.bakajinrou.plugin.listener
 
 import com.github.tanokun.bakajinrou.api.attack.AttackResult.*
 import com.github.tanokun.bakajinrou.api.attack.AttackVerifier
-import com.github.tanokun.bakajinrou.bukkit.controller.JinrouGameController
+import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.sound.Sound
 import org.bukkit.Material
@@ -16,10 +16,10 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
 
-class OnAttackListener(
+class OnAttackEventListener(
     plugin: Plugin,
     gameController: JinrouGameController,
-): LifecycleListener(plugin, {
+): LifecycleEventListener(plugin, {
     //ダイヤ剣
     register<EntityDamageByEntityEvent> { event ->
         val attacker = event.damager
@@ -72,8 +72,6 @@ class OnAttackListener(
     //ポーション (即時ダメージ)
     register<PotionSplashEvent> { event ->
         val attacker = event.entity
-
-        println(attacker.potionMeta.basePotionType)
 
         if (attacker.potionMeta.basePotionType != PotionType.HARMING) return@register
 
