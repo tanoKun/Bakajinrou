@@ -1,9 +1,9 @@
-package com.github.tanokun.bakajinrou.plugin
+package com.github.tanokun.bakajinrou.plugin.controller
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.protection.Protection
-import com.github.tanokun.bakajinrou.bukkit.controller.JinrouGameController
+import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
 import com.github.tanokun.bakajinrou.plugin.finisher.CitizenSideFinisher
 import com.github.tanokun.bakajinrou.plugin.finisher.FoxSideFinisher
 import com.github.tanokun.bakajinrou.plugin.finisher.WolfSideFinisher
@@ -23,7 +23,6 @@ import org.mockbukkit.mockbukkit.entity.PlayerMock
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-
 class FinishGameByKillingTest {
     private lateinit var server: ServerMock
 
@@ -31,7 +30,7 @@ class FinishGameByKillingTest {
     private lateinit var citizenPlayerMock: PlayerMock
     private lateinit var mediumPlayerMock: PlayerMock
     private lateinit var foxPlayerMock: PlayerMock
-    
+
     private val wolf by lazy { Participant(wolfPlayerMock.uniqueId, WolfSecondPosition, mockk<Protection>()) }
     private val citizen by lazy { Participant(citizenPlayerMock.uniqueId, CitizenPosition, mockk<Protection>()) }
     private val medium by lazy { Participant(mediumPlayerMock.uniqueId, MediumPosition, mockk<Protection>()) }
@@ -67,7 +66,7 @@ class FinishGameByKillingTest {
     }
 
     @Test
-    @DisplayName("最後の村人を殺害でのゲーム終了。(妖狐無し)")
+    @DisplayName("最後の市民を殺害でのゲーム終了。(妖狐無し)")
     fun finishGameByKillingLastCitizenWithoutFoxTest() {
         val gameController = createGame()
 
@@ -106,7 +105,7 @@ class FinishGameByKillingTest {
             game = game,
             logger = mockk(relaxed = true),
             scheduler = mockk(relaxed = true),
-            bodyHandler = mockk(relaxed = true)
+            bodyHandler = mockk(relaxed = true),
         )
     }
 
