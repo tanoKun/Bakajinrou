@@ -19,8 +19,8 @@ class LifecycleListenerTest {
 
     private lateinit var plugin: Plugin
 
-    class LifecycleListenerExample(plugin: Plugin, callback1: (PlayerJumpEvent) -> Unit, callback2: (PlayerArmorChangeEvent) -> Unit):
-        LifecycleListener(plugin = plugin, listenerDsl = {
+    class LifecycleEventListenerExample(plugin: Plugin, callback1: (PlayerJumpEvent) -> Unit, callback2: (PlayerArmorChangeEvent) -> Unit):
+        LifecycleEventListener(plugin = plugin, listenerDsl = {
             register<PlayerJumpEvent>(eventPriority = EventPriority.HIGH, callback = callback1)
             register<PlayerArmorChangeEvent>(callback = callback2)
     })
@@ -42,7 +42,7 @@ class LifecycleListenerTest {
     fun lifecycleTest() {
         val callback1: (PlayerJumpEvent) -> Unit = mockk(relaxed = true)
         val callback2: (PlayerArmorChangeEvent) -> Unit = mockk(relaxed = true)
-        val listener = LifecycleListenerExample(plugin, callback1, callback2)
+        val listener = LifecycleEventListenerExample(plugin, callback1, callback2)
 
         val event = mockk<PlayerJumpEvent>(relaxed = true)
         every { event.handlers } returns PlayerJumpEvent.getHandlerList()
