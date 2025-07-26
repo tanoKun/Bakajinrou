@@ -1,8 +1,8 @@
 package com.github.tanokun.bakajinrou.plugin.setting.map
 
-import com.github.tanokun.bakajinrou.bukkit.scheduler.schedule.TimeSchedule
-import com.github.tanokun.bakajinrou.bukkit.scheduler.schedule.arranged
-import com.github.tanokun.bakajinrou.bukkit.scheduler.schedule.every
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.TimeSchedule
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.arranged
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.every
 import com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
 import org.bukkit.Location
 import kotlin.time.Duration
@@ -25,7 +25,9 @@ data class GameMap(
      * @see GameSchedules
      * @see com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
      */
-    fun createSchedules(planner: GameSchedules, bukkitPlayerNameCache: BukkitPlayerNameCache): List<TimeSchedule> = listOf(
+    fun createSchedules(
+        planner: GameSchedules, bukkitPlayerNameCache: BukkitPlayerNameCache
+    ): List<TimeSchedule> = listOf(
         1.seconds every { leftSeconds ->
             planner.showLeftTime(leftSeconds)
         },
