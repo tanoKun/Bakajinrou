@@ -6,9 +6,9 @@ mockk = "1.14.5"
 mockbukkit = "4.39.0"
 protocollib = "5.3.0"
 junit = "5.12.2"
+adventurekt = "2.1.1"
 
 [libraries]
-paper = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
 commandapi = { module = "dev.jorel:commandapi-bukkit-core", version.ref = "commandapi" }
 commandapi-toolkit = { module = "dev.jorel:commandapi-bukkit-test-toolkit", version.ref = "commandapi" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
@@ -17,6 +17,7 @@ protocollib = { module = "com.comphenix.protocol:ProtocolLib", version.ref = "pr
 invui = { module = "xyz.xenondevs.invui:invui", version.ref = "invui" }
 invui-kotlin = { module = "xyz.xenondevs.invui:invui-kotlin", version.ref = "invui" }
 junit-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit" }
+adventurekt = { module = "plutoproject.adventurekt:core", version.ref = "adventurekt" }
 junit-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit" }
 
 
