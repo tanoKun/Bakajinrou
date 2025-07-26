@@ -19,18 +19,18 @@ class JinrouGameDecidedSideTest {
     val foxSideFinisherMock = mockk<GameFinisher>()
 
     @Test
-    @DisplayName("村人勝利 (人狼、妖狐全滅)")
+    @DisplayName("市民勝利 (人狼、妖狐全滅)")
     fun citizensWinTest() {
         val jinrouGame = createJinrouGame(
             isDeadCitizen1 = false, isDeadCitizen2 = false, isDeadWolf = true, isDeadMadman = true, isDeadFox = true
         )
         val finisher = jinrouGame.judge()
 
-        assertTrue("勝利サイドは村人なはず") { finisher == citizenSideFinisherMock }
+        assertTrue("勝利サイドは市民なはず") { finisher == citizenSideFinisherMock }
     }
 
     @Test
-    @DisplayName("人狼勝利 (村人、妖狐全滅)")
+    @DisplayName("人狼勝利 (市民、妖狐全滅)")
     fun wolfsWinTest() {
         val jinrouGame = createJinrouGame(
             isDeadCitizen1 = true, isDeadCitizen2 = true, isDeadWolf = false, isDeadMadman = false, isDeadFox = true
@@ -41,7 +41,7 @@ class JinrouGameDecidedSideTest {
     }
 
     @Test
-    @DisplayName("妖狐勝利 (村人全滅、人狼生存)")
+    @DisplayName("妖狐勝利 (市民全滅、人狼生存)")
     fun foxWinWithWolfsTest() {
         val jinrouGame = createJinrouGame(
             isDeadCitizen1 = true, isDeadCitizen2 = true, isDeadWolf = false, isDeadMadman = false, isDeadFox = false
@@ -52,7 +52,7 @@ class JinrouGameDecidedSideTest {
     }
 
     @Test
-    @DisplayName("妖狐勝利 (人狼全滅、村人生存)")
+    @DisplayName("妖狐勝利 (人狼全滅、市民生存)")
     fun foxWinWithCitizensTest() {
         val jinrouGame = createJinrouGame(
             isDeadCitizen1 = false, isDeadCitizen2 = false, isDeadWolf = true, isDeadMadman = true, isDeadFox = false
