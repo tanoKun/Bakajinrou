@@ -9,9 +9,9 @@ import java.util.*
 
 class JinrouGame(
     val participants: List<Participant>,
-    val citizenSideFinisher: (List<Participant>) -> GameFinisher,
-    val wolfSideFinisher: (List<Participant>) -> GameFinisher,
-    val foxSideFinisher: (List<Participant>) -> GameFinisher
+    val citizenSideFinisher: (JinrouGame) -> GameFinisher,
+    val wolfSideFinisher: (JinrouGame) -> GameFinisher,
+    val foxSideFinisher: (JinrouGame) -> GameFinisher
 ) {
 
     init {
@@ -32,17 +32,17 @@ class JinrouGame(
         val wolfs = survivors.map { it.position }.filterIsInstance<WolfPosition>()
         val fox = survivors.map { it.position }.filterIsInstance<FoxPosition>()
 
-        //村人勝利
+        //市民勝利
         if (wolfs.isEmpty() && fox.isEmpty())
-            return citizenSideFinisher(participants)
+            return citizenSideFinisher(this)
 
         //人狼勝利
         if (citizens.isEmpty() && fox.isEmpty())
-            return wolfSideFinisher(participants)
+            return wolfSideFinisher(this)
 
         //妖狐勝利
         if (wolfs.isEmpty() || citizens.isEmpty())
-            return foxSideFinisher(participants)
+            return foxSideFinisher(this)
 
         return null
     }
