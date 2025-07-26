@@ -6,6 +6,4 @@ import com.github.tanokun.bakajinrou.api.participant.position.Position
  * 市民陣営を合わらすポジション。
  */
 interface CitizensPosition: Position {
-    override val investigationResults: String
-        get() = "市民"
 }
