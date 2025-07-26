@@ -1,11 +1,10 @@
-package com.github.tanokun.bakajinrou.bukkit.scheduler
+package com.github.tanokun.bakajinrou.game.scheduler
 
-import com.github.tanokun.bakajinrou.bukkit.scheduler.schedule.arranged
-import com.github.tanokun.bakajinrou.bukkit.scheduler.schedule.every
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.arranged
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.every
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.time.Duration.Companion.seconds
@@ -33,7 +32,7 @@ class TimeScheduleTest {
 
         schedule.tryCall(startSeconds = 61L, leftSeconds = 60L)
 
-        assertFalse(called)
+        Assertions.assertFalse(called)
     }
 
     @Test
@@ -54,7 +53,7 @@ class TimeScheduleTest {
 
         schedule.tryCall(startSeconds = 60L, leftSeconds = 10L)
 
-        assertTrue(called)
+        Assertions.assertTrue(called)
     }
 
     @Test
@@ -65,6 +64,6 @@ class TimeScheduleTest {
 
         schedule.tryCall(startSeconds = 60L, leftSeconds = 11L)
         schedule.tryCall(startSeconds = 60L, leftSeconds = 9L)
-        assertFalse(called)
+        Assertions.assertFalse(called)
     }
 }
