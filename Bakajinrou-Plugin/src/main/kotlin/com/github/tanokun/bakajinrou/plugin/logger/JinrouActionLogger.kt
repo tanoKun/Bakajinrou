@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.logger
 
-import com.github.tanokun.bakajinrou.bukkit.logger.GameActionLogger
+import com.github.tanokun.bakajinrou.game.logger.GameActionLogger
 import java.util.*
 
 class JinrouActionLogger: GameActionLogger {
