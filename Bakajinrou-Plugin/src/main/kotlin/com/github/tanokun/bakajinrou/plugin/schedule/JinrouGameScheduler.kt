@@ -1,8 +1,9 @@
 package com.github.tanokun.bakajinrou.plugin.schedule
 
-import com.github.tanokun.bakajinrou.bukkit.scheduler.GameScheduler
-import com.github.tanokun.bakajinrou.bukkit.scheduler.schedule.OnCancellationTimeSchedule
-import com.github.tanokun.bakajinrou.bukkit.scheduler.schedule.TimeSchedule
+import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.OnCancellationTimeSchedule
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.OnLaunchingTimeSchedule
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.TimeSchedule
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitScheduler
 import org.bukkit.scheduler.BukkitTask
@@ -23,7 +24,9 @@ class JinrouGameScheduler(
 
         state = SchedulerState.ACTIVE
 
-        bukkitTask = bukkitScheduler.runTaskTimer(plugin, this, 20, 1)
+        tryCall(OnLaunchingTimeSchedule::class)
+
+        bukkitTask = bukkitScheduler.runTaskTimer(plugin, this, 0, 20)
     }
 
     override fun cancel() {
