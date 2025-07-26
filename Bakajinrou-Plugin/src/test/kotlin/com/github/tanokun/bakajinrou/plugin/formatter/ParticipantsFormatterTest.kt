@@ -14,12 +14,17 @@ import com.github.tanokun.bakajinrou.plugin.position.fox.FoxThirdPosition
 import com.github.tanokun.bakajinrou.plugin.position.wolf.MadmanSecondPosition
 import com.github.tanokun.bakajinrou.plugin.position.wolf.WolfSecondPosition
 import io.mockk.mockk
-import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
-import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.junit.jupiter.api.Test
+import plutoproject.adventurekt.component
+import plutoproject.adventurekt.text.color
+import plutoproject.adventurekt.text.deco
+import plutoproject.adventurekt.text.newline
+import plutoproject.adventurekt.text.style.bold
+import plutoproject.adventurekt.text.style.gray
+import plutoproject.adventurekt.text.text
 import java.util.*
 import kotlin.test.assertEquals
 
@@ -54,13 +59,16 @@ class ParticipantsFormatterTest {
             playerProvider = { null }
         )
 
-        val expected = Component.text("《 人狼 》", NamedTextColor.DARK_RED)
-            .decorate(TextDecoration.BOLD)
-            .appendNewline()
-            .append(Component.text("  "))
-            .append(Component.text("wolf1", NamedTextColor.DARK_RED).decorate(TextDecoration.BOLD))
-            .append(Component.text(", ", NamedTextColor.GRAY))
-            .append(Component.text("wolf2", NamedTextColor.DARK_RED).decorate(TextDecoration.BOLD))
+        val wolfColor = NamedTextColor.DARK_RED.asHexString()
+
+        val expected = component {
+            text("《 人狼 》") color wolfColor deco bold
+            newline()
+            text("  ")
+            text("wolf1") color wolfColor deco bold
+            text(", ") color gray
+            text("wolf2") color wolfColor deco bold
+        }
 
         assertEquals(serializer.serialize(expected), serializer.serialize(formatter.formatWolf()))
     }
@@ -72,14 +80,17 @@ class ParticipantsFormatterTest {
             nameCache = createCaches(),
             playerProvider = { null }
         )
+        
+        val madmanColor = NamedTextColor.RED.asHexString()
 
-        val expected = Component.text("《 狂人 》", NamedTextColor.RED)
-            .decorate(TextDecoration.BOLD)
-            .appendNewline()
-            .append(Component.text("  "))
-            .append(Component.text("madman1", NamedTextColor.RED).decorate(TextDecoration.BOLD))
-            .append(Component.text(", ", NamedTextColor.GRAY))
-            .append(Component.text("madman2", NamedTextColor.RED).decorate(TextDecoration.BOLD))
+        val expected = component {
+            text("《 狂人 》") color madmanColor deco bold
+            newline()
+            text("  ")
+            text("madman1") color madmanColor deco bold
+            text(", ") color gray
+            text("madman2") color madmanColor deco bold
+        }
 
         assertEquals(serializer.serialize(expected), serializer.serialize(formatter.formatMadman()))
     }
@@ -92,13 +103,17 @@ class ParticipantsFormatterTest {
             playerProvider = { null }
         )
 
-        val expected = Component.text("《 占い師 》", TextColor.color(0x87cefa))
-            .decorate(TextDecoration.BOLD)
-            .appendNewline()
-            .append(Component.text("  "))
-            .append(Component.text("fortune1", TextColor.color(0x87cefa)).decorate(TextDecoration.BOLD))
-            .append(Component.text(", ", NamedTextColor.GRAY))
-            .append(Component.text("idiotAsFortune1(バカ)", TextColor.color(0x87cefa)).decorate(TextDecoration.BOLD))
+        val fortuneColor = TextColor.color(0x87cefa).asHexString()
+
+        val expected = component {
+            text("《 占い師 》") color fortuneColor deco bold
+            newline()
+            text("  ")
+            text("fortune1") color fortuneColor deco bold
+            text(", ") color gray
+            text("idiotAsFortune1") color fortuneColor deco bold
+            text("(バカ)") color fortuneColor deco bold
+        }
 
         assertEquals(serializer.serialize(expected), serializer.serialize(formatter.formatFortune()))
     }
@@ -111,14 +126,18 @@ class ParticipantsFormatterTest {
             playerProvider = { null }
         )
 
-        val expected = Component.text("《 霊媒師 》", TextColor.color(0xff00ff))
-            .decorate(TextDecoration.BOLD)
-            .appendNewline()
-            .append(Component.text("  "))
-            .append(Component.text("medium1", TextColor.color(0xff00ff)).decorate(TextDecoration.BOLD))
-            .append(Component.text(", ", NamedTextColor.GRAY))
-            .append(Component.text("idiotAsMedium1(バカ)", TextColor.color(0xff00ff)).decorate(TextDecoration.BOLD))
 
+        val mediumColor = TextColor.color(0xff00ff).asHexString()
+
+        val expected = component {
+            text("《 霊媒師 》") color mediumColor deco bold
+            newline()
+            text("  ")
+            text("medium1") color mediumColor deco bold
+            text(", ") color gray
+            text("idiotAsMedium1") color mediumColor deco bold
+            text("(バカ)") color mediumColor deco bold
+        }
 
         assertEquals(serializer.serialize(expected), serializer.serialize(formatter.formatMedium()))
     }
@@ -131,13 +150,17 @@ class ParticipantsFormatterTest {
             playerProvider = { null }
         )
 
-        val expected = Component.text("《 騎士 》", TextColor.color(0x00ff7f))
-            .decorate(TextDecoration.BOLD)
-            .appendNewline()
-            .append(Component.text("  "))
-            .append(Component.text("knight1", TextColor.color(0x00ff7f)).decorate(TextDecoration.BOLD))
-            .append(Component.text(", ", NamedTextColor.GRAY))
-            .append(Component.text("idiotAsKnight1(バカ)", TextColor.color(0x00ff7f)).decorate(TextDecoration.BOLD))
+        val knightColor = TextColor.color(0x00ff7f).asHexString()
+
+        val expected = component {
+            text("《 騎士 》") color knightColor deco bold
+            newline()
+            text("  ")
+            text("knight1") color knightColor deco bold
+            text(", ") color gray
+            text("idiotAsKnight1") color knightColor deco bold
+            text("(バカ)") color knightColor deco bold
+        }
 
         assertEquals(serializer.serialize(expected), serializer.serialize(formatter.formatKnight()))
     }
@@ -150,11 +173,14 @@ class ParticipantsFormatterTest {
             playerProvider = { null }
         )
 
-        val expected = Component.text("《 妖狐 》", NamedTextColor.DARK_PURPLE)
-            .decorate(TextDecoration.BOLD)
-            .appendNewline()
-            .append(Component.text("  "))
-            .append(Component.text("fox1", NamedTextColor.DARK_PURPLE).decorate(TextDecoration.BOLD))
+        val foxColor = NamedTextColor.DARK_PURPLE.asHexString()
+
+        val expected = component {
+            text("《 妖狐 》") color foxColor deco bold
+            newline()
+            text("  ")
+            text("fox1") color foxColor deco bold
+        }
 
         assertEquals(serializer.serialize(expected), serializer.serialize(formatter.formatFox()))
     }
@@ -167,13 +193,16 @@ class ParticipantsFormatterTest {
             playerProvider = { null }
         )
 
-        val expected = Component.text("《 村人 》", NamedTextColor.BLUE)
-            .decorate(TextDecoration.BOLD)
-            .appendNewline()
-            .append(Component.text("  "))
-            .append(Component.text("citizen1", NamedTextColor.BLUE).decorate(TextDecoration.BOLD))
-            .append(Component.text(", ", NamedTextColor.GRAY))
-            .append(Component.text("citizen2", NamedTextColor.BLUE).decorate(TextDecoration.BOLD))
+        val citizenColor = NamedTextColor.BLUE.asHexString()
+
+        val expected = component {
+            text("《 市民 》") color citizenColor deco bold
+            newline()
+            text("  ")
+            text("citizen1") color citizenColor deco bold
+            text(", ") color gray
+            text("citizen2") color citizenColor deco bold
+        }
 
         assertEquals(serializer.serialize(expected), serializer.serialize(formatter.formatCitizen()))
     }

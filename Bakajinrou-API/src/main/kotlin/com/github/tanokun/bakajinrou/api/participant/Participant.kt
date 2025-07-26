@@ -2,6 +2,7 @@ package com.github.tanokun.bakajinrou.api.participant
 
 import com.github.tanokun.bakajinrou.api.ParticipantStates
 import com.github.tanokun.bakajinrou.api.participant.position.Position
+import com.github.tanokun.bakajinrou.api.participant.position.SpectatorPosition
 import com.github.tanokun.bakajinrou.api.participant.protection.Protection
 import java.util.*
 
@@ -61,6 +62,18 @@ data class Participant(
      * @return 防御できる理由
      */
     fun hasProtection() = protection.hasProtection()
+
+    /**
+     * この参加者を非観察者として、プレフィックスを選びます。
+     *
+     * @param viewer 観察者
+     */
+    fun resolvePrefix(viewer: Participant) = position.prefix.resolvePrefix(viewer = viewer, target = this)
+
+    /**
+     * @return スペクテイターであることを検出できるかどうか
+     */
+    fun isVisibleSpectators(): Boolean = isPosition<SpectatorPosition>() || state == ParticipantStates.DEAD
 
     /**
      * 陣営を比較します。

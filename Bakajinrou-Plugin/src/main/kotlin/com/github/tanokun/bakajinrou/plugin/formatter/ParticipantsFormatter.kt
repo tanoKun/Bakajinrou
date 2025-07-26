@@ -2,6 +2,7 @@ package com.github.tanokun.bakajinrou.plugin.formatter
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.position.Position
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.IdiotPosition
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
@@ -13,12 +14,16 @@ import com.github.tanokun.bakajinrou.plugin.position.citizen.MediumPosition
 import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotAsFortunePosition
 import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotAsKnightPosition
 import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotAsMediumPosition
-import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotPosition
+import com.github.tanokun.bakajinrou.plugin.position.fox.FoxThirdPosition
+import com.github.tanokun.bakajinrou.plugin.position.wolf.MadmanSecondPosition
+import com.github.tanokun.bakajinrou.plugin.position.wolf.WolfSecondPosition
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
-import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.entity.Player
+import plutoproject.adventurekt.component
+import plutoproject.adventurekt.text.*
+import plutoproject.adventurekt.text.style.bold
+import plutoproject.adventurekt.text.style.gray
 
 /**
  * ```
@@ -33,80 +38,109 @@ class ParticipantsFormatter(
     private val playerProvider: (Participant) -> Player?
 ) {
     fun formatWolf(
-        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, NamedTextColor.DARK_RED) }
-    ): Component = formatPosition<WolfPosition>(NamedTextColor.DARK_RED, "人狼", playerNameFormatter)
+        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, Positions.Wolf.color) }
+    ): Component = formatPosition<WolfPosition>(
+        Positions.Wolf.color,
+        WolfSecondPosition.prefix.defaultPrefix,
+        playerNameFormatter
+    )
 
     fun formatMadman(
-        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, NamedTextColor.RED) }
-    ): Component = formatPosition<MadmanPosition>(NamedTextColor.RED, "狂人", playerNameFormatter)
+        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, Positions.Madman.color) }
+    ): Component = formatPosition<MadmanPosition>(
+        Positions.Madman.color,
+        MadmanSecondPosition.prefix.defaultPrefix,
+        playerNameFormatter
+    )
 
     fun formatFortune(
-        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameWithIdiotFormatter<IdiotAsFortunePosition>(it, TextColor.color(0x87cefa)) }
-    ): Component = formatPositionWithIdiot<FortunePosition, IdiotAsFortunePosition>(TextColor.color(0x87cefa), "占い師", playerNameFormatter)
+        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameWithIdiotFormatter<IdiotAsFortunePosition>(it, Positions.Fortune.color) }
+    ): Component = formatPositionWithIdiot<FortunePosition, IdiotAsFortunePosition>(
+        Positions.Fortune.color,
+        FortunePosition.prefix.defaultPrefix,
+        playerNameFormatter
+    )
 
     fun formatMedium(
-        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameWithIdiotFormatter<IdiotAsMediumPosition>(it, TextColor.color(0xff00ff)) }
-    ): Component = formatPositionWithIdiot<MediumPosition, IdiotAsMediumPosition>(TextColor.color(0xff00ff), "霊媒師", playerNameFormatter)
+        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameWithIdiotFormatter<IdiotAsMediumPosition>(it, Positions.Medium.color) }
+    ): Component = formatPositionWithIdiot<MediumPosition, IdiotAsMediumPosition>(
+        Positions.Medium.color,
+        MediumPosition.prefix.defaultPrefix,
+        playerNameFormatter
+    )
 
     fun formatKnight(
-        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameWithIdiotFormatter<IdiotAsKnightPosition>(it, TextColor.color(0x00ff7f)) }
-    ): Component = formatPositionWithIdiot<KnightPosition, IdiotAsKnightPosition>(TextColor.color(0x00ff7f), "騎士", playerNameFormatter)
+        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameWithIdiotFormatter<IdiotAsKnightPosition>(it, Positions.Knight.color) }
+    ): Component = formatPositionWithIdiot<KnightPosition, IdiotAsKnightPosition>(
+        Positions.Knight.color,
+        KnightPosition.prefix.defaultPrefix,
+        playerNameFormatter
+    )
 
     fun formatFox(
-        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, NamedTextColor.DARK_PURPLE) }
-    ): Component = formatPosition<FoxPosition>(NamedTextColor.DARK_PURPLE, "妖狐", playerNameFormatter)
+        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, Positions.Fox.color) }
+    ): Component = formatPosition<FoxPosition>(
+        Positions.Fox.color,
+        FoxThirdPosition.prefix.defaultPrefix,
+        playerNameFormatter
+    )
 
     fun formatCitizen(
-        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, NamedTextColor.BLUE) }
-    ): Component = formatPosition<CitizenPosition>(NamedTextColor.BLUE, "村人", playerNameFormatter)
-
-
+        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, Positions.Citizen.color) }
+    ): Component = formatPosition<CitizenPosition>(
+        Positions.Citizen.color,
+        CitizenPosition.prefix.defaultPrefix,
+        playerNameFormatter
+    )
     private inline fun <reified T: Position> formatPosition(positionColor: TextColor, description: String, noinline formatter: (Participant) -> Component): Component {
         val positionLine = positionLineComponent(participants.filter { it.position is T }, formatter)
 
-        return Component.text("《 $description 》", positionColor)
-            .decorate(TextDecoration.BOLD)
-            .appendNewline()
-            .append(Component.text("  "))
-            .append(positionLine)
+        return component {
+            text("《 $description 》") color positionColor.asHexString() deco bold
+            newline()
+            text("  ")
+            positionLine?.let { raw { it } }
+        }
     }
 
     private inline fun <reified T: Position, reified I: IdiotPosition> formatPositionWithIdiot(positionColor: TextColor, description: String, noinline formatter: (Participant) -> Component): Component {
         val idiotsAsFortune = participants.filter { it.position is I }
 
-        val componentFortune = formatPosition<T>(positionColor, description, formatter)
-        val componentIdiot = positionLineComponent(idiotsAsFortune, formatter)
+        val componentAsJob = formatPosition<T>(positionColor, description, formatter)
 
-        return if (componentIdiot == Component.empty())
-            componentFortune
-        else
-            componentFortune
-                .append(Component.text(", ", NamedTextColor.GRAY))
-                .append(componentIdiot)
+        return component {
+            raw { componentAsJob }
+            positionLineComponent(idiotsAsFortune, formatter)?.let { line ->
+                text(", ") color gray
+                raw { line }
+            }
+        }
     }
 
-    private fun positionLineComponent(participants: List<Participant>, formatter: (Participant) -> Component): Component =
+    private fun positionLineComponent(participants: List<Participant>, formatter: (Participant) -> Component): Component? =
         participants.map { formatter(it) }
             .reduceOrNull { acc, comp ->
-                acc
-                    .append(Component.text(", ", NamedTextColor.GRAY))
-                    .append(comp)
-            } ?: Component.empty()
+                component {
+                    raw { acc }
+                    text(", ") color gray
+                    raw { comp }
+                }
+            }
 
     private fun defaultPlayerNameComponent(participant: Participant, textColor: TextColor): Component {
         val playerName = playerProvider(participant)?.name ?: nameCache.get(participant.uniqueId) ?: "unknownPlayer"
 
-        return Component.text(playerName, textColor)
-            .decorate(TextDecoration.BOLD)
+        return component {
+            text(playerName) color textColor.asHexString() deco bold
+        }
     }
 
     private inline fun <reified I: IdiotPosition> defaultPlayerNameWithIdiotFormatter(participant: Participant, positionColor: TextColor): Component {
         if (participant.position is I) {
-            return defaultPlayerNameComponent(participant, positionColor)
-                .append(Component.text("(バカ)")
-                    .color(positionColor)
-                    .decorate(TextDecoration.BOLD)
-                )
+            return component {
+                raw { defaultPlayerNameComponent(participant, positionColor) }
+                text("(バカ)") color positionColor.asHexString() deco bold
+            }
         }
 
         return defaultPlayerNameComponent(participant, positionColor)
