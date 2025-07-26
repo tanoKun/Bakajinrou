@@ -7,7 +7,7 @@ import com.github.tanokun.bakajinrou.game.scheduler.CallbackOnSchedule
  */
 class OnCancellationTimeSchedule(
     override val callback: CallbackOnSchedule
-) : TimeSchedule {
+) : OnlyOnceSchedule {
 
     override fun tryCall(startSeconds: Long, leftSeconds: Long) = callback(leftSeconds)
 }
