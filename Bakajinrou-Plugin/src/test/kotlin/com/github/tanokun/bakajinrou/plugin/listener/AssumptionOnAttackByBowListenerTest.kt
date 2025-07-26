@@ -44,7 +44,7 @@ class AssumptionOnAttackByBowListenerTest: AssumptionOnAttackTest() {
         val victim = server.addPlayer()
 
         val controller = createController(shooter, victim, ProtectionResult.NONE)
-        OnAttackListener(plugin, controller).apply { registerAll() }
+        OnAttackEventListener(plugin, controller).apply { registerAll() }
 
         createDamageEvent(arrow, victim, DamageType.ARROW).callEvent()
 
@@ -62,7 +62,7 @@ class AssumptionOnAttackByBowListenerTest: AssumptionOnAttackTest() {
         }
 
         val controller = createController(shooter, victim, ProtectionResult.TOTEM)
-        OnAttackListener(plugin, controller).apply { registerAll() }
+        OnAttackEventListener(plugin, controller).apply { registerAll() }
 
         createDamageEvent(arrow, victim, DamageType.ARROW).callEvent()
 
@@ -81,7 +81,7 @@ class AssumptionOnAttackByBowListenerTest: AssumptionOnAttackTest() {
         }
 
         val controller = createController(shooter, victim, ProtectionResult.SHIELD)
-        OnAttackListener(plugin, controller).apply { registerAll() }
+        OnAttackEventListener(plugin, controller).apply { registerAll() }
 
         createDamageEvent(arrow, victim, DamageType.ARROW).callEvent()
 
@@ -100,7 +100,7 @@ class AssumptionOnAttackByBowListenerTest: AssumptionOnAttackTest() {
         }
 
         val controller = createController(shooter, victim, ProtectionResult.POTION_RESISTANCE)
-        OnAttackListener(plugin, controller).apply { registerAll() }
+        OnAttackEventListener(plugin, controller).apply { registerAll() }
 
         createDamageEvent(arrow, victim, DamageType.ARROW).callEvent()
 

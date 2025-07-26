@@ -44,7 +44,7 @@ class AssumptionOnAttackByPotionListenerTest: AssumptionOnAttackTest() {
         val victim = server.addPlayer()
 
         val controller = createController(shooter, victim, ProtectionResult.NONE)
-        OnAttackListener(plugin, controller).apply { registerAll() }
+        OnAttackEventListener(plugin, controller).apply { registerAll() }
 
         createPotionSplashEvent(shooter, victim).callEvent()
 
@@ -58,7 +58,7 @@ class AssumptionOnAttackByPotionListenerTest: AssumptionOnAttackTest() {
         val victim = server.addPlayer().apply { playerWorldMock() }
 
         val controller = createController(shooter, victim, ProtectionResult.TOTEM)
-        OnAttackListener(plugin, controller).apply { registerAll() }
+        OnAttackEventListener(plugin, controller).apply { registerAll() }
 
         createPotionSplashEvent(shooter, victim).callEvent()
 
@@ -72,7 +72,7 @@ class AssumptionOnAttackByPotionListenerTest: AssumptionOnAttackTest() {
         val victim = server.addPlayer()
 
         val controller = createController(shooter, victim, ProtectionResult.SHIELD)
-        OnAttackListener(plugin, controller).apply { registerAll() }
+        OnAttackEventListener(plugin, controller).apply { registerAll() }
 
         createPotionSplashEvent(shooter, victim).callEvent()
 
@@ -86,7 +86,7 @@ class AssumptionOnAttackByPotionListenerTest: AssumptionOnAttackTest() {
         val victim = server.addPlayer()
 
         val controller = createController(shooter, victim, ProtectionResult.POTION_RESISTANCE)
-        OnAttackListener(plugin, controller).apply { registerAll() }
+        OnAttackEventListener(plugin, controller).apply { registerAll() }
 
         createPotionSplashEvent(shooter, victim).callEvent()
 

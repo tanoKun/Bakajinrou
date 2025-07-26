@@ -6,7 +6,7 @@ import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizensPo
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.api.participant.protection.Protection
 import com.github.tanokun.bakajinrou.api.participant.protection.ProtectionResult
-import com.github.tanokun.bakajinrou.bukkit.controller.JinrouGameController
+import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
 import com.github.tanokun.bakajinrou.plugin.finisher.CitizenSideFinisher
 import com.github.tanokun.bakajinrou.plugin.finisher.FoxSideFinisher
 import com.github.tanokun.bakajinrou.plugin.finisher.WolfSideFinisher
