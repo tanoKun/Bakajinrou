@@ -22,8 +22,6 @@ class TabListModifier(
 
             val gameType = if (isVisibleSpectator(entry.profileId)) GameType.byId(targetPlayer.gameMode.value) else GameType.SURVIVAL
 
-            println(entry.profileId == viewer.uniqueId)
-
             val displayName = component {
                 val prefix = prefixModifier.createPrefix(viewer = viewer)
 
