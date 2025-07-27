@@ -1,15 +1,16 @@
 package com.github.tanokun.bakajinrou.api.participant
 
 import com.github.tanokun.bakajinrou.api.ParticipantStates
+import com.github.tanokun.bakajinrou.api.method.GrantedMethod
+import com.github.tanokun.bakajinrou.api.method.ProtectiveMethod
 import com.github.tanokun.bakajinrou.api.participant.position.Position
 import com.github.tanokun.bakajinrou.api.participant.position.SpectatorPosition
-import com.github.tanokun.bakajinrou.api.participant.protection.Protection
 import java.util.*
 
 data class Participant(
     val uniqueId: UUID,
     val position: Position,
-    private val protection: Protection
+    private val strategy: GrantedStrategy
 ) {
     var state: ParticipantStates = ParticipantStates.SURVIVED
         private set
@@ -57,13 +58,6 @@ data class Participant(
     }
 
     /**
-     * プレイヤーが何らかの理由で攻撃を無効かできるか
-     *
-     * @return 防御できる理由
-     */
-    fun hasProtection() = protection.hasProtection()
-
-    /**
      * この参加者を非観察者として、プレフィックスを選びます。
      *
      * @param viewer 観察者
@@ -79,4 +73,12 @@ data class Participant(
      * 陣営を比較します。
      */
     inline fun <reified T: Position> isPosition() = position is T
+
+    fun grantMethod(method: GrantedMethod) = strategy.grant(method)
+
+    fun removeMethod(method: GrantedMethod) = strategy.remove(method)
+
+    fun getGrantedMethod(uniqueId: UUID): GrantedMethod? = strategy.getMethod(uniqueId)
+
+    fun getActiveProtectiveMethods(): List<ProtectiveMethod> = strategy.getActiveProtectiveMethods(this)
 }
