@@ -68,7 +68,7 @@ abstract class GameScheduler(
 
         if (leftTime <= 0) {
             tryCall(OnCancellationByOvertimeSchedule::class)
-            cancel()
+            if (isActive()) cancel()
         }
     }
 }
