@@ -38,7 +38,8 @@ class JinrouGameController(
 
     fun finish(finisher: GameFinisher) {
         finisher.notifyFinish()
-        scheduler.cancel()
+
+        if (scheduler.isActive()) scheduler.cancel()
     }
 
     fun launch() {
