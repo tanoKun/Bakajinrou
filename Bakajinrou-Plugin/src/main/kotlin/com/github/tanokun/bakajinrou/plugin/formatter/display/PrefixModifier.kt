@@ -1,14 +1,15 @@
 package com.github.tanokun.bakajinrou.plugin.formatter.display
 
+import com.github.tanokun.bakajinrou.api.ParticipantStates
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.plugin.formatter.getPositionColor
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import plutoproject.adventurekt.component
-import plutoproject.adventurekt.text.color
-import plutoproject.adventurekt.text.raw
+import plutoproject.adventurekt.text.*
+import plutoproject.adventurekt.text.style.bold
+import plutoproject.adventurekt.text.style.gold
 import plutoproject.adventurekt.text.style.gray
-import plutoproject.adventurekt.text.text
 
 class PrefixModifier(
     val target: Participant
@@ -28,30 +29,41 @@ class PrefixModifier(
      * @see com.github.tanokun.bakajinrou.api.participant.position.Prefix
      */
     fun createPrefix(viewer: Participant): Component {
-        val resolvedPrefix = target.resolvePrefix(viewer) ?: let {
-            return applyPrefixOnlyComingOut()
+        val resolvedPrefix = target.resolvePrefix(viewer)?.let {
+            component { text(it) color positionColor.asHexString() with bold }
         }
+
+        val comingOutPrefix = comingOut?.let {
+            component { text(it.displayName) color it.color.asHexString() with bold }
+        }
+
+        val absentPrefix =
+            if (target.state == ParticipantStates.SUSPENDED)
+                component { text("退出中") color gold deco bold }
+            else
+                null
+
+        return join(resolvedPrefix, comingOutPrefix, absentPrefix)
+    }
+
+    private fun join(vararg prefixes: Component?): Component {
+        val prefixes = prefixes.filterNotNull()
+        if (prefixes.isEmpty()) return Component.text("")
 
         return component {
             text("[") color gray
 
-            text(resolvedPrefix) color positionColor.asHexString()
-
-            comingOut?.let {
-                text(", ") color gray
-                raw { Component.text(it.displayName, it.color) }
+            val prefix = prefixes.reduce { acc, next ->
+                component {
+                    raw { acc }
+                    text(", ") color gray
+                    raw { next }
+                }
             }
+
+            raw { prefix }
 
             text("]") color gray
         }
     }
-
-    private fun applyPrefixOnlyComingOut(): Component = comingOut?.let {
-        component {
-            text("[") color gray
-            text(it.displayName) color it.color.asHexString()
-            text("]") color gray
-        }
-
-    } ?: Component.text("")
 }
