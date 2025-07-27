@@ -1,12 +1,12 @@
 package com.github.tanokun.bakajinrou.api
 
 import com.github.tanokun.bakajinrou.api.finishing.GameFinisher
+import com.github.tanokun.bakajinrou.api.participant.GrantedStrategy
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizensPosition
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
-import com.github.tanokun.bakajinrou.api.participant.protection.Protection
 import io.mockk.mockk
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -88,11 +88,11 @@ class JinrouGameDecidedSideTest {
         isDeadCitizen1: Boolean, isDeadCitizen2: Boolean, isDeadFox: Boolean, isDeadWolf: Boolean, isDeadMadman: Boolean,
     ) = JinrouGame(
         listOf(
-            Participant(UUID.randomUUID(), mockk<CitizensPosition>(), mockk<Protection>()).apply { if (isDeadCitizen1) dead() },
-            Participant(UUID.randomUUID(), mockk<CitizensPosition>(), mockk<Protection>()).apply { if (isDeadCitizen2) dead() },
-            Participant(UUID.randomUUID(), mockk<FoxPosition>(), mockk<Protection>()).apply { if (isDeadFox) dead() },
-            Participant(UUID.randomUUID(), mockk<WolfPosition>(), mockk<Protection>()).apply { if (isDeadWolf) dead() },
-            Participant(UUID.randomUUID(), mockk<MadmanPosition>(), mockk<Protection>()).apply { if (isDeadMadman) dead() },
+            Participant(UUID.randomUUID(), mockk<CitizensPosition>(), mockk<GrantedStrategy>()).apply { if (isDeadCitizen1) dead() },
+            Participant(UUID.randomUUID(), mockk<CitizensPosition>(), mockk<GrantedStrategy>()).apply { if (isDeadCitizen2) dead() },
+            Participant(UUID.randomUUID(), mockk<FoxPosition>(), mockk<GrantedStrategy>()).apply { if (isDeadFox) dead() },
+            Participant(UUID.randomUUID(), mockk<WolfPosition>(), mockk<GrantedStrategy>()).apply { if (isDeadWolf) dead() },
+            Participant(UUID.randomUUID(), mockk<MadmanPosition>(), mockk<GrantedStrategy>()).apply { if (isDeadMadman) dead() },
         ),
         { citizenSideFinisherMock },
         { wolfSideFinisherMock },
