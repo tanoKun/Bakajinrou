@@ -1,140 +1,64 @@
 package com.github.tanokun.bakajinrou.plugin.listener
 
-import com.github.tanokun.bakajinrou.api.attack.AttackResult.*
-import com.github.tanokun.bakajinrou.api.attack.AttackVerifier
-import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
-import net.kyori.adventure.key.Key
-import net.kyori.adventure.sound.Sound
-import org.bukkit.Material
-import org.bukkit.Particle
+import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.api.attack.method.effect.DamagePotionEffect
+import com.github.tanokun.bakajinrou.api.attack.method.item.SwordItem
+import com.github.tanokun.bakajinrou.api.attack.method.other.ArrowMethod
+import com.github.tanokun.bakajinrou.plugin.method.getGrantedMethodByItemStack
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.PotionSplashEvent
-import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
-import org.bukkit.potion.PotionEffectType
 import org.bukkit.potion.PotionType
 
 class OnAttackEventListener(
     plugin: Plugin,
-    gameController: JinrouGameController,
+    jinrouGame: JinrouGame,
 ): LifecycleEventListener(plugin, {
     //ダイヤ剣
     register<EntityDamageByEntityEvent> { event ->
-        val attacker = event.damager
-        val victim = event.entity
+        val attacker = jinrouGame.getParticipant(event.damager.uniqueId) ?: return@register
+        val victim = jinrouGame.getParticipant(event.entity.uniqueId) ?: return@register
 
-        if (attacker !is Player) return@register
-        if (victim !is Player) return@register
+        val attackerPlayer = event.damager as Player
 
-        val mainHandItem = attacker.inventory.itemInMainHand
-        if (mainHandItem.type != Material.DIAMOND_SWORD) {
-            event.damage = 0.01
-            return@register
-        }
+        event.damage = 0.01
 
-        gameController.onAttack(by = AttackVerifier.Sword, to = victim.uniqueId) {
-            when (it) {
-                PROTECTED_BY_TOTEM -> { onProtectedByTotem(victim) }
-                PROTECTED_BY_POTION_RESISTANCE -> { onProtectedByResistance(victim) }
-                SUCCESS_ATTACK -> { onSuccess(attacker = attacker, victim = victim, controller = gameController) }
-                INVALID_ATTACK -> event.isCancelled = true
-                PROTECTED_BY_SHIELD -> return@onAttack
-            }
-
-            if (it != INVALID_ATTACK) removeMainHandOrOffHand(Material.DIAMOND_SWORD, attacker)
-        }
+        val method = attacker.getGrantedMethodByItemStack(attackerPlayer.inventory.itemInMainHand) ?: return@register
+        (method as? SwordItem)?.attack(by = attacker, victim = victim)
     }
 
     //弓 (矢)
     register<EntityDamageByEntityEvent> { event ->
-        val attacker = event.damager
-        val victim = event.entity
+        val attacker = (event.damager as? Arrow) ?: return@register
 
-        if (attacker !is Arrow) return@register
-        if (victim !is Player) return@register
+        val shooterPlayer = (attacker.shooter as? Player) ?: return@register
+        val shooter = jinrouGame.getParticipant(shooterPlayer.uniqueId) ?: return@register
+        val method = (shooter.getGrantedMethodByItemStack(attacker.itemStack) as? ArrowMethod) ?: return@register
 
-        val shooter = attacker.shooter
-        if (shooter !is Player) return@register
+        val victim = jinrouGame.getParticipant(event.entity.uniqueId) ?: return@register
 
-        gameController.onAttack(by = AttackVerifier.Bow, to = victim.uniqueId) {
-            when (it) {
-                PROTECTED_BY_TOTEM -> { onProtectedByTotem(victim) }
-                PROTECTED_BY_SHIELD -> { onProtectedByShield(victim) }
-                PROTECTED_BY_POTION_RESISTANCE -> { onProtectedByResistance(victim) }
-                SUCCESS_ATTACK -> { onSuccess(attacker = shooter, victim = victim, controller = gameController) }
-                INVALID_ATTACK -> event.isCancelled = true
-            }
-        }
+        event.damage = 0.01
+
+
+        method.attack(by = shooter, victim = victim)
     }
 
     //ポーション (即時ダメージ)
     register<PotionSplashEvent> { event ->
-        val attacker = event.entity
+        val potion = event.entity
 
-        if (attacker.potionMeta.basePotionType != PotionType.HARMING) return@register
+        val shooterPlayer = (potion.shooter as? Player) ?: return@register
+        val shooter = jinrouGame.getParticipant(shooterPlayer.uniqueId) ?: return@register
+        val method = (shooter.getGrantedMethodByItemStack(potion.item) as? DamagePotionEffect) ?: return@register
 
-        val shooter = attacker.shooter
-        if (shooter !is Player) return@register
-
+        if (potion.potionMeta.basePotionType != PotionType.HARMING) return@register
         event.affectedEntities
             .filterIsInstance<Player>()
-            .forEach { victim ->
-                gameController.onAttack(by = AttackVerifier.Potion, to = victim.uniqueId) {
-                    when (it) {
-                        PROTECTED_BY_TOTEM -> { onProtectedByTotem(victim) }
-                        PROTECTED_BY_POTION_RESISTANCE -> { onProtectedByResistance(victim) }
-                        SUCCESS_ATTACK -> { onSuccess(attacker = shooter, victim = victim, controller = gameController) }
-                        INVALID_ATTACK -> event.isCancelled = true
-                        PROTECTED_BY_SHIELD -> return@onAttack
-                    }
-                }
+            .forEach { victimPlayer ->
+                val victim = jinrouGame.getParticipant(victimPlayer.uniqueId) ?: return@forEach
+                method.attack(by = shooter, victim = victim)
             }
     }
 })
-
-private fun onProtectedByTotem(victim: Player) {
-    val world = victim.world
-
-    world.playSound(Sound.sound(Key.key("item.totem.use"), Sound.Source.PLAYER, 1.0f, 1.0f))
-    world.spawnParticle(Particle.TOTEM_OF_UNDYING, victim.location, 30, 0.5, 0.5, 0.5, 0.1)
-
-    removeMainHandOrOffHand(Material.TOTEM_OF_UNDYING, victim)
-}
-
-private fun onProtectedByShield(victim: Player) {
-    val world = victim.world
-
-    world.playSound(Sound.sound(Key.key("item.shield.block"), Sound.Source.PLAYER, 1.0f, 1.0f))
-    world.spawnParticle(Particle.BLOCK, victim.location, 10, 0.3, 0.3, 0.3, Material.OAK_WOOD.createBlockData())
-
-    removeMainHandOrOffHand(Material.SHIELD, victim)
-}
-
-private fun onProtectedByResistance(victim: Player) {
-    val world = victim.world
-
-    world.playSound(Sound.sound(Key.key("entity.zombie_villager.cure"), Sound.Source.PLAYER, 1.0f, 1.0f))
-    victim.removePotionEffect(PotionEffectType.RESISTANCE)
-}
-
-
-private fun onSuccess(attacker: Player, victim: Player, controller: JinrouGameController) {
-    controller.killed(victim = victim.uniqueId, by = attacker.uniqueId)
-}
-
-private fun removeMainHandOrOffHand(material: Material, player: Player) {
-    player.inventory.itemInMainHand.apply {
-        if (type != material) return@apply
-
-        player.inventory.setItemInMainHand(ItemStack.of(Material.AIR))
-        return
-    }
-
-    player.inventory.itemInOffHand.apply {
-        if (type != material) return@apply
-
-        player.inventory.setItemInMainHand(ItemStack.of(Material.AIR))
-    }
-}
