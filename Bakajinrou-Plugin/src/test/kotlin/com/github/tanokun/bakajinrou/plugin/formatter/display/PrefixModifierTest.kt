@@ -1,5 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.formatter.display
 
+import com.github.tanokun.bakajinrou.api.ParticipantStates
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
 import com.github.tanokun.bakajinrou.plugin.position.citizen.CitizenPosition
@@ -19,6 +20,7 @@ class PrefixModifierTest {
         val viewer = mockk<Participant>()
         val target = mockk<Participant> {
             every { resolvePrefix(viewer) } returns null
+            every { state } returns ParticipantStates.SURVIVED
             every { position } returns mockk<CitizenPosition>()
         }
 
@@ -35,6 +37,7 @@ class PrefixModifierTest {
         val viewer = mockk<Participant>()
         val target = mockk<Participant> {
             every { resolvePrefix(viewer) } returns null
+            every { state } returns ParticipantStates.SURVIVED
             every { position } returns mockk<CitizenPosition>()
         }
 
@@ -44,7 +47,7 @@ class PrefixModifierTest {
 
         val result = modifier.createPrefix(viewer)
 
-        assertEquals("§7[§4ラスト人狼§7]", serializer.serialize(result))
+        assertEquals("§7[§4§lラスト人狼§7]", serializer.serialize(result))
     }
 
     @Test
@@ -53,6 +56,7 @@ class PrefixModifierTest {
         val viewer = mockk<Participant>()
         val target = mockk<Participant> {
             every { resolvePrefix(viewer) } returns "狂人"
+            every { state } returns ParticipantStates.SURVIVED
             every { position } returns mockk<MadmanPosition>()
         }
 
@@ -62,6 +66,25 @@ class PrefixModifierTest {
 
         val result = modifier.createPrefix(viewer)
 
-        assertEquals("§7[§c狂人§7, §x§8§7§c§e§f§a占い師§7]", serializer.serialize(result))
+        assertEquals("§7[§c§l狂人§7, §x§8§7§c§e§f§a§l占い師§7]", serializer.serialize(result))
+    }
+
+    @Test
+    @DisplayName("表示するプレフィックスが、カミングアウト、明かされたプレフィックス、そして退出中")
+    fun bothComingOutAndResolvedPrefixAndAbsentTest() {
+        val viewer = mockk<Participant>()
+        val target = mockk<Participant> {
+            every { resolvePrefix(viewer) } returns "狂人"
+            every { state } returns ParticipantStates.SUSPENDED
+            every { position } returns mockk<MadmanPosition>()
+        }
+
+        val modifier = PrefixModifier(target).apply {
+            comingOut = ComingOut.FORTUNE
+        }
+
+        val result = modifier.createPrefix(viewer)
+
+        assertEquals("§7[§c§l狂人§7, §x§8§7§c§e§f§a§l占い師§7, §6§l退出中§7]", serializer.serialize(result))
     }
 }
