@@ -1,9 +1,10 @@
-package com.github.tanokun.bakajinrou.plugin.listener
+package com.github.tanokun.bakajinrou.plugin.listener.launching
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.attack.method.effect.DamagePotionEffect
 import com.github.tanokun.bakajinrou.api.attack.method.item.SwordItem
 import com.github.tanokun.bakajinrou.api.attack.method.other.ArrowMethod
+import com.github.tanokun.bakajinrou.plugin.listener.LifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.method.getGrantedMethodByItemStack
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
