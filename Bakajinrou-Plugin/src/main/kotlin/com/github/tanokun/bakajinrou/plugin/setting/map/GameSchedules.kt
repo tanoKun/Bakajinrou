@@ -85,7 +85,7 @@ class GameSchedules(
             .forEach {
                 val bukkitPlayer = getBukkitPlayer(it) ?: return@forEach
 
-                val growingEffect = PotionEffect(PotionEffectType.GLOWING, 5, 1, false, false)
+                val growingEffect = PotionEffect(PotionEffectType.GLOWING, 100, 1, false, false)
                 bukkitPlayer.addPotionEffect(growingEffect)
         }
     }
