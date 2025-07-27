@@ -2,7 +2,7 @@ package com.github.tanokun.bakajinrou.plugin.setting.map
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.participant.protection.Protection
+import com.github.tanokun.bakajinrou.plugin.participant.ParticipantStrategy
 import com.github.tanokun.bakajinrou.plugin.position.citizen.CitizenPosition
 import com.github.tanokun.bakajinrou.plugin.position.citizen.MediumPosition
 import com.github.tanokun.bakajinrou.plugin.position.fox.FoxThirdPosition
@@ -100,11 +100,11 @@ class GameSchedulesTest {
     }
 
     fun createJinrouGame(): JinrouGame {
-        val wolf = Participant(wolf.uniqueId, WolfSecondPosition, mockk<Protection>())
-        val madman = Participant(madman.uniqueId, MadmanSecondPosition, mockk<Protection>())
-        val citizen = Participant(citizen.uniqueId, CitizenPosition, mockk<Protection>())
-        val medium = Participant(medium.uniqueId, MediumPosition, mockk<Protection>())
-        val fox = Participant(fox.uniqueId, FoxThirdPosition, mockk<Protection>())
+        val wolf = Participant(wolf.uniqueId, WolfSecondPosition, mockk<ParticipantStrategy>())
+        val madman = Participant(madman.uniqueId, MadmanSecondPosition, mockk<ParticipantStrategy>())
+        val citizen = Participant(citizen.uniqueId, CitizenPosition, mockk<ParticipantStrategy>())
+        val medium = Participant(medium.uniqueId, MediumPosition, mockk<ParticipantStrategy>())
+        val fox = Participant(fox.uniqueId, FoxThirdPosition, mockk<ParticipantStrategy>())
 
         return JinrouGame(
             participants = listOf(wolf, madman, citizen, medium, fox),

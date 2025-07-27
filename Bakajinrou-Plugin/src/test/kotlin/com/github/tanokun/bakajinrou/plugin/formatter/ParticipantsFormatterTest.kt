@@ -1,8 +1,8 @@
 package com.github.tanokun.bakajinrou.plugin.formatter
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.participant.protection.Protection
 import com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
+import com.github.tanokun.bakajinrou.plugin.participant.ParticipantStrategy
 import com.github.tanokun.bakajinrou.plugin.position.citizen.CitizenPosition
 import com.github.tanokun.bakajinrou.plugin.position.citizen.FortunePosition
 import com.github.tanokun.bakajinrou.plugin.position.citizen.KnightPosition
@@ -208,24 +208,24 @@ class ParticipantsFormatterTest {
     }
 
     fun createParticipants() = listOf(
-        Participant(wolf1UniqueId, WolfSecondPosition, mockk<Protection>()),
-        Participant(wolf2UniqueId, WolfSecondPosition, mockk<Protection>()),
-        Participant(madman1UniqueId, MadmanSecondPosition, mockk<Protection>()),
-        Participant(madman2UniqueId, MadmanSecondPosition, mockk<Protection>()),
+        Participant(wolf1UniqueId, WolfSecondPosition, mockk<ParticipantStrategy>()),
+        Participant(wolf2UniqueId, WolfSecondPosition, mockk<ParticipantStrategy>()),
+        Participant(madman1UniqueId, MadmanSecondPosition, mockk<ParticipantStrategy>()),
+        Participant(madman2UniqueId, MadmanSecondPosition, mockk<ParticipantStrategy>()),
 
-        Participant(fortune1UniqueId, FortunePosition, mockk<Protection>()),
-        Participant(idiotAsFortune1UniqueId, IdiotAsFortunePosition, mockk<Protection>()),
+        Participant(fortune1UniqueId, FortunePosition, mockk<ParticipantStrategy>()),
+        Participant(idiotAsFortune1UniqueId, IdiotAsFortunePosition, mockk<ParticipantStrategy>()),
 
-        Participant(medium1UniqueId, MediumPosition, mockk<Protection>()),
-        Participant(idiotAsMedium1UniqueId, IdiotAsMediumPosition, mockk<Protection>()),
+        Participant(medium1UniqueId, MediumPosition, mockk<ParticipantStrategy>()),
+        Participant(idiotAsMedium1UniqueId, IdiotAsMediumPosition, mockk<ParticipantStrategy>()),
 
-        Participant(knight1UniqueId, KnightPosition, mockk<Protection>()),
-        Participant(idiotAsKnight1UniqueId, IdiotAsKnightPosition, mockk<Protection>()),
+        Participant(knight1UniqueId, KnightPosition, mockk<ParticipantStrategy>()),
+        Participant(idiotAsKnight1UniqueId, IdiotAsKnightPosition, mockk<ParticipantStrategy>()),
 
-        Participant(fox1UniqueId, FoxThirdPosition, mockk<Protection>()),
+        Participant(fox1UniqueId, FoxThirdPosition, mockk<ParticipantStrategy>()),
 
-        Participant(citizen1UniqueId, CitizenPosition, mockk<Protection>()),
-        Participant(citizen2UniqueId, CitizenPosition, mockk<Protection>()),
+        Participant(citizen1UniqueId, CitizenPosition, mockk<ParticipantStrategy>()),
+        Participant(citizen2UniqueId, CitizenPosition, mockk<ParticipantStrategy>()),
     )
 
     fun createCaches() = BukkitPlayerNameCache().apply {

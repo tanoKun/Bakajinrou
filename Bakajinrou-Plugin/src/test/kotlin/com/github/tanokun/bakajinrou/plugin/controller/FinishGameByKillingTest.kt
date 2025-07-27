@@ -2,11 +2,11 @@ package com.github.tanokun.bakajinrou.plugin.controller
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.participant.protection.Protection
 import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
 import com.github.tanokun.bakajinrou.plugin.finisher.CitizenSideFinisher
 import com.github.tanokun.bakajinrou.plugin.finisher.FoxSideFinisher
 import com.github.tanokun.bakajinrou.plugin.finisher.WolfSideFinisher
+import com.github.tanokun.bakajinrou.plugin.participant.ParticipantStrategy
 import com.github.tanokun.bakajinrou.plugin.position.citizen.CitizenPosition
 import com.github.tanokun.bakajinrou.plugin.position.citizen.MediumPosition
 import com.github.tanokun.bakajinrou.plugin.position.fox.FoxThirdPosition
@@ -31,10 +31,10 @@ class FinishGameByKillingTest {
     private lateinit var mediumPlayerMock: PlayerMock
     private lateinit var foxPlayerMock: PlayerMock
 
-    private val wolf by lazy { Participant(wolfPlayerMock.uniqueId, WolfSecondPosition, mockk<Protection>()) }
-    private val citizen by lazy { Participant(citizenPlayerMock.uniqueId, CitizenPosition, mockk<Protection>()) }
-    private val medium by lazy { Participant(mediumPlayerMock.uniqueId, MediumPosition, mockk<Protection>()) }
-    private val fox by lazy { Participant(foxPlayerMock.uniqueId, FoxThirdPosition, mockk<Protection>()) }
+    private val wolf by lazy { Participant(wolfPlayerMock.uniqueId, WolfSecondPosition, mockk<ParticipantStrategy>()) }
+    private val citizen by lazy { Participant(citizenPlayerMock.uniqueId, CitizenPosition, mockk<ParticipantStrategy>()) }
+    private val medium by lazy { Participant(mediumPlayerMock.uniqueId, MediumPosition, mockk<ParticipantStrategy>()) }
+    private val fox by lazy { Participant(foxPlayerMock.uniqueId, FoxThirdPosition, mockk<ParticipantStrategy>()) }
 
     @BeforeEach
     fun setUp() {
@@ -56,8 +56,8 @@ class FinishGameByKillingTest {
     fun finishGameByKillingLastWolfWithoutFoxTest() {
         val gameController = createGame()
 
-        gameController.killed(victim = fox.uniqueId, by = citizen.uniqueId)
-        gameController.killed(victim = wolf.uniqueId, by = citizen.uniqueId)
+        gameController.killed(victim = fox, by = citizen)
+        gameController.killed(victim = wolf, by = citizen)
 
         assertLose(wolfPlayerMock)
         assertVictory(citizenPlayerMock)
@@ -70,9 +70,9 @@ class FinishGameByKillingTest {
     fun finishGameByKillingLastCitizenWithoutFoxTest() {
         val gameController = createGame()
 
-        gameController.killed(victim = fox.uniqueId, by = wolf.uniqueId)
-        gameController.killed(victim = citizen.uniqueId, by = wolf.uniqueId)
-        gameController.killed(victim = medium.uniqueId, by = wolf.uniqueId)
+        gameController.killed(victim = fox, by = wolf)
+        gameController.killed(victim = citizen, by = wolf)
+        gameController.killed(victim = medium, by = wolf)
 
         assertVictory(wolfPlayerMock)
         assertLose(citizenPlayerMock)
@@ -85,7 +85,7 @@ class FinishGameByKillingTest {
     fun finishGameByKillingLastCitizenWithFoxTest() {
         val gameController = createGame()
 
-        gameController.killed(victim = wolf.uniqueId, by = fox.uniqueId)
+        gameController.killed(victim = wolf, by = fox)
 
         assertLose(wolfPlayerMock)
         assertLose(citizenPlayerMock)
