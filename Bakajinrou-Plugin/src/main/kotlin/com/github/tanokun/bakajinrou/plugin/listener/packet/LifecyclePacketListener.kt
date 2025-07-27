@@ -22,25 +22,25 @@ abstract class LifecyclePacketListener internal constructor(
     }
 
     internal fun register(
-        packet: PacketType, listenerPriority: ListenerPriority = ListenerPriority.NORMAL, callback: (PacketContainer, Player) -> Unit
+        packet: PacketType, listenerPriority: ListenerPriority = ListenerPriority.NORMAL, callback: (PacketEvent, PacketContainer, Player) -> Unit
     ) {
         val adapter = PacketAdapterObject(listenerPriority, packet, callback)
         adapters.add(adapter)
     }
 
     private inner class PacketAdapterObject(
-        listenerPriority: ListenerPriority, private val packetType: PacketType, private val callback: (PacketContainer, Player) -> Unit
+        listenerPriority: ListenerPriority, private val packetType: PacketType, private val callback: (PacketEvent, PacketContainer, Player) -> Unit
     ) : PacketAdapter(plugin, listenerPriority, packetType) {
         override fun onPacketSending(event: PacketEvent) {
             if (event.packetType != packetType) return
 
-            callback(event.packet, event.player)
+            callback(event, event.packet, event.player)
         }
 
         override fun onPacketReceiving(event: PacketEvent) {
             if (event.packetType != packetType) return
 
-            callback(event.packet, event.player)
+            callback(event, event.packet, event.player)
         }
     }
 
