@@ -5,9 +5,10 @@ import com.github.tanokun.bakajinrou.api.ParticipantStates
 import com.github.tanokun.bakajinrou.api.finishing.GameFinisher
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.game.logger.BodyHandler
-import com.github.tanokun.bakajinrou.game.logger.GameActionLogger
+import com.github.tanokun.bakajinrou.game.logger.GameLogger
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.schedule.onCancellation
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -15,14 +16,18 @@ import kotlin.coroutines.CoroutineContext
 
 class JinrouGameController(
     private val game: JinrouGame,
-    private val logger: GameActionLogger,
+    private val logger: GameLogger,
     private val scheduler: GameScheduler,
     private val bodyHandler: BodyHandler,
-    defaultDispatcher: CoroutineContext
+    uiDispatcher: CoroutineContext
 ) {
     private val job: Job = SupervisorJob()
 
-    val scope: CoroutineScope = CoroutineScope(job + defaultDispatcher)
+    private val exceptionHandler = CoroutineExceptionHandler { context, throwable ->
+        logger.logException(throwable)
+    }
+
+    val scope: CoroutineScope = CoroutineScope(job + uiDispatcher + exceptionHandler)
 
     init {
         require(game.judge() == null) {
