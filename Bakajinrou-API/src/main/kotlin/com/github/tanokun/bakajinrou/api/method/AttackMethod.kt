@@ -11,12 +11,11 @@ interface AttackMethod: GrantedMethod {
      * @param victim 攻撃対象
      */
     fun attack(by: Participant, victim: Participant) {
-        onConsume(consumer = by)
+        for (protectiveMethod in victim.getActiveProtectiveMethods()) {
+            protectiveMethod.onConsume(consumer = victim)
+            victim.removeMethod(protectiveMethod)
 
-        for (protectItem in victim.getActiveProtectiveMethods()) {
-            protectItem.onConsume(consumer = victim)
-
-            when (protectItem.verifyProtect(method = this)) {
+            when (protectiveMethod.verifyProtect(method = this)) {
                 is AttackResult.Protected -> return
                 AttackResult.SuccessAttack -> continue
             }
