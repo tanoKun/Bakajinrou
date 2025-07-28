@@ -5,7 +5,9 @@ import com.github.tanokun.bakajinrou.api.attack.method.effect.DamagePotionEffect
 import com.github.tanokun.bakajinrou.api.attack.method.item.SwordItem
 import com.github.tanokun.bakajinrou.api.attack.method.other.ArrowMethod
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.plugin.listener.launching.OnAttackEventListener
+import com.github.tanokun.bakajinrou.plugin.listener.launching.attack.OnAttackByBowEventListener
+import com.github.tanokun.bakajinrou.plugin.listener.launching.attack.OnAttackByPotionEventListener
+import com.github.tanokun.bakajinrou.plugin.listener.launching.attack.OnAttackBySwordEventListener
 import com.github.tanokun.bakajinrou.plugin.method.getGrantedMethodByItemStack
 import com.google.common.base.Function
 import io.mockk.*
@@ -38,8 +40,12 @@ class OnAttackEventListenerTest {
     private lateinit var plugin: Plugin
 
 
-    private val attackerMock: Participant = mockk()
-    private val victimMock: Participant = mockk()
+    private val attackerMock: Participant = mockk {
+        every { removeMethod(any()) } just runs
+    }
+    private val victimMock: Participant = mockk {
+        every { removeMethod(any()) } just runs
+    }
 
     private val attackerPlayerMock: Player = mockk {
         every { uniqueId } returns UUID.randomUUID()
@@ -62,14 +68,17 @@ class OnAttackEventListenerTest {
 
     private val swordItemMock: SwordItem = mockk {
         every { attack(by = attackerMock, victim = victimMock) } just runs
+        every { onConsume(any()) } just runs
     }
 
     private val arrowMethodMock: ArrowMethod = mockk {
         every { attack(by = attackerMock, victim = victimMock) } just runs
+        every { onConsume(any()) } just runs
     }
 
     private val damagePotionEffectMock: DamagePotionEffect = mockk {
         every { attack(by = attackerMock, victim = victimMock) } just runs
+        every { onConsume(any()) } just runs
     }
 
     @BeforeEach
@@ -79,7 +88,9 @@ class OnAttackEventListenerTest {
 
         mockkStatic(Participant::getGrantedMethodByItemStack)
 
-        OnAttackEventListener(plugin, jinrouGameMock).registerAll()
+        OnAttackByBowEventListener(plugin, jinrouGameMock).registerAll()
+        OnAttackByPotionEventListener(plugin, jinrouGameMock).registerAll()
+        OnAttackBySwordEventListener(plugin, jinrouGameMock).registerAll()
     }
 
     @AfterEach
