@@ -106,6 +106,7 @@ class FinishGameByKillingTest {
             logger = mockk(relaxed = true),
             scheduler = mockk(relaxed = true),
             bodyHandler = mockk(relaxed = true),
+            uiDispatcher = mockk()
         )
     }
 
