@@ -18,6 +18,8 @@ repositories {
 }
 
 dependencies {
+    implementation(libs.kotlinx.coroutines.core)
+
     testImplementation(libs.bundles.junit)
     testImplementation(libs.mockk)
     testImplementation(kotlin("test"))

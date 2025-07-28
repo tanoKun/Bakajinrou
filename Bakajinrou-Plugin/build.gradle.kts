@@ -34,9 +34,13 @@ dependencies {
     implementation(libs.bundles.invui)
     implementation(libs.adventurekt)
 
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.bundles.mccoroutine)
+
     implementation(project(":Bakajinrou-API"))
     implementation(project(":Bakajinrou-Game"))
 
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.bundles.mocks)
 
     testImplementation(libs.bundles.commandapi)
@@ -56,15 +60,25 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-tasks.named("shadowJar") {
-    dependsOn(subprojects.map { it.tasks.named("test") })
-}
+tasks {
+    val copyJarToPlugins by registering(Copy::class) {
+        dependsOn(shadowJar)
+        from(shadowJar.get().archiveFile)
+        into("C:/Users/owner/Desktop/1.21 paper/plugins")
+        rename {
+            "plugin.jar"
+        }
+    }
 
-tasks.shadowJar {
-    archiveBaseName.set("BakaJinrou")
-    archiveVersion.set(projectVersion)
+    shadowJar {
+        dependsOn(subprojects.map { it.tasks.named("test") })
 
-    mergeServiceFiles()
+        archiveBaseName.set("BakaJinrou")
+        archiveVersion.set(projectVersion)
+
+        mergeServiceFiles()
+        finalizedBy(copyJarToPlugins)
+    }
 }
 
 
