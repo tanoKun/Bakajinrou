@@ -19,6 +19,8 @@ class TabListModifier(
 
     fun modifyByUpdateGameMode(contents: List<PlayerInfoData>): List<PlayerInfoData>  {
         return contents.map { entry ->
+            if (prefixModifiers.firstOrNull { it.target.uniqueId == entry.profileId } == null) return@map entry
+
             val gameType = if (isVisibleSpectator(entry.profileId)) entry.gameMode else EnumWrappers.NativeGameMode.SURVIVAL
 
             return@map PlayerInfoData(
