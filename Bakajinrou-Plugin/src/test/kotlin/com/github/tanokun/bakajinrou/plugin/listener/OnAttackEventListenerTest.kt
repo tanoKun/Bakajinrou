@@ -5,6 +5,7 @@ import com.github.tanokun.bakajinrou.api.attack.method.effect.DamagePotionEffect
 import com.github.tanokun.bakajinrou.api.attack.method.item.SwordItem
 import com.github.tanokun.bakajinrou.api.attack.method.other.ArrowMethod
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.plugin.listener.launching.OnAttackEventListener
 import com.github.tanokun.bakajinrou.plugin.method.getGrantedMethodByItemStack
 import com.google.common.base.Function
 import io.mockk.*

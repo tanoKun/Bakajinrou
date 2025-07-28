@@ -11,7 +11,7 @@ import com.github.tanokun.bakajinrou.plugin.listener.packet.LifecyclePacketListe
 import org.bukkit.plugin.Plugin
 
 class TabListPacketListener(
-    jinrouGame: JinrouGame, plugin: Plugin, protocolManager: ProtocolManager
+    plugin: Plugin, jinrouGame: JinrouGame, protocolManager: ProtocolManager
 ) : LifecyclePacketListener(plugin, protocolManager, {
     val prefixModifiers = jinrouGame.participants.map { PrefixModifier(it) }
 

@@ -1,5 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.method.weapon
 
+import com.github.tanokun.bakajinrou.api.attack.AttackResult
 import com.github.tanokun.bakajinrou.api.attack.method.effect.DamagePotionEffect
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
@@ -29,6 +30,19 @@ class AttackByDamagePotionEffect(
 
     override fun onConsume(consumer: Participant) {
         consumer.removeMethod(this)
+    }
+
+    override fun attack(by: Participant, victim: Participant) {
+        for (protectItem in victim.getActiveProtectiveMethods()) {
+            protectItem.onConsume(consumer = victim)
+
+            when (protectItem.verifyProtect(method = this)) {
+                is AttackResult.Protected -> return
+                AttackResult.SuccessAttack -> continue
+            }
+        }
+
+        onSuccessAttack(by, victim)
     }
 
     override fun createBukkitItem(): ItemStack {
