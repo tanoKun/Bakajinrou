@@ -17,6 +17,8 @@ abstract class LifecyclePacketListener internal constructor(
 
     private val adapters = arrayListOf<PacketAdapter>()
 
+    private val onCancellations = arrayListOf<() -> Unit>()
+
     init {
         listenerDsl(this)
     }
@@ -26,6 +28,10 @@ abstract class LifecyclePacketListener internal constructor(
     ) {
         val adapter = PacketAdapterObject(listenerPriority, packet, callback)
         adapters.add(adapter)
+    }
+
+    internal fun onCancellation(canceller: () -> Unit) {
+        onCancellations.add(canceller)
     }
 
     private inner class PacketAdapterObject(
@@ -53,6 +59,10 @@ abstract class LifecyclePacketListener internal constructor(
     override fun unregisterAll() {
         adapters.forEach { adapter ->
             protocolManager.removePacketListener(adapter)
+        }
+
+        onCancellations.forEach {
+            it.invoke()
         }
     }
 }
