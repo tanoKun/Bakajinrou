@@ -14,12 +14,16 @@ class PlayerConnectionEventListener(
     register<PlayerQuitEvent> { event ->
         val participant = jinrouGame.getParticipant(event.player.uniqueId) ?: return@register
 
+        event.quitMessage(null)
+
         participant.suspended()
         event.player.updatePlayerListName()
     }
 
     register<PlayerJoinEvent> { event ->
         val participant = jinrouGame.getParticipant(event.player.uniqueId) ?: return@register
+
+        event.joinMessage(null)
 
         participant.survived()
         event.player.updatePlayerListName()
