@@ -5,15 +5,24 @@ import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.method.ProtectiveMethod
 import com.github.tanokun.bakajinrou.api.participant.position.Position
 import com.github.tanokun.bakajinrou.api.participant.position.SpectatorPosition
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 import java.util.*
+import kotlin.coroutines.CoroutineContext
 
-data class Participant(
+class Participant(
     val uniqueId: UUID,
     val position: Position,
-    private val strategy: GrantedStrategy
+    private val strategy: GrantedStrategy,
+    defaultState: ParticipantStates = ParticipantStates.SURVIVED
 ) {
-    var state: ParticipantStates = ParticipantStates.SURVIVED
-        private set
+    val state: ParticipantStates
+        get() = _state.value
+
+    private val _state: MutableStateFlow<ParticipantStates> = MutableStateFlow(defaultState)
 
     /**
      * 状態を死亡状態にします。
@@ -25,7 +34,7 @@ data class Participant(
         if (state == ParticipantStates.DEAD) return false
         if (state == ParticipantStates.SUSPENDED) return false
 
-        state = ParticipantStates.DEAD
+        _state.value = ParticipantStates.DEAD
 
         return true
     }
@@ -38,7 +47,7 @@ data class Participant(
     fun survived(): Boolean {
         if (state != ParticipantStates.SUSPENDED) return false
 
-        state = ParticipantStates.SURVIVED
+        _state.value = ParticipantStates.SURVIVED
 
         return true
     }
@@ -52,10 +61,22 @@ data class Participant(
         if (state == ParticipantStates.SUSPENDED) return false
         if (state == ParticipantStates.DEAD) return false
 
-        state = ParticipantStates.SUSPENDED
+        _state.value = ParticipantStates.SUSPENDED
 
         return true
     }
+
+    /**
+     * [state]に相当するステータスになった場合に、値を収集します。
+     *
+     * @param state 監視したい値
+     *
+     * @return 収集のジョブ
+     */
+    fun observeState(state: ParticipantStates, scope: CoroutineScope, context: CoroutineContext, callback: () -> Unit): Job =
+        scope.launch(context) {
+            _state.filter { it == state }.collect { callback() }
+        }
 
     /**
      * この参加者を非観察者として、プレフィックスを選びます。
