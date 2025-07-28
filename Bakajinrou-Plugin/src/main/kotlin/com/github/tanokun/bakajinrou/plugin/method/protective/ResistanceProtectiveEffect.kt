@@ -14,8 +14,6 @@ class ResistanceProtectiveEffect: ResistanceEffect() {
     override fun isActive(of: Participant): Boolean = true
 
     override fun onConsume(consumer: Participant) {
-        consumer.removeMethod(this)
-
         Bukkit.getPlayer(consumer.uniqueId)?.apply {
             removePotionEffect(PotionEffectType.RESISTANCE)
             world.playSound(location, Sound.ENTITY_ZOMBIE_VILLAGER_CURE, SoundCategory.PLAYERS, 1.0f, 1.0f)

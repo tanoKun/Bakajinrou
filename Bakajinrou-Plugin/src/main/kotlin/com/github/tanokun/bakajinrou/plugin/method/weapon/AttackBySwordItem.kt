@@ -23,11 +23,11 @@ class AttackBySwordItem(
 ): SwordItem, AsBukkitItem {
     override val uniqueId: UUID = UUID.randomUUID()
 
+    override val transportable: Boolean = true
+
     override fun onSuccessAttack(by: Participant, victim: Participant) = controller.killed(victim = victim, by = by)
 
-    override fun onConsume(consumer: Participant) {
-        consumer.removeMethod(this)
-    }
+    override fun onConsume(consumer: Participant) {}
 
     override fun createBukkitItem(): ItemStack {
         val item = ItemStack.of(Material.DIAMOND_SWORD)

@@ -10,6 +10,7 @@ import java.util.*
 val itemKey: NamespacedKey = NamespacedKey("jinrou", "item")
 
 interface AsBukkitItem: GrantedMethod {
+    val transportable: Boolean
 
     fun createBukkitItem(): ItemStack
 }

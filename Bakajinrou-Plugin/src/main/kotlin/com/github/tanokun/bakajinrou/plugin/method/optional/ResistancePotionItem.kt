@@ -2,6 +2,7 @@ package com.github.tanokun.bakajinrou.plugin.method.optional
 
 import com.github.tanokun.bakajinrou.api.method.optional.OptionalMethod
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.plugin.formatter.toTick
 import com.github.tanokun.bakajinrou.plugin.method.AsBukkitItem
 import com.github.tanokun.bakajinrou.plugin.method.itemKey
 import com.github.tanokun.bakajinrou.plugin.method.protective.ResistanceProtectiveEffect
@@ -22,6 +23,7 @@ import plutoproject.adventurekt.text.text
 import plutoproject.adventurekt.text.with
 import plutoproject.adventurekt.text.without
 import java.util.*
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * 耐性効果を付与するポーション。
@@ -31,11 +33,11 @@ import java.util.*
 class ResistancePotionItem(private val plugin: Plugin): OptionalMethod.DrinkingMethod, AsBukkitItem {
     override val uniqueId: UUID = UUID.randomUUID()
 
-    private val effectTime = 400
+    override val transportable: Boolean = true
+
+    private val effectTime = 20.seconds
 
     override fun onConsume(consumer: Participant) {
-        consumer.removeMethod(this)
-
         consumer.getActiveProtectiveMethods()
             .filter { it is ResistanceProtectiveEffect }
             .forEach { consumer.removeMethod(it) }
@@ -43,15 +45,9 @@ class ResistancePotionItem(private val plugin: Plugin): OptionalMethod.DrinkingM
         val protective = ResistanceProtectiveEffect()
         consumer.grantMethod(protective)
 
-        Bukkit.getPlayer(consumer.uniqueId)?.apply {
-            val resistanceEffect = PotionEffect(PotionEffectType.RESISTANCE, effectTime, 1, false, true)
-
-            addPotionEffect(resistanceEffect)
-        }
-
         Bukkit.getScheduler().runTaskLater(plugin, Runnable {
             if (consumer.getGrantedMethod(protective.uniqueId) != null) consumer.removeMethod(protective)
-        }, effectTime.toLong())
+        }, effectTime.toTick().toLong())
     }
 
     override fun createBukkitItem(): ItemStack {
@@ -64,7 +60,7 @@ class ResistancePotionItem(private val plugin: Plugin): OptionalMethod.DrinkingM
 
             meta.color = Color.fromRGB(0x339900)
             meta.addCustomEffect(
-                PotionEffect(PotionEffectType.RESISTANCE, effectTime, 1, false, true),
+                PotionEffect(PotionEffectType.RESISTANCE, effectTime.toTick(), 1, false, true),
                 true
             )
             meta.persistentDataContainer.set(itemKey, PersistentDataType.STRING, uniqueId.toString())

@@ -13,6 +13,8 @@ import java.util.*
 class ShieldProtectiveItem: ShieldItem(), AsBukkitItem {
     override val uniqueId: UUID = UUID.randomUUID()
 
+    override val transportable: Boolean = true
+
     override fun isActive(of: Participant): Boolean {
         val player = Bukkit.getPlayer(of.uniqueId) ?: return false
 
@@ -24,8 +26,6 @@ class ShieldProtectiveItem: ShieldItem(), AsBukkitItem {
     }
 
     override fun onConsume(consumer: Participant) {
-        consumer.removeMethod(this)
-
         Bukkit.getPlayer(consumer.uniqueId)?.apply {
             world.playSound(location, Sound.ITEM_SHIELD_BLOCK, SoundCategory.PLAYERS, 1.0f, 1.0f)
             world.spawnParticle(Particle.BLOCK, location, 10, 0.3, 0.3, 0.3, Material.OAK_WOOD.createBlockData())

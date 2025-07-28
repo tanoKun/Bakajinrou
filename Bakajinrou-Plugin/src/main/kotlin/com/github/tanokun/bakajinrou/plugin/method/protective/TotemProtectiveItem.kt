@@ -13,6 +13,8 @@ import java.util.*
 class TotemProtectiveItem: TotemItem(), AsBukkitItem {
     override val uniqueId: UUID = UUID.randomUUID()
 
+    override val transportable: Boolean = true
+
     override fun isActive(of: Participant): Boolean {
         val player = Bukkit.getPlayer(of.uniqueId) ?: return false
 
@@ -23,8 +25,6 @@ class TotemProtectiveItem: TotemItem(), AsBukkitItem {
     }
 
     override fun onConsume(consumer: Participant) {
-        consumer.removeMethod(this)
-
         Bukkit.getPlayer(consumer.uniqueId)?.apply {
             world.playSound(location, Sound.ITEM_TOTEM_USE, SoundCategory.PLAYERS, 1.0f, 1.0f)
             world.spawnParticle(Particle.TOTEM_OF_UNDYING, location, 30, 0.5, 0.5, 0.5, 0.1)

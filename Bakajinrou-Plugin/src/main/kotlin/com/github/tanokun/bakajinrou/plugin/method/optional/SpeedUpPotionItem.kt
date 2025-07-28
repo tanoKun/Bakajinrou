@@ -2,6 +2,7 @@ package com.github.tanokun.bakajinrou.plugin.method.optional
 
 import com.github.tanokun.bakajinrou.api.method.optional.OptionalMethod
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.plugin.formatter.toTick
 import com.github.tanokun.bakajinrou.plugin.method.AsBukkitItem
 import com.github.tanokun.bakajinrou.plugin.method.itemKey
 import org.bukkit.Color
@@ -19,6 +20,7 @@ import plutoproject.adventurekt.text.text
 import plutoproject.adventurekt.text.with
 import plutoproject.adventurekt.text.without
 import java.util.*
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * スピードを付与するポーション。
@@ -28,9 +30,11 @@ import java.util.*
 class SpeedUpPotionItem: OptionalMethod.ThrowMethod, AsBukkitItem {
     override val uniqueId: UUID = UUID.randomUUID()
 
-    private val effectTime = 600
+    override val transportable: Boolean = true
 
-    override fun onConsume(consumer: Participant) { consumer.removeMethod(this) }
+    private val effectTime = 20.seconds
+
+    override fun onConsume(consumer: Participant) {}
 
     override fun createBukkitItem(): ItemStack {
         val item = ItemStack.of(Material.SPLASH_POTION)
@@ -42,7 +46,7 @@ class SpeedUpPotionItem: OptionalMethod.ThrowMethod, AsBukkitItem {
 
             meta.color = Color.fromRGB(0xCDFFF3)
             meta.addCustomEffect(
-                PotionEffect(PotionEffectType.SPEED, effectTime, 1, false, true),
+                PotionEffect(PotionEffectType.SPEED, effectTime.toTick(), 1, false, true),
                 true
             )
             meta.persistentDataContainer.set(itemKey, PersistentDataType.STRING, uniqueId.toString())
