@@ -11,20 +11,17 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.plugin.Plugin
-import org.bukkit.scheduler.BukkitTask
-import java.util.*
 
 class OptionalMethodEventListener(
     plugin: Plugin,
     jinrouGame: JinrouGame,
 ): LifecycleEventListener(plugin, {
-    val drinking = hashMapOf<UUID, BukkitTask>()
-
     register<PlayerItemConsumeEvent> { event ->
         val consumer = jinrouGame.getParticipant(event.player.uniqueId) ?: return@register
 
         val method = (consumer.getGrantedMethodByItemStack(event.item) as? OptionalMethod.DrinkingMethod) ?: return@register
         method.onConsume(consumer = consumer)
+        consumer.removeMethod(method)
     }
 
     register<PotionSplashEvent> { event ->
@@ -35,6 +32,7 @@ class OptionalMethodEventListener(
         val method = (shooter.getGrantedMethodByItemStack(potion.item) as? OptionalMethod.ThrowMethod) ?: return@register
 
         method.onConsume(consumer = shooter)
+        shooter.removeMethod(method)
     }
 
     register<PlayerInteractEvent> { event ->
@@ -46,5 +44,6 @@ class OptionalMethodEventListener(
 
         val method = (consumer.getGrantedMethodByItemStack(item) as? OptionalMethod.ClickMethod) ?: return@register
         method.onConsume(consumer = consumer)
+        consumer.removeMethod(method)
     }
 })
