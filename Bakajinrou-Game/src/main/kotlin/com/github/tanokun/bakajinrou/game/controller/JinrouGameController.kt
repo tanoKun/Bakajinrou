@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import java.util.logging.Logger
 import kotlin.coroutines.CoroutineContext
 
 class JinrouGameController(
@@ -19,12 +20,13 @@ class JinrouGameController(
     private val logger: GameLogger,
     private val scheduler: GameScheduler,
     private val bodyHandler: BodyHandler,
+    private val debug: Logger,
     uiDispatcher: CoroutineContext
 ) {
     private val job: Job = SupervisorJob()
 
     private val exceptionHandler = CoroutineExceptionHandler { context, throwable ->
-        logger.logException(throwable)
+        debug.severe(throwable.stackTraceToString())
     }
 
     val scope: CoroutineScope = CoroutineScope(job + uiDispatcher + exceptionHandler)
