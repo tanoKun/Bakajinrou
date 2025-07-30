@@ -1,15 +1,13 @@
 package com.github.tanokun.bakajinrou.plugin.method.optional
 
-import com.github.tanokun.bakajinrou.api.method.optional.OptionalMethod
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.plugin.formatter.toTick
 import com.github.tanokun.bakajinrou.plugin.method.AsBukkitItem
-import com.github.tanokun.bakajinrou.plugin.method.itemKey
+import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
-import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import plutoproject.adventurekt.component
@@ -32,9 +30,14 @@ class InvisibilityPotionItem: OptionalMethod.DrinkingMethod, AsBukkitItem {
 
     override val transportable: Boolean = true
 
+    override val isVisible: Boolean = true
+
     private val effectTime = 30.seconds
 
-    override fun onConsume(consumer: Participant) {}
+    override fun onConsume(consumer: Participant) {
+        Bukkit.getPlayer(consumer.uniqueId)
+            ?.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, effectTime.toTick(), 1, false, true))
+    }
 
     override fun createBukkitItem(): ItemStack {
         val item = ItemStack.of(Material.POTION)
@@ -45,11 +48,7 @@ class InvisibilityPotionItem: OptionalMethod.DrinkingMethod, AsBukkitItem {
             meta.displayName(component { text("透明化ポーション") color "#7F8392" without italic with bold })
 
             meta.color = Color.fromRGB(0x7F8392)
-            meta.addCustomEffect(
-                PotionEffect(PotionEffectType.INVISIBILITY, effectTime.toTick(), 1, false, true),
-                true
-            )
-            meta.persistentDataContainer.set(itemKey, PersistentDataType.STRING, uniqueId.toString())
+            setPersistent(meta.persistentDataContainer)
         }
 
         return item

@@ -1,17 +1,14 @@
 package com.github.tanokun.bakajinrou.plugin.method.optional
 
-import com.github.tanokun.bakajinrou.api.method.optional.OptionalMethod
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.plugin.formatter.toTick
 import com.github.tanokun.bakajinrou.plugin.method.AsBukkitItem
-import com.github.tanokun.bakajinrou.plugin.method.itemKey
 import com.github.tanokun.bakajinrou.plugin.method.protective.ResistanceProtectiveEffect
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
-import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.Plugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -35,9 +32,14 @@ class ResistancePotionItem(private val plugin: Plugin): OptionalMethod.DrinkingM
 
     override val transportable: Boolean = true
 
+    override val isVisible: Boolean = true
+
     private val effectTime = 20.seconds
 
     override fun onConsume(consumer: Participant) {
+        Bukkit.getPlayer(consumer.uniqueId)
+            ?.addPotionEffect(PotionEffect(PotionEffectType.RESISTANCE, effectTime.toTick(), 1, false, true))
+
         consumer.getActiveProtectiveMethods()
             .filter { it is ResistanceProtectiveEffect }
             .forEach { consumer.removeMethod(it) }
@@ -59,11 +61,7 @@ class ResistancePotionItem(private val plugin: Plugin): OptionalMethod.DrinkingM
             meta.displayName(component { text("耐性ポーション") color "#339900" without italic with bold })
 
             meta.color = Color.fromRGB(0x339900)
-            meta.addCustomEffect(
-                PotionEffect(PotionEffectType.RESISTANCE, effectTime.toTick(), 1, false, true),
-                true
-            )
-            meta.persistentDataContainer.set(itemKey, PersistentDataType.STRING, uniqueId.toString())
+            setPersistent(meta.persistentDataContainer)
         }
 
         return item
