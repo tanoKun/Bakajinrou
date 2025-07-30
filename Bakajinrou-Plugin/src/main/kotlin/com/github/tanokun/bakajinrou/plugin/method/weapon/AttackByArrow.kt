@@ -20,14 +20,12 @@ import kotlin.time.Duration.Companion.seconds
 
 class AttackByArrow(
     private val controller: JinrouGameController
-): ArrowMethod, AsBukkitItem {
+): ArrowMethod(), AsBukkitItem {
     override val uniqueId: UUID = UUID.randomUUID()
 
     override val transportable: Boolean = false
 
     private val revivalTime: Duration = 3.seconds
-
-    override fun onSuccessAttack(by: Participant, victim: Participant) = controller.killed(victim = victim, by = by)
 
     override fun onConsume(consumer: Participant) {
         controller.scope.launch {

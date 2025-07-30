@@ -1,9 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.method.weapon
 
-import com.github.tanokun.bakajinrou.api.attack.AttackResult
 import com.github.tanokun.bakajinrou.api.attack.method.effect.DamagePotionEffect
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
 import com.github.tanokun.bakajinrou.plugin.method.AsBukkitItem
 import com.github.tanokun.bakajinrou.plugin.method.itemKey
 import org.bukkit.Material
@@ -21,29 +19,12 @@ import plutoproject.adventurekt.text.with
 import plutoproject.adventurekt.text.without
 import java.util.*
 
-class AttackByDamagePotionEffect(
-    private val controller: JinrouGameController
-): DamagePotionEffect, AsBukkitItem {
+class AttackByDamagePotionEffect: DamagePotionEffect(), AsBukkitItem {
     override val uniqueId: UUID = UUID.randomUUID()
 
     override val transportable: Boolean = true
 
-    override fun onSuccessAttack(by: Participant, victim: Participant) = controller.killed(victim = victim, by = by)
-
     override fun onConsume(consumer: Participant) {}
-
-    override fun attack(by: Participant, victim: Participant) {
-        for (protectItem in victim.getActiveProtectiveMethods()) {
-            protectItem.onConsume(consumer = victim)
-
-            when (protectItem.verifyProtect(method = this)) {
-                is AttackResult.Protected -> return
-                AttackResult.SuccessAttack -> continue
-            }
-        }
-
-        onSuccessAttack(by, victim)
-    }
 
     override fun createBukkitItem(): ItemStack {
         val item = ItemStack.of(Material.SPLASH_POTION)

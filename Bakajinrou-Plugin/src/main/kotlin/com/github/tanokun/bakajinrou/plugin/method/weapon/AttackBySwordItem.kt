@@ -2,7 +2,6 @@ package com.github.tanokun.bakajinrou.plugin.method.weapon
 
 import com.github.tanokun.bakajinrou.api.attack.method.item.SwordItem
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
 import com.github.tanokun.bakajinrou.plugin.method.AsBukkitItem
 import com.github.tanokun.bakajinrou.plugin.method.itemKey
 import org.bukkit.Material
@@ -18,15 +17,10 @@ import plutoproject.adventurekt.text.with
 import plutoproject.adventurekt.text.without
 import java.util.*
 
-class AttackBySwordItem(
-    private val controller: JinrouGameController
-): SwordItem, AsBukkitItem {
+class AttackBySwordItem: SwordItem(), AsBukkitItem {
     override val uniqueId: UUID = UUID.randomUUID()
 
     override val transportable: Boolean = true
-
-    override fun onSuccessAttack(by: Participant, victim: Participant) = controller.killed(victim = victim, by = by)
-
     override fun onConsume(consumer: Participant) {}
 
     override fun createBukkitItem(): ItemStack {

@@ -1,6 +1,5 @@
 package com.github.tanokun.bakajinrou.plugin.method
 
-import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
 import com.github.tanokun.bakajinrou.plugin.method.optional.InvisibilityPotionItem
 import com.github.tanokun.bakajinrou.plugin.method.optional.ResistancePotionItem
 import com.github.tanokun.bakajinrou.plugin.method.optional.SpeedUpPotionItem
@@ -10,10 +9,10 @@ import com.github.tanokun.bakajinrou.plugin.method.weapon.AttackBySwordItem
 import org.bukkit.plugin.Plugin
 import kotlin.random.Random
 
-class BukkitItemFactory(plugin: Plugin, jinrouGameController: JinrouGameController) {
+class BukkitItemFactory(plugin: Plugin) {
     private val randomItems = listOf<() -> AsBukkitItem>(
-        { AttackBySwordItem(jinrouGameController) },
-        { AttackByDamagePotionEffect(jinrouGameController) },
+        { AttackBySwordItem() },
+        { AttackByDamagePotionEffect() },
         { InvisibilityPotionItem() },
         { SpeedUpPotionItem() },
         { ResistancePotionItem(plugin) },

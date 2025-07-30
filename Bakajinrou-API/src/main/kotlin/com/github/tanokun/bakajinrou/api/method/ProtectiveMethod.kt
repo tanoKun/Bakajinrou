@@ -7,19 +7,21 @@ interface ProtectiveMethod: GrantedMethod {
     val priority: ActivationPriority
 
     /**
-     * [method]での攻撃が、このアイテムで防御可能か検証します。
+     * 指定された攻撃手段による攻撃を、この防御アイテムが防御できるかを判定します。
      *
      * @param method 攻撃手段
      *
-     * @return 検証した攻撃の結果
+     * @return 防御結果
      */
     fun verifyProtect(method: AttackMethod): AttackResult
 
     /**
-     * このアイテムが、防御可能状態にあるか示します。
-     * これがfalseだった場合、アイテムは消費されません。
+     * この防御アイテムが防御可能な状態かを返します。
+     * 防御不可能な場合は消費されません。
      *
-     * @return 防御可能か
+     * @param of 防御者
+     *
+     * @return 防御可能であれば true、そうでなければ false
      */
     fun isActive(of: Participant): Boolean
 }
