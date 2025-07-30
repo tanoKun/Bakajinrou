@@ -3,10 +3,8 @@ package com.github.tanokun.bakajinrou.plugin.method.weapon
 import com.github.tanokun.bakajinrou.api.attack.method.item.SwordItem
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.plugin.method.AsBukkitItem
-import com.github.tanokun.bakajinrou.plugin.method.itemKey
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
-import org.bukkit.persistence.PersistentDataType
 import plutoproject.adventurekt.component
 import plutoproject.adventurekt.text.color
 import plutoproject.adventurekt.text.style.bold
@@ -21,6 +19,9 @@ class AttackBySwordItem: SwordItem(), AsBukkitItem {
     override val uniqueId: UUID = UUID.randomUUID()
 
     override val transportable: Boolean = true
+
+    override val isVisible: Boolean = true
+
     override fun onConsume(consumer: Participant) {}
 
     override fun createBukkitItem(): ItemStack {
@@ -32,7 +33,7 @@ class AttackBySwordItem: SwordItem(), AsBukkitItem {
                 component { text("ポーション、トーテムに対しては無効") color gray without italic with bold }
             ))
 
-            meta.persistentDataContainer.set(itemKey, PersistentDataType.STRING, uniqueId.toString())
+            setPersistent(meta.persistentDataContainer)
         }
 
         return item

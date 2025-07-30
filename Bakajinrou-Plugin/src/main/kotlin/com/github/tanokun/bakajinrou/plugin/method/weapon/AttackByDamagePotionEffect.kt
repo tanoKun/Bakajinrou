@@ -3,11 +3,9 @@ package com.github.tanokun.bakajinrou.plugin.method.weapon
 import com.github.tanokun.bakajinrou.api.attack.method.effect.DamagePotionEffect
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.plugin.method.AsBukkitItem
-import com.github.tanokun.bakajinrou.plugin.method.itemKey
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
-import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionType
 import plutoproject.adventurekt.component
 import plutoproject.adventurekt.text.color
@@ -24,6 +22,8 @@ class AttackByDamagePotionEffect: DamagePotionEffect(), AsBukkitItem {
 
     override val transportable: Boolean = true
 
+    override val isVisible: Boolean = true
+
     override fun onConsume(consumer: Participant) {}
 
     override fun createBukkitItem(): ItemStack {
@@ -38,7 +38,7 @@ class AttackByDamagePotionEffect: DamagePotionEffect(), AsBukkitItem {
             ))
 
             meta.basePotionType = PotionType.HARMING
-            meta.persistentDataContainer.set(itemKey, PersistentDataType.STRING, uniqueId.toString())
+            setPersistent(meta.persistentDataContainer)
         }
 
         return item

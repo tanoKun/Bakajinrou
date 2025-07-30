@@ -4,16 +4,16 @@ import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.protect.method.item.TotemItem
 import com.github.tanokun.bakajinrou.plugin.method.AsBukkitItem
 import com.github.tanokun.bakajinrou.plugin.method.getGrantedMethodByItemStack
-import com.github.tanokun.bakajinrou.plugin.method.itemKey
 import org.bukkit.*
 import org.bukkit.inventory.ItemStack
-import org.bukkit.persistence.PersistentDataType
 import java.util.*
 
 class TotemProtectiveItem: TotemItem(), AsBukkitItem {
     override val uniqueId: UUID = UUID.randomUUID()
 
     override val transportable: Boolean = true
+
+    override val isVisible: Boolean = true
 
     override fun isActive(of: Participant): Boolean {
         val player = Bukkit.getPlayer(of.uniqueId) ?: return false
@@ -35,7 +35,7 @@ class TotemProtectiveItem: TotemItem(), AsBukkitItem {
         val item = ItemStack.of(Material.TOTEM_OF_UNDYING)
 
         item.editMeta { meta ->
-            meta.persistentDataContainer.set(itemKey, PersistentDataType.STRING, uniqueId.toString())
+            setPersistent(meta.persistentDataContainer)
         }
 
         return item

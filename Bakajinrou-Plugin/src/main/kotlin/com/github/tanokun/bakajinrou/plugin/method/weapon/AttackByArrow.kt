@@ -5,13 +5,11 @@ import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
 import com.github.tanokun.bakajinrou.plugin.formatter.toTick
 import com.github.tanokun.bakajinrou.plugin.method.AsBukkitItem
-import com.github.tanokun.bakajinrou.plugin.method.itemKey
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
-import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.util.*
@@ -24,6 +22,8 @@ class AttackByArrow(
     override val uniqueId: UUID = UUID.randomUUID()
 
     override val transportable: Boolean = false
+
+    override val isVisible: Boolean = true
 
     private val revivalTime: Duration = 3.seconds
 
@@ -44,7 +44,7 @@ class AttackByArrow(
         val item = ItemStack.of(Material.ARROW)
 
         item.editMeta { meta ->
-            meta.persistentDataContainer.set(itemKey, PersistentDataType.STRING, uniqueId.toString())
+            setPersistent(meta.persistentDataContainer)
         }
 
         return item
