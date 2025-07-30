@@ -1,11 +1,7 @@
 package com.github.tanokun.bakajinrou.game.controller
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
-import com.github.tanokun.bakajinrou.api.ParticipantStates
 import com.github.tanokun.bakajinrou.api.finishing.GameFinisher
-import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.game.logger.BodyHandler
-import com.github.tanokun.bakajinrou.game.logger.GameLogger
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.schedule.onCancellation
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -17,9 +13,7 @@ import kotlin.coroutines.CoroutineContext
 
 class JinrouGameController(
     private val game: JinrouGame,
-    private val logger: GameLogger,
     private val scheduler: GameScheduler,
-    private val bodyHandler: BodyHandler,
     private val debug: Logger,
     uiDispatcher: CoroutineContext
 ) {
@@ -41,29 +35,37 @@ class JinrouGameController(
         })
     }
 
-    fun killed(victim: Participant, by: Participant) {
-        if (!game.participants.contains(victim)) return
-        if (!game.participants.contains(by)) return
-
-        if (victim.state != ParticipantStates.SURVIVED) return
-
-        victim.dead()
-
-        logger.logKillParticipantToSpectator(victim.uniqueId, by.uniqueId)
-        bodyHandler.createBody(victim.uniqueId)
-
-        game.judge()?.let { finisher ->
-            finish(finisher)
-        }
-    }
-
+    /**
+     * ゲームを終了、スケジューラの停止処理を行います。
+     * 基本的に、1つのゲームに対して1度しか呼び出されません。
+     *
+     * 前提条件:
+     * - ゲームがアクティブであること
+     *
+     * 副作用：
+     * - [GameFinisher] を使用し、ゲーム終了通知を送信
+     * - ゲームスケジューラの停止
+     *
+     * @param finisher ゲームの終了を処理する
+     */
     fun finish(finisher: GameFinisher) {
-        finisher.notifyFinish()
+        if (!scheduler.isActive()) return
 
-        if (scheduler.isActive()) scheduler.cancel()
+        finisher.notifyFinish()
+        scheduler.cancel()
     }
 
+    /**
+     * ゲームを開始、参加者の初期化を行います。
+     * 基本的に、1つのゲームに対して1度しか呼び出されません。
+     *
+     * 副作用：
+     * - ゲームスケジューラの開始
+     * - 各参加者の初期化処理
+     */
     fun launch() {
+        if (scheduler.isActive()) return
+
         scheduler.launch()
         game.participants.forEach { it.position.doAtStarting(it.uniqueId) }
     }
