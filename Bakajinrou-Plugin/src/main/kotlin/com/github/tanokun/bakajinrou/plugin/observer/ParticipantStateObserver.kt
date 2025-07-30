@@ -17,7 +17,7 @@ class ParticipantStateObserver(
     jinrouGame: JinrouGame,
     controller: JinrouGameController,
     asyncContext: CoroutineContext,
-    uiContext: CoroutineContext
+    uiContext: CoroutineContext,
 ) {
     init {
         jinrouGame.participants.forEach {
@@ -30,6 +30,8 @@ class ParticipantStateObserver(
                     val entries = Bukkit.getOnlinePlayers()
                         .filter { it !== player }
                         .map { createPacketEntry(it as CraftPlayer) }
+
+                    if (entries.isEmpty()) return@launch
 
                     (player as? CraftPlayer)?.handle?.connection?.send(
                         ClientboundPlayerInfoUpdatePacket(EnumSet.of(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME), entries)
@@ -51,4 +53,6 @@ class ParticipantStateObserver(
             Optionull.map(handle.chatSession, RemoteChatSession::asData)
         )
     }
+
+
 }
