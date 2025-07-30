@@ -8,13 +8,14 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 class QuartzDistribute(
-    private val jinrouGame: JinrouGame,
     private val getBukkitPlayer: (Participant) -> Player?
 ) {
     /**
      * 生存状態の参加者にクオーツを1個配布します。
+     *
+     * @param jinrouGame 干渉先のゲーム
      */
-    fun distributeQuartzToSurvivors() {
+    fun distributeQuartzToSurvivors(jinrouGame: JinrouGame) {
         jinrouGame.participants
             .filter { it.state == ParticipantStates.SURVIVED }
             .forEach {

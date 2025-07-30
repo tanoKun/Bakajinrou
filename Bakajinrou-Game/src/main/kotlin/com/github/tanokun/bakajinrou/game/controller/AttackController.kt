@@ -62,6 +62,8 @@ class AttackController(
         gameLogger.logKillParticipantToSpectator(victim.uniqueId, by.uniqueId)
         bodyHandler.createBody(victim.uniqueId)
 
+        debug.logKill(by.uniqueId, victim.uniqueId)
+
         game.judge()?.let { finisher ->
             gameController.finish(finisher)
         }
@@ -91,11 +93,9 @@ class AttackController(
         with.onConsume(consumer = by)
         by.removeMethod(method = with)
 
-        if (result == AttackResult.SuccessAttack) {
-            notifyDeath(victim, by)
-        }
-
         debug.logAttackResult(by.uniqueId, victim.uniqueId, with, result)
+
+        if (result == AttackResult.SuccessAttack) notifyDeath(by = by, victim = victim)
     }
 
     /**
@@ -120,11 +120,9 @@ class AttackController(
         val result = with.attack(victim = victim)
         by.removeMethod(with)
 
-        if (result == AttackResult.SuccessAttack) {
-            notifyDeath(victim, by)
-        }
-
         debug.logAttackResult(by.uniqueId, victim.uniqueId, with, result)
+
+        if (result == AttackResult.SuccessAttack) notifyDeath(by = by, victim = victim)
     }
 
     /**
@@ -149,11 +147,9 @@ class AttackController(
         victims.forEach {
             val result = with.attack(victim = it)
 
-            if (result == AttackResult.SuccessAttack) {
-                notifyDeath(by = by, victim = it)
-            }
-
             debug.logAttackResult(by.uniqueId, it.uniqueId, with, result)
+
+            if (result == AttackResult.SuccessAttack) notifyDeath(by = by, victim = it)
         }
 
 

@@ -59,8 +59,9 @@ class GameSchedulesTest {
     @Test
     @DisplayName("アクションバーに表示される時間のテスト")
     fun showLeftTimeToActionbarTest() {
-        val timeAnnouncer = TimeAnnouncer(jinrouGame = createJinrouGame()) { server.getPlayer(it.uniqueId) }
-        timeAnnouncer.showRemainingTimeActionBar(231)
+        val timeAnnouncer = TimeAnnouncer { server.getPlayer(it.uniqueId) }
+        val jinrouGame = createJinrouGame()
+        timeAnnouncer.showRemainingTimeActionBar(jinrouGame, 231)
 
         players.forEach { player ->
             val expected = Component.text("残り時間: 3分 51秒")
@@ -72,7 +73,7 @@ class GameSchedulesTest {
             assertEquals(serializer.serialize(expected), serializer.serialize(lastSendActionbar))
         }
 
-        timeAnnouncer.showRemainingTimeActionBar(47)
+        timeAnnouncer.showRemainingTimeActionBar(jinrouGame, 47)
 
         players.forEach { player ->
             val expected = Component.text("残り時間: 0分 47秒")
@@ -88,8 +89,10 @@ class GameSchedulesTest {
     @Test
     @DisplayName("妖狐、人狼は発光せず、村陣営と狂人のみ発光")
     fun doNotGrowWolfsAndFoxButCitizensAndMadman() {
-        val gameSchedules = GrowingNotifier(jinrouGame = createJinrouGame()) { server.getPlayer(it.uniqueId) }
-        gameSchedules.growCitizens()
+        val gameSchedules = GrowingNotifier { server.getPlayer(it.uniqueId) }
+        val jinrouGame = createJinrouGame()
+
+        gameSchedules.growCitizens(jinrouGame)
 
         assertFalse(wolf.hasPotionEffect(PotionEffectType.GLOWING), "人狼は発光を持たない")
         assertTrue(madman.hasPotionEffect(PotionEffectType.GLOWING), "狂人は発光を持つ")

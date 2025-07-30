@@ -9,7 +9,6 @@ import org.bukkit.entity.Player
 import kotlin.time.Duration.Companion.seconds
 
 class TimeAnnouncer(
-    private val jinrouGame: JinrouGame,
     private val getBukkitPlayer: (Participant) -> Player?
 ) {
     /**
@@ -17,11 +16,12 @@ class TimeAnnouncer(
      *
      * 表示フォーマットは `"残り時間: ${minutes}分 ${seconds}秒"` です。
      *
+     * @param jinrouGame 干渉先のゲーム
      * @param leftSeconds 残り時間（秒単位）。0以上である必要があります。
      *
      * @throws IllegalArgumentException 残り時間が0未満の場合
      */
-    fun showRemainingTimeActionBar(leftSeconds: Long) {
+    fun showRemainingTimeActionBar(jinrouGame: JinrouGame, leftSeconds: Long) {
         if (leftSeconds < 0) throw IllegalArgumentException("残り時間は0以上である必要があります。")
 
         val formattedTime = leftSeconds.seconds.toComponents { _, minutes, seconds, _ ->

@@ -8,7 +8,6 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
 class HiddenPositionAnnouncer(
-    private val jinrouGame: JinrouGame,
     private val getBukkitPlayer: (Participant) -> Player?,
     private val playerNameCache: PlayerNameCache
 ) {
@@ -17,9 +16,11 @@ class HiddenPositionAnnouncer(
      * - 人狼
      * - 妖狐
      *
+     * @param jinrouGame 干渉先のゲーム
+     *
      * @see com.github.tanokun.bakajinrou.plugin.formatter.ParticipantsFormatter
      */
-    fun notifyWolfsAndFox() {
+    fun notifyWolfsAndFox(jinrouGame: JinrouGame) {
         val formatter = ParticipantsFormatter(jinrouGame.participants, playerNameCache) { Bukkit.getPlayer(it.uniqueId) }
 
         jinrouGame.participants.forEach {

@@ -1,5 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.setting.map
 
+import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.game.scheduler.schedule.TimeSchedule
 import com.github.tanokun.bakajinrou.game.scheduler.schedule.arranged
 import com.github.tanokun.bakajinrou.game.scheduler.schedule.every
@@ -24,27 +25,30 @@ data class GameMap(
         quartzDistribute: QuartzDistribute,
         growingNotifier: GrowingNotifier,
         hiddenPositionAnnouncer: HiddenPositionAnnouncer,
+        jinrouGame: JinrouGame,
     ): List<TimeSchedule> = listOf(
         1.seconds every { leftSeconds ->
-            timeAnnouncer.showRemainingTimeActionBar(leftSeconds)
+            timeAnnouncer.showRemainingTimeActionBar(jinrouGame, leftSeconds)
         },
 
-        delayToGiveQuartz every { _ ->
-            quartzDistribute.distributeQuartzToSurvivors()
+        delayToGiveQuartz every { leftSeconds ->
+            quartzDistribute.distributeQuartzToSurvivors(jinrouGame)
+
+            if (startTime == leftSeconds) quartzDistribute.distributeQuartzToSurvivors(jinrouGame)
         },
 
         6.minutes arranged {
-            growingNotifier.announceGlowingStart(3)
+            growingNotifier.announceGlowingStart(jinrouGame, 3)
         },
 
         1.minutes every schedule@ { leftSeconds ->
             if (leftSeconds.seconds > 5.minutes) return@schedule
 
-            growingNotifier.growCitizens()
+            growingNotifier.growCitizens(jinrouGame)
         },
 
         3.minutes arranged {
-            hiddenPositionAnnouncer.notifyWolfsAndFox()
+            hiddenPositionAnnouncer.notifyWolfsAndFox(jinrouGame)
         }
     )
 }

@@ -12,15 +12,15 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
 class GrowingNotifier(
-    private val jinrouGame: JinrouGame,
     private val getBukkitPlayer: (Participant) -> Player?
 ) {
     /**
      * 残り時間 [glowingStartMinutes] 分の発光お知らせを全ての参加者に表示します。
      *
+     * @param jinrouGame 干渉先のゲーム
      * @param glowingStartMinutes 何分から発光が始まるか。
      */
-    fun announceGlowingStart(glowingStartMinutes: Int) {
+    fun announceGlowingStart(jinrouGame: JinrouGame, glowingStartMinutes: Int) {
         jinrouGame.participants.forEach {
             val bukkitPlayer = getBukkitPlayer(it) ?: return@forEach
 
@@ -36,8 +36,10 @@ class GrowingNotifier(
      * 以下の役職を除き、5秒間の発光を付与します。
      * - 人狼
      * - 妖狐
+     *
+     * @param jinrouGame 干渉先のゲーム
      */
-    fun growCitizens() {
+    fun growCitizens(jinrouGame: JinrouGame) {
         jinrouGame.participants
             .filterNot { it.isPosition<WolfPosition>() || it.isPosition<FoxPosition>() }
             .forEach {

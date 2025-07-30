@@ -14,13 +14,15 @@ import com.github.tanokun.bakajinrou.game.logger.DebugLogger
 import com.github.tanokun.bakajinrou.game.logger.GameLogger
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.schedule.TimeSchedule
-import com.github.tanokun.bakajinrou.game.scheduler.schedule.onCancellationByOvertime
-import com.github.tanokun.bakajinrou.plugin.finisher.CitizenSideFinisher
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.onCancellation
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.onLaunching
 import com.github.tanokun.bakajinrou.plugin.method.BukkitItemFactory
 import com.github.tanokun.bakajinrou.plugin.observer.ParticipantStateObserver
+import com.github.tanokun.bakajinrou.plugin.scheduler.schedule.GameLifecycleUI
 import com.github.tanokun.bakajinrou.plugin.setting.factory.GameListenerRegistry
 import com.github.tanokun.bakajinrou.plugin.setting.factory.PositionAssigner
 import com.github.tanokun.bakajinrou.plugin.setting.factory.SelectedMap
+import com.github.tanokun.bakajinrou.plugin.setting.map.GameMap
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
@@ -34,11 +36,12 @@ class GamePlanner(
     private val loggerProvider: LoggerProvider,
     private val gameSchedulerProvider: GameSchedulerProvider,
     private val bodyHandlerProvider: BodyHandlerProvider,
-    private val positionAssigner: PositionAssigner
+    private val positionAssigner: PositionAssigner,
+    private val gameLifecycleUI: GameLifecycleUI
 ) {
     var selectedMap: SelectedMap? = null
 
-    private val candidates: MutableSet<Player> = mutableSetOf()
+    val candidates: MutableSet<Player> = mutableSetOf()
 
     private val spectators: MutableSet<Player> = mutableSetOf()
 
@@ -61,10 +64,10 @@ class GamePlanner(
         val strategyIntegrity = StrategyIntegrity()
 
         val gameLogger: GameLogger = loggerProvider()
-        val schedules = selectedMap.createSchedules()
+        val jinrouGame: JinrouGame = jinrouGameProvider(positionAssigner.assignPositions(candidates, spectators, strategyIntegrity))
+        val schedules = selectedMap.createSchedules(jinrouGame)
         val scheduler: GameScheduler = gameSchedulerProvider(selectedMap.startTime, schedules, plugin)
         val bodyHandler: BodyHandler = bodyHandlerProvider()
-        val jinrouGame: JinrouGame = jinrouGameProvider(positionAssigner.assignPositions(candidates, spectators, strategyIntegrity))
 
         val jinrouGameController = JinrouGameController(jinrouGame, scheduler, plugin.logger, plugin.minecraftDispatcher)
         val attackController = AttackController(gameLogger, bodyHandler, DebugLogger(plugin.logger, playerNameCache), jinrouGame, jinrouGameController)
@@ -72,16 +75,16 @@ class GamePlanner(
         val itemFactory = BukkitItemFactory(plugin)
 
         ParticipantStateObserver(jinrouGame, jinrouGameController, plugin.asyncDispatcher, plugin.minecraftDispatcher)
-        addDefinitiveSchedules(scheduler, plugin, jinrouGame, jinrouGameController, attackController, itemFactory, protocolManager)
+        registerListeners(scheduler, plugin, jinrouGame, attackController, itemFactory, protocolManager)
+        addLifecycleUI(scheduler, jinrouGame, jinrouGameController, gameLifecycleUI, selectedMap.gameMap)
 
         return jinrouGame to jinrouGameController
     }
 
-    private fun addDefinitiveSchedules(
+    private fun registerListeners(
         scheduler: GameScheduler,
         plugin: Plugin,
         jinrouGame: JinrouGame,
-        jinrouGameController: JinrouGameController,
         attackController: AttackController,
         itemFactory: BukkitItemFactory,
         protocolManager: ProtocolManager
@@ -91,8 +94,21 @@ class GamePlanner(
             scheduler.addSchedule(asUnRegisterSchedule())
         }
 
-        scheduler.addSchedule(onCancellationByOvertime {
-            jinrouGameController.finish(CitizenSideFinisher(jinrouGame))
+    }
+
+    private fun addLifecycleUI(
+        scheduler: GameScheduler,
+        jinrouGame: JinrouGame,
+        jinrouGameController: JinrouGameController,
+        gameLifecycleUi: GameLifecycleUI,
+        gameMap: GameMap
+    ) {
+        scheduler.addSchedule(onLaunching {
+            gameLifecycleUi.startingGame(jinrouGame, jinrouGameController, gameMap)
+        })
+
+        scheduler.addSchedule(onCancellation {
+            gameLifecycleUi.finishGame(jinrouGame, gameMap)
         })
     }
 }

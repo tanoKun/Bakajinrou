@@ -3,6 +3,7 @@ package com.github.tanokun.bakajinrou.plugin.setting.factory
 import com.comphenix.protocol.ProtocolManager
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.game.controller.AttackController
+import com.github.tanokun.bakajinrou.game.scheduler.schedule.onCancellation
 import com.github.tanokun.bakajinrou.game.scheduler.schedule.onLaunching
 import com.github.tanokun.bakajinrou.plugin.listener.LifecycleListener
 import com.github.tanokun.bakajinrou.plugin.listener.launching.PlayerConnectionEventListener
@@ -39,7 +40,7 @@ class GameListenerRegistry(
         listeners.forEach(LifecycleListener::registerAll)
     }
 
-    fun asUnRegisterSchedule() = onLaunching {
+    fun asUnRegisterSchedule() = onCancellation {
         listeners.forEach(LifecycleListener::unregisterAll)
     }
 }
