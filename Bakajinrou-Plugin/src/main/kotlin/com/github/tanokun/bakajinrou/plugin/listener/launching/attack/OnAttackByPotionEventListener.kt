@@ -2,6 +2,7 @@ package com.github.tanokun.bakajinrou.plugin.listener.launching.attack
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.attack.method.effect.DamagePotionEffect
+import com.github.tanokun.bakajinrou.game.controller.AttackController
 import com.github.tanokun.bakajinrou.plugin.listener.LifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.method.getGrantedMethodByItemStack
 import org.bukkit.entity.Player
@@ -14,6 +15,7 @@ import org.bukkit.potion.PotionType
 class OnAttackByPotionEventListener(
     plugin: Plugin,
     jinrouGame: JinrouGame,
+    attackController: AttackController,
 ): LifecycleEventListener(plugin, {
     register<PotionSplashEvent> { event ->
         val potion = event.entity
@@ -23,15 +25,12 @@ class OnAttackByPotionEventListener(
         val attackMethod = (shooter.getGrantedMethodByItemStack(potion.item) as? DamagePotionEffect) ?: return@register
 
         if (potion.potionMeta.basePotionType != PotionType.HARMING) return@register
-        event.affectedEntities
+
+        val victims = event.affectedEntities
             .filterIsInstance<Player>()
-            .forEach { victimPlayer ->
-                val victim = jinrouGame.getParticipant(victimPlayer.uniqueId) ?: return@forEach
+            .mapNotNull { jinrouGame.getParticipant(it.uniqueId) }
 
-                attackMethod.attack(by = shooter, victim = victim)
-            }
-
-        shooter.removeMethod(attackMethod)
+        attackController.attack(by = shooter, victims = victims, attackMethod)
     }
 
     register<ProjectileLaunchEvent> { event ->
@@ -46,6 +45,6 @@ class OnAttackByPotionEventListener(
             return@register
         }
 
-        damagePotionEffectMethod.onConsume(shooter)
+        attackController.throwPotion(shooter, damagePotionEffectMethod)
     }
 })

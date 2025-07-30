@@ -2,6 +2,7 @@ package com.github.tanokun.bakajinrou.plugin.listener.launching.attack
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.attack.method.other.ArrowMethod
+import com.github.tanokun.bakajinrou.game.controller.AttackController
 import com.github.tanokun.bakajinrou.plugin.listener.LifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.method.appearance.BowItem
 import com.github.tanokun.bakajinrou.plugin.method.getGrantedMethodByItemStack
@@ -15,6 +16,7 @@ import org.bukkit.plugin.Plugin
 class OnAttackByBowEventListener(
     plugin: Plugin,
     jinrouGame: JinrouGame,
+    attackController: AttackController,
 ): LifecycleEventListener(plugin, {
     register<EntityDamageByEntityEvent> { event ->
         val attacker = (event.damager as? Arrow) ?: return@register
@@ -27,8 +29,7 @@ class OnAttackByBowEventListener(
 
         event.damage = 0.01
 
-        attackMethod.attack(by = shooter, victim = victim)
-        shooter.removeMethod(attackMethod)
+        attackController.attack(by = shooter, victim = victim, attackMethod)
     }
 
     register<EntityShootBowEvent> { event ->
@@ -48,6 +49,6 @@ class OnAttackByBowEventListener(
             return@register
         }
 
-        arrowMethod.onConsume(shooter)
+        attackController.shootArrow(shooter, arrowMethod)
     }
 })

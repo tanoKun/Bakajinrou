@@ -2,6 +2,7 @@ package com.github.tanokun.bakajinrou.plugin.listener.launching.attack
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.attack.method.item.SwordItem
+import com.github.tanokun.bakajinrou.game.controller.AttackController
 import com.github.tanokun.bakajinrou.plugin.listener.LifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.method.getGrantedMethodByItemStack
 import org.bukkit.entity.Player
@@ -12,6 +13,7 @@ import org.bukkit.plugin.Plugin
 class OnAttackBySwordEventListener(
     plugin: Plugin,
     jinrouGame: JinrouGame,
+    attackController: AttackController,
 ): LifecycleEventListener(plugin, {
     register<EntityDamageByEntityEvent> { event ->
         val attacker = jinrouGame.getParticipant(event.damager.uniqueId) ?: return@register
@@ -30,8 +32,6 @@ class OnAttackBySwordEventListener(
 
         if (attackMethod !is SwordItem) return@register
 
-        attackMethod.attack(by = attacker, victim = victim)
-        attackMethod.onConsume(consumer = attacker)
-        attacker.removeMethod(attackMethod)
+        attackController.attack(by = attacker, victim = victim, attackMethod)
     }
 })
