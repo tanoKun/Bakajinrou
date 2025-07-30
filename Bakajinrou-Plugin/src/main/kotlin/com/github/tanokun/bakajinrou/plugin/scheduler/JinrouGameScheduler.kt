@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.schedule
+package com.github.tanokun.bakajinrou.plugin.scheduler
 
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.schedule.OnCancellationTimeSchedule

@@ -3,7 +3,10 @@ package com.github.tanokun.bakajinrou.plugin.setting.map
 import com.github.tanokun.bakajinrou.game.scheduler.schedule.TimeSchedule
 import com.github.tanokun.bakajinrou.game.scheduler.schedule.arranged
 import com.github.tanokun.bakajinrou.game.scheduler.schedule.every
-import com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
+import com.github.tanokun.bakajinrou.plugin.scheduler.schedule.GrowingNotifier
+import com.github.tanokun.bakajinrou.plugin.scheduler.schedule.HiddenPositionAnnouncer
+import com.github.tanokun.bakajinrou.plugin.scheduler.schedule.QuartzDistribute
+import com.github.tanokun.bakajinrou.plugin.scheduler.schedule.TimeAnnouncer
 import org.bukkit.Location
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
@@ -15,39 +18,33 @@ data class GameMap(
     val startTime: Long,
     val delayToGiveQuartz: Duration
 ) {
-    /**
-     *
-     * @param planner Bukkitへの通知の委託先
-     * @param bukkitPlayerNameCache プレイヤー名のキャッシュ
-     *
-     * @return ゲームのスケジュール
-     *
-     * @see GameSchedules
-     * @see com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
-     */
+
     fun createSchedules(
-        planner: GameSchedules, bukkitPlayerNameCache: BukkitPlayerNameCache
+        timeAnnouncer: TimeAnnouncer,
+        quartzDistribute: QuartzDistribute,
+        growingNotifier: GrowingNotifier,
+        hiddenPositionAnnouncer: HiddenPositionAnnouncer,
     ): List<TimeSchedule> = listOf(
         1.seconds every { leftSeconds ->
-            planner.showLeftTime(leftSeconds)
+            timeAnnouncer.showRemainingTimeActionBar(leftSeconds)
         },
 
         delayToGiveQuartz every { _ ->
-            planner.giveQuartzToSurvivedParticipants()
+            quartzDistribute.distributeQuartzToSurvivors()
+        },
+
+        6.minutes arranged {
+            growingNotifier.announceGlowingStart(3)
         },
 
         1.minutes every schedule@ { leftSeconds ->
             if (leftSeconds.seconds > 5.minutes) return@schedule
 
-            planner.growCitizens()
-        },
-
-        6.minutes arranged {
-            planner.notifyParticipantsOfGrowing()
+            growingNotifier.growCitizens()
         },
 
         3.minutes arranged {
-            planner.notifyWolfsAndFox(bukkitPlayerNameCache)
+            hiddenPositionAnnouncer.notifyWolfsAndFox()
         }
     )
 }
