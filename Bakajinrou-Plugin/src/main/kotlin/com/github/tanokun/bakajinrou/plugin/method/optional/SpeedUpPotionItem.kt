@@ -1,15 +1,12 @@
 package com.github.tanokun.bakajinrou.plugin.method.optional
 
-import com.github.tanokun.bakajinrou.api.method.optional.OptionalMethod
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.plugin.formatter.toTick
 import com.github.tanokun.bakajinrou.plugin.method.AsBukkitItem
-import com.github.tanokun.bakajinrou.plugin.method.itemKey
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.PotionMeta
-import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import plutoproject.adventurekt.component
@@ -32,6 +29,8 @@ class SpeedUpPotionItem: OptionalMethod.ThrowMethod, AsBukkitItem {
 
     override val transportable: Boolean = true
 
+    override val isVisible: Boolean = true
+
     private val effectTime = 20.seconds
 
     override fun onConsume(consumer: Participant) {}
@@ -49,7 +48,7 @@ class SpeedUpPotionItem: OptionalMethod.ThrowMethod, AsBukkitItem {
                 PotionEffect(PotionEffectType.SPEED, effectTime.toTick(), 1, false, true),
                 true
             )
-            meta.persistentDataContainer.set(itemKey, PersistentDataType.STRING, uniqueId.toString())
+            setPersistent(meta.persistentDataContainer)
         }
 
         return item
