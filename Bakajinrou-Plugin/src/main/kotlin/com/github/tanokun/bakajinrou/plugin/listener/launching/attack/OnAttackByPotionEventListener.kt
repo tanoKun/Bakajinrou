@@ -40,10 +40,7 @@ class OnAttackByPotionEventListener(
         val shooter = jinrouGame.getParticipant(shooterPlayer.uniqueId) ?: return@register
         val damagePotionEffectMethod = shooter.getGrantedMethodByItemStack(potion.item) ?: return@register
 
-        if (damagePotionEffectMethod !is DamagePotionEffect) {
-            event.isCancelled = true
-            return@register
-        }
+        if (damagePotionEffectMethod !is DamagePotionEffect) return@register
 
         attackController.throwPotion(shooter, damagePotionEffectMethod)
     }
