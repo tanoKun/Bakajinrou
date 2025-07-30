@@ -6,7 +6,7 @@ import com.github.tanokun.bakajinrou.api.participant.position.citizen.IdiotPosit
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
-import com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
+import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.position.citizen.CitizenPosition
 import com.github.tanokun.bakajinrou.plugin.position.citizen.FortunePosition
 import com.github.tanokun.bakajinrou.plugin.position.citizen.KnightPosition
@@ -34,7 +34,7 @@ import plutoproject.adventurekt.text.style.gray
  */
 class ParticipantsFormatter(
     private val participants: List<Participant>,
-    private val nameCache: BukkitPlayerNameCache,
+    private val nameCache: PlayerNameCache,
     private val playerProvider: (Participant) -> Player?
 ) {
     fun formatWolf(
