@@ -67,6 +67,6 @@ class JinrouGameController(
         if (scheduler.isActive()) return
 
         scheduler.launch()
-        game.participants.forEach { it.position.doAtStarting(it.uniqueId) }
+        game.participants.forEach { it.position.doAtStarting(it) }
     }
 }

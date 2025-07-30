@@ -1,8 +1,8 @@
 package com.github.tanokun.bakajinrou.plugin.position.citizen.idiot
 
-import java.util.*
+import com.github.tanokun.bakajinrou.api.participant.Participant
 
 object IdiotAsFortunePosition: IdiotAsJobPosition("占い師") {
-    override fun doAtStarting(uniqueId: UUID) {
+    override fun doAtStarting(participant: Participant) {
     }
 }
