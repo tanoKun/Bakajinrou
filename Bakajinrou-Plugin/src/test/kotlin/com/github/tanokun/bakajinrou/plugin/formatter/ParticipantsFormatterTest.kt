@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.formatter
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.plugin.cache.BukkitPlayerNameCache
+import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.participant.ParticipantStrategy
 import com.github.tanokun.bakajinrou.plugin.position.citizen.CitizenPosition
 import com.github.tanokun.bakajinrou.plugin.position.citizen.FortunePosition
@@ -228,7 +228,7 @@ class ParticipantsFormatterTest {
         Participant(citizen2UniqueId, CitizenPosition, mockk<ParticipantStrategy>()),
     )
 
-    fun createCaches() = BukkitPlayerNameCache().apply {
+    fun createCaches() = PlayerNameCache().apply {
         put(wolf1UniqueId, "wolf1")
         put(wolf2UniqueId, "wolf2")
         put(madman1UniqueId, "madman1")
