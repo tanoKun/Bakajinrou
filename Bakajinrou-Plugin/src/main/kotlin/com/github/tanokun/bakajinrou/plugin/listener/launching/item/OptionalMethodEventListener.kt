@@ -1,9 +1,9 @@
 package com.github.tanokun.bakajinrou.plugin.listener.launching.item
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
-import com.github.tanokun.bakajinrou.api.method.optional.OptionalMethod
 import com.github.tanokun.bakajinrou.plugin.listener.LifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.method.getGrantedMethodByItemStack
+import com.github.tanokun.bakajinrou.plugin.method.optional.OptionalMethod
 import org.bukkit.entity.Player
 import org.bukkit.event.block.Action
 import org.bukkit.event.entity.PotionSplashEvent
@@ -44,6 +44,5 @@ class OptionalMethodEventListener(
 
         val method = (consumer.getGrantedMethodByItemStack(item) as? OptionalMethod.ClickMethod) ?: return@register
         method.onConsume(consumer = consumer)
-        consumer.removeMethod(method)
     }
 })
