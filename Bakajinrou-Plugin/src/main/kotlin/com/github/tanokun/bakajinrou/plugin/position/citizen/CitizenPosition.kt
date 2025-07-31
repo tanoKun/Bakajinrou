@@ -1,6 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.position.citizen
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.position.Position
 import com.github.tanokun.bakajinrou.api.participant.position.Prefix
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizensPosition
@@ -10,5 +11,5 @@ object CitizenPosition: CitizensPosition {
 
     override val publicPosition: Position = this
 
-    override fun doAtStarting(participant: Participant) {}
+    override fun doAtStarting(self: Participant, participants: ParticipantScope.All) {}
 }
