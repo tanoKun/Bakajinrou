@@ -2,7 +2,7 @@ package com.github.tanokun.bakajinrou.game.cache
 
 import java.util.*
 
-class PlayerNameCache {
+object PlayerNameCache {
     private val caches = hashMapOf<UUID, String>()
 
     fun put(uniqueId: UUID, name: String) {
