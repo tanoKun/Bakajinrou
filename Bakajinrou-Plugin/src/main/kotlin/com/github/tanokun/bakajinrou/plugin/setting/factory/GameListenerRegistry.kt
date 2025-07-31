@@ -12,8 +12,9 @@ import com.github.tanokun.bakajinrou.plugin.listener.launching.attack.OnAttackBy
 import com.github.tanokun.bakajinrou.plugin.listener.launching.attack.OnAttackBySwordEventListener
 import com.github.tanokun.bakajinrou.plugin.listener.launching.item.OnCraftEventListener
 import com.github.tanokun.bakajinrou.plugin.listener.launching.item.OptionalMethodEventListener
+import com.github.tanokun.bakajinrou.plugin.listener.launching.item.SecretItemPacketListener
 import com.github.tanokun.bakajinrou.plugin.listener.launching.item.TransportMethodEventListener
-import com.github.tanokun.bakajinrou.plugin.listener.launching.packet.TabListPacketListener
+import com.github.tanokun.bakajinrou.plugin.listener.launching.tab.TabListPacketListener
 import com.github.tanokun.bakajinrou.plugin.method.BukkitItemFactory
 import org.bukkit.plugin.Plugin
 
@@ -29,11 +30,12 @@ class GameListenerRegistry(
             OnAttackByBowEventListener(plugin, jinrouGame, attackController),
             OnAttackByPotionEventListener(plugin, jinrouGame, attackController),
             OnAttackBySwordEventListener(plugin, jinrouGame, attackController),
-            TabListPacketListener(plugin, jinrouGame, protocolManager),
             PlayerConnectionEventListener(plugin, jinrouGame),
             OnCraftEventListener(plugin, jinrouGame, itemFactory),
             OptionalMethodEventListener(plugin, jinrouGame),
-            TransportMethodEventListener(plugin, jinrouGame)
+            TransportMethodEventListener(plugin, jinrouGame),
+            TabListPacketListener(plugin, jinrouGame, protocolManager),
+            SecretItemPacketListener(plugin, jinrouGame, protocolManager)
         )
 
     fun asRegisterSchedule() = onLaunching {

@@ -1,10 +1,10 @@
 package com.github.tanokun.bakajinrou.plugin.setting.map
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.game.scheduler.schedule.TimeSchedule
 import com.github.tanokun.bakajinrou.game.scheduler.schedule.arranged
 import com.github.tanokun.bakajinrou.game.scheduler.schedule.every
-import com.github.tanokun.bakajinrou.plugin.scheduler.schedule.GrowingNotifier
+import com.github.tanokun.bakajinrou.plugin.scheduler.schedule.GlowingNotifier
 import com.github.tanokun.bakajinrou.plugin.scheduler.schedule.HiddenPositionAnnouncer
 import com.github.tanokun.bakajinrou.plugin.scheduler.schedule.QuartzDistribute
 import com.github.tanokun.bakajinrou.plugin.scheduler.schedule.TimeAnnouncer
@@ -23,32 +23,32 @@ data class GameMap(
     fun createSchedules(
         timeAnnouncer: TimeAnnouncer,
         quartzDistribute: QuartzDistribute,
-        growingNotifier: GrowingNotifier,
+        glowingNotifier: GlowingNotifier,
         hiddenPositionAnnouncer: HiddenPositionAnnouncer,
-        jinrouGame: JinrouGame,
+        participants: ParticipantScope.All,
     ): List<TimeSchedule> = listOf(
         1.seconds every { leftSeconds ->
-            timeAnnouncer.showRemainingTimeActionBar(jinrouGame, leftSeconds)
+            timeAnnouncer.showRemainingTimeActionBar(participants, leftSeconds)
         },
 
         delayToGiveQuartz every { leftSeconds ->
-            quartzDistribute.distributeQuartzToSurvivors(jinrouGame)
+            quartzDistribute.distributeQuartzToSurvivors(participants)
 
-            if (startTime == leftSeconds) quartzDistribute.distributeQuartzToSurvivors(jinrouGame)
+            if (startTime == leftSeconds) quartzDistribute.distributeQuartzToSurvivors(participants)
         },
 
         6.minutes arranged {
-            growingNotifier.announceGlowingStart(jinrouGame, 3)
+            glowingNotifier.announceGlowingStart(participants, 3)
         },
 
         1.minutes every schedule@ { leftSeconds ->
             if (leftSeconds.seconds > 5.minutes) return@schedule
 
-            growingNotifier.growCitizens(jinrouGame)
+            glowingNotifier.glowCitizens(participants)
         },
 
         3.minutes arranged {
-            hiddenPositionAnnouncer.notifyWolfsAndFox(jinrouGame)
+            hiddenPositionAnnouncer.notifyWolfsAndFox(participants)
         }
     )
 }

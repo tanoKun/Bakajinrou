@@ -10,7 +10,7 @@ class CitizenSideFinisher(
     private val game: JinrouGame
 ): EachSideFinisher() {
     override fun notifyFinish() {
-        game.participants.forEach { participant ->
+        game.getAllParticipants().forEach { participant ->
             val bukkitPlayer = getBukkitPlayer(participant) ?: return@forEach
 
             showVictorySideTitle(

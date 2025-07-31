@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.observer
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.ParticipantStates
+import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
 import kotlinx.coroutines.launch
 import net.minecraft.Optionull
@@ -14,13 +14,13 @@ import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 class ParticipantStateObserver(
-    jinrouGame: JinrouGame,
+    participants: ParticipantScope.All,
     controller: JinrouGameController,
     asyncContext: CoroutineContext,
     uiContext: CoroutineContext,
 ) {
     init {
-        jinrouGame.participants.forEach {
+        participants.forEach {
             it.observeState(state = ParticipantStates.DEAD, scope = controller.scope, context = asyncContext) {
                 controller.scope.launch(uiContext) {
                     val player = Bukkit.getPlayer(it.uniqueId) ?: return@launch

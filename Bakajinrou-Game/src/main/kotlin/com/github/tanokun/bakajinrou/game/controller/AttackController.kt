@@ -7,6 +7,7 @@ import com.github.tanokun.bakajinrou.api.attack.method.effect.DamagePotionEffect
 import com.github.tanokun.bakajinrou.api.attack.method.item.SwordItem
 import com.github.tanokun.bakajinrou.api.attack.method.other.ArrowMethod
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.game.logger.BodyHandler
 import com.github.tanokun.bakajinrou.game.logger.DebugLogger
 import com.github.tanokun.bakajinrou.game.logger.GameLogger
@@ -54,8 +55,8 @@ class AttackController(
      * @param by 殺した参加者
      */
     fun notifyDeath(by: Participant, victim: Participant) {
-        if (!game.participants.contains(victim)) return
-        if (!game.participants.contains(by)) return
+        if (!game.getAllParticipants().contains(victim)) return
+        if (!game.getAllParticipants().contains(by)) return
 
         if (victim.state != ParticipantStates.DEAD) return
 
@@ -143,7 +144,7 @@ class AttackController(
      * @see com.github.tanokun.bakajinrou.api.method.AttackMethod.attack
      * @see DamagePotionEffect
      */
-    fun attack(by: Participant, victims: List<Participant>, with: DamagePotionEffect) {
+    fun attack(by: Participant, victims: ParticipantScope.NonSpectators, with: DamagePotionEffect) {
         victims.forEach {
             val result = with.attack(victim = it)
 

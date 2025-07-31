@@ -67,6 +67,7 @@ class JinrouGameController(
         if (scheduler.isActive()) return
 
         scheduler.launch()
-        game.participants.forEach { it.position.doAtStarting(it) }
+        val allParticipants = game.getAllParticipants()
+        game.getAllParticipants().forEach { it.position.doAtStarting(it, allParticipants) }
     }
 }

@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.scheduler.schedule
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
 import com.github.tanokun.bakajinrou.plugin.formatter.display.updatePlayerListName
 import com.github.tanokun.bakajinrou.plugin.formatter.toTick
@@ -36,12 +36,12 @@ class GameLifecycleUI(
      * - 移動速度上昇 と 透明化 のポーション効果を10秒間に付与
      * - 透明化解除後、Bow と Arrow の手段の追加
      *
-     * @param jinrouGame 現在の人狼ゲームインスタンス。
+     * @param participants ゲームの全ての参加者
      * @param controller ゲームを制御するコントローラ。コルーチンのスコープも含む
      * @param gameMap 使用されるマップ
      */
-    fun startingGame(jinrouGame: JinrouGame, controller: JinrouGameController, gameMap: GameMap) {
-        jinrouGame.participants.forEach {
+    fun startingGame(participants: ParticipantScope.All, controller: JinrouGameController, gameMap: GameMap) {
+        participants.forEach {
             val bukkitPlayer: Player = getBukkitPlayer(it) ?: return@forEach
 
             bukkitPlayer.teleport(gameMap.spawnLocation)
@@ -79,14 +79,14 @@ class GameLifecycleUI(
      *
      * 副作用:
      * - 各参加者をロビー地点へテレポート
-     * - プレイヤーのインベントリをクリア
+     * - 参加者のインベントリをクリア
      * - タブリストの名前表示を更新
      *
-     * @param jinrouGame 終了対象の人狼ゲームインスタンス。
+     * @param participants ゲームの全ての参加者
      * @param gameMap 使用されていたマップ。ロビー地点を含む。
      */
-    fun finishGame(jinrouGame: JinrouGame, gameMap: GameMap) {
-        jinrouGame.participants.forEach {
+    fun finishGame(participants: ParticipantScope.All, gameMap: GameMap) {
+        participants.forEach {
             val bukkitPlayer: Player = getBukkitPlayer(it) ?: return@forEach
 
             bukkitPlayer.teleport(gameMap.lobbyLocation)

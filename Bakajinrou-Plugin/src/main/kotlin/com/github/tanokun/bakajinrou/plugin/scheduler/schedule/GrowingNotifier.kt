@@ -1,27 +1,29 @@
 package com.github.tanokun.bakajinrou.plugin.scheduler.schedule
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
+import com.github.tanokun.bakajinrou.plugin.formatter.toTick
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
+import kotlin.time.Duration.Companion.seconds
 
-class GrowingNotifier(
+class GlowingNotifier(
     private val getBukkitPlayer: (Participant) -> Player?
 ) {
     /**
      * 残り時間 [glowingStartMinutes] 分の発光お知らせを全ての参加者に表示します。
      *
-     * @param jinrouGame 干渉先のゲーム
+     * @param participants ゲームの全ての参加者
      * @param glowingStartMinutes 何分から発光が始まるか。
      */
-    fun announceGlowingStart(jinrouGame: JinrouGame, glowingStartMinutes: Int) {
-        jinrouGame.participants.forEach {
+    fun announceGlowingStart(participants: ParticipantScope.All, glowingStartMinutes: Int) {
+        participants.forEach {
             val bukkitPlayer = getBukkitPlayer(it) ?: return@forEach
 
             bukkitPlayer.sendMessage(
@@ -37,16 +39,16 @@ class GrowingNotifier(
      * - 人狼
      * - 妖狐
      *
-     * @param jinrouGame 干渉先のゲーム
+     * @param participants ゲームの全ての参加者
      */
-    fun growCitizens(jinrouGame: JinrouGame) {
-        jinrouGame.participants
+    fun glowCitizens(participants: ParticipantScope.All) {
+        participants
             .filterNot { it.isPosition<WolfPosition>() || it.isPosition<FoxPosition>() }
             .forEach {
                 val bukkitPlayer = getBukkitPlayer(it) ?: return@forEach
 
-                val growingEffect = PotionEffect(PotionEffectType.GLOWING, 100, 1, false, false)
-                bukkitPlayer.addPotionEffect(growingEffect)
+                val glowingEffect = PotionEffect(PotionEffectType.GLOWING, 5.seconds.toTick(), 1, false, false)
+                bukkitPlayer.addPotionEffect(glowingEffect)
             }
     }
 }

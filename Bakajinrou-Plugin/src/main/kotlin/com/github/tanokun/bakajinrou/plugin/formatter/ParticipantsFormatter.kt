@@ -1,6 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.formatter
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.position.Position
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.IdiotPosition
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
@@ -33,10 +34,11 @@ import plutoproject.adventurekt.text.style.gray
  * を目的の形とするフォーマッター
  */
 class ParticipantsFormatter(
-    private val participants: List<Participant>,
-    private val nameCache: PlayerNameCache,
+    private val participants: ParticipantScope.NonSpectators,
     private val playerProvider: (Participant) -> Player?
 ) {
+    private val nameCache = PlayerNameCache
+
     fun formatWolf(
         playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, Positions.Wolf.color) }
     ): Component = formatPosition<WolfPosition>(
@@ -93,7 +95,7 @@ class ParticipantsFormatter(
         playerNameFormatter
     )
     private inline fun <reified T: Position> formatPosition(positionColor: TextColor, description: String, noinline formatter: (Participant) -> Component): Component {
-        val positionLine = positionLineComponent(participants.filter { it.position is T }, formatter)
+        val positionLine = positionLineComponent(participants.position<T>(), formatter)
 
         return component {
             text("《 $description 》") color positionColor.asHexString() deco bold
@@ -104,7 +106,7 @@ class ParticipantsFormatter(
     }
 
     private inline fun <reified T: Position, reified I: IdiotPosition> formatPositionWithIdiot(positionColor: TextColor, description: String, noinline formatter: (Participant) -> Component): Component {
-        val idiotsAsFortune = participants.filter { it.position is I }
+        val idiotsAsFortune = participants.position<I>()
 
         val componentAsJob = formatPosition<T>(positionColor, description, formatter)
 
@@ -117,7 +119,7 @@ class ParticipantsFormatter(
         }
     }
 
-    private fun positionLineComponent(participants: List<Participant>, formatter: (Participant) -> Component): Component? =
+    private fun positionLineComponent(participants: ParticipantScope.NonSpectators, formatter: (Participant) -> Component): Component? =
         participants.map { formatter(it) }
             .reduceOrNull { acc, comp ->
                 component {
