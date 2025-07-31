@@ -1,7 +1,7 @@
 [versions]
 paper = "1.21-R0.1-SNAPSHOT"
 commandapi = "10.1.1"
-invui = "1.44"
+invui = "1.46"
 mockk = "1.14.5"
 mockbukkit = "4.39.0"
 protocollib = "5.3.0"
@@ -17,7 +17,6 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockkbukkit = { module = "org.mockbukkit.mockbukkit:mockbukkit-v1.21", version.ref = "mockbukkit" }
 protocollib = { module = "com.comphenix.protocol:ProtocolLib", version.ref = "protocollib" }
 invui = { module = "xyz.xenondevs.invui:invui", version.ref = "invui" }
-invui-kotlin = { module = "xyz.xenondevs.invui:invui-kotlin", version.ref = "invui" }
 junit-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit" }
 adventurekt = { module = "plutoproject.adventurekt:core", version.ref = "adventurekt" }
 junit-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit" }
@@ -28,12 +27,11 @@ mccoroutine-bukkit-core = { module = "com.github.shynixn.mccoroutine:mccoroutine
 
 [bundles]
 commandapi = ["commandapi", "commandapi-toolkit"]
-invui = ["invui", "invui-kotlin"]
 mocks = ["mockk", "mockkbukkit"]
 junit = ["junit-api", "junit-params"]
 mccoroutine = ["mccoroutine-bukkit-api", "mccoroutine-bukkit-core"]
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version = "9.0.0-rc1" }
-bukkit = { id = "net.minecrell.plugin-yml.bukkit", version = "0.6.0" }
+paper = { id = "net.minecrell.plugin-yml.paper", version = "0.6.0" }
 paperweight = { id = "io.papermc.paperweight.userdev", version = "1.7.7" }
