@@ -29,7 +29,7 @@ class AttackBySwordItem: SwordItem(), AsBukkitItem {
 
         item.editMeta { meta ->
             meta.lore(listOf(
-                component { text("プレイヤーを近接戦闘で殺害できる。") color gray without italic with bold },
+                component { text("参加者を近接戦闘で殺害できる。") color gray without italic with bold },
                 component { text("ポーション、トーテムに対しては無効") color gray without italic with bold }
             ))
 

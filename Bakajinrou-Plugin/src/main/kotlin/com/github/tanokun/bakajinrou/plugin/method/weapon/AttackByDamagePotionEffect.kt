@@ -33,7 +33,7 @@ class AttackByDamagePotionEffect: DamagePotionEffect(), AsBukkitItem {
             meta as PotionMeta
 
             meta.lore(listOf(
-                component { text("プレイヤーを毒殺できる。") color gray without italic with bold },
+                component { text("参加者を毒殺できる。") color gray without italic with bold },
                 component { text("ポーション、トーテムに対しては無効") color gray without italic with bold }
             ))
 

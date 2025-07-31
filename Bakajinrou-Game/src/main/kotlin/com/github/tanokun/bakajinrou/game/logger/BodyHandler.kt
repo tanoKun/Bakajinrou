@@ -5,7 +5,7 @@ import java.util.*
 interface BodyHandler {
 
     /**
-     * [of]に適するプレイヤーの死体を作成します。
+     * [of]に適する参加者の死体を作成します。
      */
     fun createBody(of: UUID)
 
@@ -15,7 +15,7 @@ interface BodyHandler {
     fun deleteBodies()
 
     /**
-     * 登録されている死体を、[to]プレイヤーに表示します。
+     * 登録されている死体を、[to]参加者に表示します。
      */
     fun showBodies(to: UUID)
 }
