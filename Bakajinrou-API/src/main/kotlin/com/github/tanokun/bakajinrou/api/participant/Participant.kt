@@ -24,6 +24,10 @@ class Participant(
 
     private val _state: MutableStateFlow<ParticipantStates> = MutableStateFlow(defaultState)
 
+    init {
+        if (position is SpectatorPosition) _state.value = ParticipantStates.DEAD
+    }
+
     /**
      * 状態を死亡状態にします。
      * また現在の状態がゲーム中断の場合、状態は変更されません。
@@ -102,4 +106,15 @@ class Participant(
     fun getGrantedMethod(uniqueId: UUID): GrantedMethod? = strategy.getMethod(uniqueId)
 
     fun getActiveProtectiveMethods(): List<ProtectiveMethod> = strategy.getActiveProtectiveMethods(this)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Participant
+
+        return uniqueId == other.uniqueId
+    }
+
+    override fun hashCode(): Int = uniqueId.hashCode()
 }
