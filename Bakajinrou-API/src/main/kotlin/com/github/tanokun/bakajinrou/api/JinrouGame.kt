@@ -2,13 +2,14 @@ package com.github.tanokun.bakajinrou.api
 
 import com.github.tanokun.bakajinrou.api.finishing.GameFinisher
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizensPosition
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import java.util.*
 
 class JinrouGame(
-    val participants: List<Participant>,
+    private val participants: List<Participant>,
     val citizenSideFinisher: (JinrouGame) -> GameFinisher,
     val wolfSideFinisher: (JinrouGame) -> GameFinisher,
     val foxSideFinisher: (JinrouGame) -> GameFinisher
@@ -55,4 +56,6 @@ class JinrouGame(
 
     fun getParticipant(uniqueId: UUID): Participant? =
         participants.firstOrNull { it.uniqueId == uniqueId }
+
+    fun getAllParticipants(): ParticipantScope.All = ParticipantScope.All(participants)
 }
