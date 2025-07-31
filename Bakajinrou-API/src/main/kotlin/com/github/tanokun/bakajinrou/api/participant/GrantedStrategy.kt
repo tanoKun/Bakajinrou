@@ -6,7 +6,7 @@ import java.util.*
 
 interface GrantedStrategy {
     /**
-     * 手段をプレイヤーに付与します。
+     * 手段を参加者に付与します。
      * 全ストラテージーを通して、[GrantedMethod.uniqueId]が重複した方法は追加できません。
      *
      * @param method 追加したい手段
@@ -16,7 +16,7 @@ interface GrantedStrategy {
     fun grant(method: GrantedMethod)
 
     /**
-     * 手段をプレイヤーから剥奪します。
+     * 手段を参加者から剥奪します。
      * 全ストラテージーを通して、[GrantedMethod.uniqueId]が存在しない手段は剥奪出来ません。
      *
      * @param method 削除したいアイテム
