@@ -18,11 +18,13 @@ import java.util.*
 class TabListPacketListener(
     plugin: Plugin, jinrouGame: JinrouGame, protocolManager: ProtocolManager
 ) : LifecyclePacketListener(plugin, protocolManager, {
-    val prefixModifiers = jinrouGame.participants.map { PrefixModifier(it) }
+    val participants = jinrouGame.getAllParticipants()
+
+    val prefixModifiers = participants.map { PrefixModifier(it) }
 
     val suspendedPlayers = arrayListOf<UUID>()
 
-    val tabModifiers = jinrouGame.participants
+    val tabModifiers = participants
         .associate { it.uniqueId to TabListModifier(viewer = it, prefixModifiers) }
 
     register(packet = PacketType.Play.Server.PLAYER_INFO, listenerPriority = ListenerPriority.LOW) { event, packet, receiver ->
@@ -59,7 +61,7 @@ class TabListPacketListener(
     onCancellation {
         val packet = ClientboundPlayerInfoRemovePacket(suspendedPlayers.filter { Bukkit.getPlayer(it) == null })
 
-        jinrouGame.participants.forEach {
+        participants.forEach {
             val player = (Bukkit.getPlayer(it.uniqueId) as? CraftPlayer) ?: return@forEach
             player.handle.connection.send(packet)
         }
