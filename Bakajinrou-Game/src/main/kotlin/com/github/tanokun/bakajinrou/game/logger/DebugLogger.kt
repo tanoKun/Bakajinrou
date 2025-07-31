@@ -8,9 +8,9 @@ import java.util.logging.Logger
 
 class DebugLogger(
     private val logger: Logger,
-    private val nameCache: PlayerNameCache,
-
 ) {
+    private val nameCache = PlayerNameCache
+
     fun logAttackResult(attacker: UUID, victim: UUID, attackMethod: AttackMethod, attackResult: AttackResult) {
         when (attackResult) {
             is AttackResult.Protected -> logger.info("Attack protected: ${nameCache.get(attacker)}($attacker) -> ${nameCache.get(victim)}($victim) methods>[attack: $$attackMethod, protective: ${attackResult.by}]")

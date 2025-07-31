@@ -5,8 +5,8 @@ import com.github.shynixn.mccoroutine.bukkit.asyncDispatcher
 import com.github.shynixn.mccoroutine.bukkit.minecraftDispatcher
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.StrategyIntegrity
-import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.game.controller.AttackController
 import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
 import com.github.tanokun.bakajinrou.game.logger.BodyHandler
@@ -49,14 +49,13 @@ class GamePlanner(
      * 新しい人狼ゲームを構築し、ゲーム本体とそのコントローラーを生成します。
      *
      * @param plugin Bukkitプラグインインスタンス
-     * @param playerNameCache プレイヤー名のキャッシュ
      * @param protocolManager ProtocolLibのプロトコルマネージャ。パケット操作に使用
      *
      * @return 作成された JinrouGame と JinrouGameController のペア。
      *
      * @throws IllegalStateException マップ未選択、参加人数不足時
      */
-    fun createGame(plugin: Plugin, playerNameCache: PlayerNameCache, protocolManager: ProtocolManager): Pair<JinrouGame, JinrouGameController> {
+    fun createGame(plugin: Plugin, protocolManager: ProtocolManager): Pair<JinrouGame, JinrouGameController> {
         val selectedMap = selectedMap ?: throw IllegalStateException("マップが選択されていません。")
 
         if (positionAssigner.getMinimumRequired() > candidates.size) throw IllegalStateException("現在の参加人数では、選択されている役職が多すぎます。")
@@ -64,19 +63,20 @@ class GamePlanner(
         val strategyIntegrity = StrategyIntegrity()
 
         val gameLogger: GameLogger = loggerProvider()
-        val jinrouGame: JinrouGame = jinrouGameProvider(positionAssigner.assignPositions(candidates, spectators, strategyIntegrity))
-        val schedules = selectedMap.createSchedules(jinrouGame)
+        val participants = positionAssigner.assignPositions(candidates, spectators, strategyIntegrity)
+        val jinrouGame: JinrouGame = jinrouGameProvider(participants)
+        val schedules = selectedMap.createSchedules(participants)
         val scheduler: GameScheduler = gameSchedulerProvider(selectedMap.startTime, schedules, plugin)
         val bodyHandler: BodyHandler = bodyHandlerProvider()
 
         val jinrouGameController = JinrouGameController(jinrouGame, scheduler, plugin.logger, plugin.minecraftDispatcher)
-        val attackController = AttackController(gameLogger, bodyHandler, DebugLogger(plugin.logger, playerNameCache), jinrouGame, jinrouGameController)
+        val attackController = AttackController(gameLogger, bodyHandler, DebugLogger(plugin.logger), jinrouGame, jinrouGameController)
 
         val itemFactory = BukkitItemFactory(plugin)
 
-        ParticipantStateObserver(jinrouGame, jinrouGameController, plugin.asyncDispatcher, plugin.minecraftDispatcher)
+        ParticipantStateObserver(participants, jinrouGameController, plugin.asyncDispatcher, plugin.minecraftDispatcher)
         registerListeners(scheduler, plugin, jinrouGame, attackController, itemFactory, protocolManager)
-        addLifecycleUI(scheduler, jinrouGame, jinrouGameController, gameLifecycleUI, selectedMap.gameMap)
+        addLifecycleUI(scheduler, participants, jinrouGameController, gameLifecycleUI, selectedMap.gameMap)
 
         return jinrouGame to jinrouGameController
     }
@@ -98,17 +98,17 @@ class GamePlanner(
 
     private fun addLifecycleUI(
         scheduler: GameScheduler,
-        jinrouGame: JinrouGame,
+        participant: ParticipantScope.All,
         jinrouGameController: JinrouGameController,
         gameLifecycleUi: GameLifecycleUI,
         gameMap: GameMap
     ) {
         scheduler.addSchedule(onLaunching {
-            gameLifecycleUi.startingGame(jinrouGame, jinrouGameController, gameMap)
+            gameLifecycleUi.startingGame(participant, jinrouGameController, gameMap)
         })
 
         scheduler.addSchedule(onCancellation {
-            gameLifecycleUi.finishGame(jinrouGame, gameMap)
+            gameLifecycleUi.finishGame(participant, gameMap)
         })
     }
 }
