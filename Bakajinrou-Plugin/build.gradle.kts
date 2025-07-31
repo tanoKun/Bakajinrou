@@ -8,7 +8,7 @@ version = projectVersion
 
 plugins {
     kotlin("jvm")
-    alias(libs.plugins.bukkit)
+    alias(libs.plugins.paper)
     alias(libs.plugins.shadow)
     alias(libs.plugins.paperweight)
 }
@@ -23,6 +23,7 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.dmulloy2.net/repository/public/")
     maven("https://maven.nostal.ink/repository/maven-public/")
+    maven("https://repo.triumphteam.dev/snapshots")
 }
 
 dependencies {
@@ -31,7 +32,7 @@ dependencies {
     compileOnly(libs.protocollib)
     compileOnly(libs.commandapi)
 
-    implementation(libs.bundles.invui)
+    compileOnly(libs.invui)
     implementation(libs.adventurekt)
 
     implementation(libs.kotlinx.coroutines.core)
@@ -58,6 +59,7 @@ tasks.withType<Test> {
     }
 
     useJUnitPlatform()
+
 }
 
 tasks {
@@ -81,18 +83,18 @@ tasks {
     }
 }
 
-
-bukkit {
+paper {
     main = "com.github.tanokun.bakajinrou.plugin.BakaJinrou"
+
+    loader = "com.github.tanokun.bakajinrou.plugin.BakaJinrouPluginLoader"
 
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
     apiVersion = "1.21"
     authors = listOf("tanoKun")
     version = projectVersion
 
-    depend = arrayListOf(
-        "ProtocolLib",
-        "CommandAPI"
-    )
+    serverDependencies {
+        register("CommandAPI")
+        register("ProtocolLib")
+    }
 }
-
