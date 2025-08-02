@@ -8,6 +8,8 @@ sealed class ParticipantScope(participant: List<Participant>): List<Participant>
     class All(participant: List<Participant>): ParticipantScope(participant) {
         fun nonSpectators(): NonSpectators = NonSpectators(this)
 
+        fun deadOnly(): All = All(this.filter { it.state == ParticipantStates.DEAD })
+
         fun survivedOnly(): NonSpectators = NonSpectators(this.filter { it.state == ParticipantStates.SURVIVED })
 
         inline fun <reified P: Position> position() = All(this.filter { it.isPosition<P>() })
@@ -20,6 +22,8 @@ sealed class ParticipantScope(participant: List<Participant>): List<Participant>
 
     class NonSpectators(participant: List<Participant>) : ParticipantScope(participant.filterNot { it.isPosition<SpectatorPosition>() }) {
         fun survivedOnly(): NonSpectators = NonSpectators(this.filter { it.state == ParticipantStates.SURVIVED })
+
+        fun deadOnly(): NonSpectators = NonSpectators(this.filter { it.state == ParticipantStates.DEAD })
 
         inline fun <reified P: Position> position() = NonSpectators(this.filter { it.isPosition<P>() })
 
