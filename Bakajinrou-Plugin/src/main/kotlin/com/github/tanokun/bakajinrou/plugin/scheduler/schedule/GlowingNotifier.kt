@@ -22,7 +22,7 @@ class GlowingNotifier(
      * @param participants ゲームの全ての参加者
      * @param glowingStartMinutes 何分から発光が始まるか。
      */
-    fun announceGlowingStart(participants: ParticipantScope.All, glowingStartMinutes: Int) {
+     fun announceGlowingStart(participants: ParticipantScope.All, glowingStartMinutes: Int) {
         participants.forEach {
             val bukkitPlayer = getBukkitPlayer(it) ?: return@forEach
 
@@ -41,7 +41,7 @@ class GlowingNotifier(
      *
      * @param participants ゲームの全ての参加者
      */
-    fun glowCitizens(participants: ParticipantScope.All) {
+     fun glowCitizens(participants: ParticipantScope.All) {
         participants
             .filterNot { it.isPosition<WolfPosition>() || it.isPosition<FoxPosition>() }
             .forEach {
