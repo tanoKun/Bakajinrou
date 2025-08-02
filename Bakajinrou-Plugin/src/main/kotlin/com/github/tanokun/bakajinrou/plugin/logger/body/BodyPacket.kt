@@ -2,10 +2,7 @@ package com.github.tanokun.bakajinrou.plugin.logger.body
 
 import net.minecraft.ChatFormatting
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
-import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
-import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket
+import net.minecraft.network.protocol.game.*
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.Pose
@@ -28,8 +25,8 @@ class BodyPacket(server: Server, body: Player) {
     ).apply {
         this.uuid = randomUuid
         this.setPos(body.location.x, body.location.y, body.location.z)
-        yRot = body.location.yaw.toFloat()
-        xRot = body.location.pitch.toFloat()
+        yRot = body.location.yaw
+        xRot = body.location.pitch
 
         this.pose = Pose.SWIMMING
     }
@@ -37,19 +34,31 @@ class BodyPacket(server: Server, body: Player) {
     fun sendBody(to: Player) {
         to as CraftPlayer
 
-        dummy.connection = to.handle.connection
+        val connection = to.handle.connection
+        dummy.connection = connection
 
         val playerInfoPacket = ClientboundPlayerInfoUpdatePacket.createSinglePlayerInitializing(dummy, false)
-        to.handle.connection.send(playerInfoPacket)
+        connection.send(playerInfoPacket)
 
         val addEntityPacket = createAddEntityPacket(dummy)
-        to.handle.connection.send(addEntityPacket)
+        connection.send(addEntityPacket)
 
         val dataPacket = ClientboundSetEntityDataPacket(dummy.id, dummy.entityData.packAll())
-        to.handle.connection.send(dataPacket)
+        connection.send(dataPacket)
 
         hiddenNameTag(to.handle)
     }
+
+    fun remove(to: Player) {
+        to as CraftPlayer
+
+        val connection = to.handle.connection
+
+        val removeEntitiesPacket = ClientboundRemoveEntitiesPacket(dummy.id)
+        connection.send(removeEntitiesPacket)
+    }
+
+
     private fun hiddenNameTag(to: ServerPlayer) {
         val dummyTeam = PlayerTeam(Scoreboard(), "hidden_team_${dummy.id}").apply {
             setNameTagVisibility(Visibility.NEVER)
