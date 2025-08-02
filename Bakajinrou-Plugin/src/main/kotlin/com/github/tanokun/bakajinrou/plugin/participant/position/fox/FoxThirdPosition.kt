@@ -1,11 +1,13 @@
-package com.github.tanokun.bakajinrou.plugin.position.fox
+package com.github.tanokun.bakajinrou.plugin.participant.position.fox
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
-import com.github.tanokun.bakajinrou.api.participant.position.Position
-import com.github.tanokun.bakajinrou.api.participant.position.Prefix
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
 import com.github.tanokun.bakajinrou.plugin.formatter.toTick
+import com.github.tanokun.bakajinrou.plugin.gui.ability.AbilityResult
+import com.github.tanokun.bakajinrou.plugin.participant.position.HasPrefix
+import com.github.tanokun.bakajinrou.plugin.participant.position.Positions
+import com.github.tanokun.bakajinrou.plugin.participant.prefix.DefaultPrefix
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.title.Title
 import org.bukkit.NamespacedKey
@@ -20,10 +22,10 @@ import plutoproject.adventurekt.text.style.darkRed
 import plutoproject.adventurekt.text.text
 import kotlin.time.Duration.Companion.seconds
 
-object FoxThirdPosition: FoxPosition {
-    override val prefix: Prefix = Prefix(revealedPrefix = "妖狐", defaultPrefix = "妖狐")
+object FoxThirdPosition: FoxPosition, HasPrefix {
+    override val prefix: DefaultPrefix = DefaultPrefix(revealedPrefix = "妖狐", defaultPrefix = "妖狐", Positions.Fox.color)
 
-    override val publicPosition: Position = this
+    override val abilityResult: AbilityResult = AbilityResult.Fox
 
     override fun doAtStarting(self: Participant, participants: ParticipantScope.All) {}
 
