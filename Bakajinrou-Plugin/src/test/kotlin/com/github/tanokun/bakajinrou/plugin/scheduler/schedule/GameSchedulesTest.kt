@@ -1,13 +1,14 @@
 package com.github.tanokun.bakajinrou.plugin.scheduler.schedule
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
+import com.github.tanokun.bakajinrou.api.participant.all
+import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
+import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.plugin.participant.ParticipantStrategy
-import com.github.tanokun.bakajinrou.plugin.position.citizen.CitizenPosition
-import com.github.tanokun.bakajinrou.plugin.position.citizen.MediumPosition
-import com.github.tanokun.bakajinrou.plugin.position.fox.FoxThirdPosition
-import com.github.tanokun.bakajinrou.plugin.position.wolf.MadmanSecondPosition
-import com.github.tanokun.bakajinrou.plugin.position.wolf.WolfSecondPosition
+import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.CitizenPosition
+import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.MediumPosition
+import com.github.tanokun.bakajinrou.plugin.participant.position.fox.FoxThirdPosition
 import io.mockk.mockk
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -60,8 +61,7 @@ class GameSchedulesTest {
     @DisplayName("アクションバーに表示される時間のテスト")
     fun showLeftTimeToActionbarTest() {
         val timeAnnouncer = TimeAnnouncer { server.getPlayer(it.uniqueId) }
-        val jinrouGame = createJinrouGame()
-        timeAnnouncer.showRemainingTimeActionBar(jinrouGame, 231)
+        timeAnnouncer.showRemainingTimeActionBar(createParticipants(), 231)
 
         players.forEach { player ->
             val expected = Component.text("残り時間: 3分 51秒")
@@ -73,7 +73,7 @@ class GameSchedulesTest {
             assertEquals(serializer.serialize(expected), serializer.serialize(lastSendActionbar))
         }
 
-        timeAnnouncer.showRemainingTimeActionBar(jinrouGame, 47)
+        timeAnnouncer.showRemainingTimeActionBar(createParticipants(), 47)
 
         players.forEach { player ->
             val expected = Component.text("残り時間: 0分 47秒")
@@ -88,11 +88,10 @@ class GameSchedulesTest {
 
     @Test
     @DisplayName("妖狐、人狼は発光せず、村陣営と狂人のみ発光")
-    fun doNotGrowWolfsAndFoxButCitizensAndMadman() {
-        val gameSchedules = GrowingNotifier { server.getPlayer(it.uniqueId) }
-        val jinrouGame = createJinrouGame()
+    fun doNotGlowWolfsAndFoxButCitizensAndMadman() {
+        val gameSchedules = GlowingNotifier { server.getPlayer(it.uniqueId) }
 
-        gameSchedules.growCitizens(jinrouGame)
+        gameSchedules.glowCitizens(createParticipants())
 
         assertFalse(wolf.hasPotionEffect(PotionEffectType.GLOWING), "人狼は発光を持たない")
         assertTrue(madman.hasPotionEffect(PotionEffectType.GLOWING), "狂人は発光を持つ")
@@ -102,18 +101,13 @@ class GameSchedulesTest {
 
     }
 
-    fun createJinrouGame(): JinrouGame {
-        val wolf = Participant(wolf.uniqueId, WolfSecondPosition, mockk<ParticipantStrategy>())
-        val madman = Participant(madman.uniqueId, MadmanSecondPosition, mockk<ParticipantStrategy>())
-        val citizen = Participant(citizen.uniqueId, CitizenPosition, mockk<ParticipantStrategy>())
-        val medium = Participant(medium.uniqueId, MediumPosition, mockk<ParticipantStrategy>())
-        val fox = Participant(fox.uniqueId, FoxThirdPosition, mockk<ParticipantStrategy>())
+    fun createParticipants(): ParticipantScope.All {
+        val wolf = Participant(wolf.uniqueId, mockk<WolfPosition>(), mockk<ParticipantStrategy>())
+        val madman = Participant(madman.uniqueId, mockk<MadmanPosition>(), mockk<ParticipantStrategy>())
+        val citizen = Participant(citizen.uniqueId, mockk<CitizenPosition>(), mockk<ParticipantStrategy>())
+        val medium = Participant(medium.uniqueId, mockk<MediumPosition>(), mockk<ParticipantStrategy>())
+        val fox = Participant(fox.uniqueId, mockk<FoxThirdPosition>(), mockk<ParticipantStrategy>())
 
-        return JinrouGame(
-            participants = listOf(wolf, madman, citizen, medium, fox),
-            citizenSideFinisher = { mockk() },
-            wolfSideFinisher = { mockk() },
-            foxSideFinisher = { mockk() }
-        )
+        return listOf(wolf, madman, citizen, medium, fox).all()
     }
 }
