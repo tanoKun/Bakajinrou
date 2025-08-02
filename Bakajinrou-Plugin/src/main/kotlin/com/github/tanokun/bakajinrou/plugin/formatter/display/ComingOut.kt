@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.formatter.display
 
-import com.github.tanokun.bakajinrou.plugin.formatter.Positions
+import com.github.tanokun.bakajinrou.plugin.participant.position.Positions
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
 
