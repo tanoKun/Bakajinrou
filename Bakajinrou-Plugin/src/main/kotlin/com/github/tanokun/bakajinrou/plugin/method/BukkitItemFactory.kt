@@ -10,7 +10,7 @@ import org.bukkit.plugin.Plugin
 import kotlin.random.Random
 
 class BukkitItemFactory(plugin: Plugin) {
-    private val randomItems = listOf<() -> AsBukkitItem>(
+    private val randomItems = listOf(
         { AttackBySwordItem() },
         { AttackByDamagePotionEffect() },
         { InvisibilityPotionItem() },
