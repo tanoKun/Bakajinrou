@@ -16,25 +16,28 @@ import kotlin.coroutines.CoroutineContext
 class ParticipantStateObserver(
     participants: ParticipantScope.All,
     controller: JinrouGameController,
-    asyncContext: CoroutineContext,
     uiContext: CoroutineContext,
+    asyncContext: CoroutineContext,
 ) {
     init {
         participants.forEach {
             it.observeState(state = ParticipantStates.DEAD, scope = controller.scope, context = asyncContext) {
                 controller.scope.launch(uiContext) {
-                    val player = Bukkit.getPlayer(it.uniqueId) ?: return@launch
+                    val participantPlayer = Bukkit.getPlayer(it.uniqueId) ?: return@launch
 
-                    player.gameMode = GameMode.SPECTATOR
+                    participantPlayer.gameMode = GameMode.SPECTATOR
 
                     val entries = Bukkit.getOnlinePlayers()
-                        .filter { it !== player }
-                        .map { createPacketEntry(it as CraftPlayer) }
+                        .filter { p -> p !== participantPlayer }
+                        .map { player -> createPacketEntry(player as CraftPlayer) }
 
                     if (entries.isEmpty()) return@launch
 
-                    (player as? CraftPlayer)?.handle?.connection?.send(
-                        ClientboundPlayerInfoUpdatePacket(EnumSet.of(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME), entries)
+                    (participantPlayer as? CraftPlayer)?.handle?.connection?.send(
+                        ClientboundPlayerInfoUpdatePacket(EnumSet.of(
+                            ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME,
+                            ClientboundPlayerInfoUpdatePacket.Action.UPDATE_GAME_MODE
+                        ), entries)
                     )
                 }
             }

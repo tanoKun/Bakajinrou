@@ -2,6 +2,7 @@ package com.github.tanokun.bakajinrou.plugin.observer
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.all
 import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
 import io.mockk.*
 import kotlinx.coroutines.CoroutineScope
@@ -32,7 +33,7 @@ class ParticipantStateObserverTest {
         val participantMock = Participant(uniqueId, mockk(), mockk(), mockk())
 
         val jinrouGameMock = mockk<JinrouGame> {
-            every { participants } returns listOf(participantMock)
+            every { getAllParticipants() } returns listOf(participantMock).all()
         }
 
         val controllerMock = mockk<JinrouGameController> {
@@ -44,10 +45,10 @@ class ParticipantStateObserverTest {
         every { Bukkit.getOnlinePlayers() } returns listOf()
 
         ParticipantStateObserver(
-            jinrouGame = jinrouGameMock,
+            participants = jinrouGameMock.getAllParticipants(),
             controller = controllerMock,
-            asyncContext = testDefaultDispatcher,
-            uiContext = testUIDispatcher
+            uiContext = testUIDispatcher,
+            asyncContext = testDefaultDispatcher
         )
 
         participantMock.dead()
