@@ -8,6 +8,7 @@ protocollib = "5.3.0"
 junit = "5.12.2"
 adventurekt = "2.1.1"
 kotlinx-coroutines = "1.10.2"
+kotlinx-serialization-json = "1.9.0"
 mccoroutine = "2.22.0"
 
 [libraries]
@@ -21,6 +22,7 @@ junit-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.r
 adventurekt = { module = "plutoproject.adventurekt:core", version.ref = "adventurekt" }
 junit-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 mccoroutine-bukkit-api = { module = "com.github.shynixn.mccoroutine:mccoroutine-bukkit-api", version.ref = "mccoroutine" }
 mccoroutine-bukkit-core = { module = "com.github.shynixn.mccoroutine:mccoroutine-bukkit-core", version.ref = "mccoroutine" }
