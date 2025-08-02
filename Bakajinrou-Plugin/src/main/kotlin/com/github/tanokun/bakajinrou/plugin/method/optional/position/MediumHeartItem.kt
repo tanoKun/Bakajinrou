@@ -2,11 +2,11 @@ package com.github.tanokun.bakajinrou.plugin.method.optional.position
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
-import com.github.tanokun.bakajinrou.plugin.formatter.Positions
 import com.github.tanokun.bakajinrou.plugin.gui.AbilityGUI
 import com.github.tanokun.bakajinrou.plugin.gui.ability.medium.MediumUsableAbility
 import com.github.tanokun.bakajinrou.plugin.method.AsBukkitItem
 import com.github.tanokun.bakajinrou.plugin.method.optional.OptionalMethod
+import com.github.tanokun.bakajinrou.plugin.participant.position.Positions
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
