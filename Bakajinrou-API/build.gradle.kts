@@ -5,6 +5,7 @@ version = "1.0.0-SNAPSHOT"
 
 plugins {
     kotlin("jvm")
+    kotlin("plugin.serialization") version "2.2.0"
 }
 
 kotlin {
@@ -19,6 +20,7 @@ repositories {
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.json)
 
     testImplementation(libs.bundles.junit)
     testImplementation(libs.mockk)
