@@ -1,5 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.scheduler.schedule
 
+import com.github.tanokun.bakajinrou.api.map.GameMap
+import com.github.tanokun.bakajinrou.api.map.PointLocation
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
@@ -7,11 +9,12 @@ import com.github.tanokun.bakajinrou.plugin.formatter.display.updatePlayerListNa
 import com.github.tanokun.bakajinrou.plugin.formatter.toTick
 import com.github.tanokun.bakajinrou.plugin.method.appearance.BowItem
 import com.github.tanokun.bakajinrou.plugin.method.weapon.AttackByArrow
-import com.github.tanokun.bakajinrou.plugin.setting.map.GameMap
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.title.Title
+import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
@@ -40,11 +43,11 @@ class GameLifecycleUI(
      * @param controller ゲームを制御するコントローラ。コルーチンのスコープも含む
      * @param gameMap 使用されるマップ
      */
-    fun startingGame(participants: ParticipantScope.All, controller: JinrouGameController, gameMap: GameMap) {
+     fun startingGame(participants: ParticipantScope.All, controller: JinrouGameController, gameMap: GameMap) {
         participants.forEach {
             val bukkitPlayer: Player = getBukkitPlayer(it) ?: return@forEach
 
-            bukkitPlayer.teleport(gameMap.spawnLocation)
+            bukkitPlayer.teleport(gameMap.spawnPoint.asBukkit())
             bukkitPlayer.setArrowsInBody(0, false)
 
             val startTitle = Title.title(
@@ -69,7 +72,7 @@ class GameLifecycleUI(
             bukkitPlayer.updatePlayerListName()
         }
 
-        gameMap.spawnLocation.world.playSound(
+        gameMap.spawnPoint.asBukkit().world.playSound(
             Sound.sound(NamespacedKey("minecraft", "entity.wolf.howl"), Sound.Source.PLAYER, 1.0f, 1.0f)
         )
     }
@@ -85,13 +88,19 @@ class GameLifecycleUI(
      * @param participants ゲームの全ての参加者
      * @param gameMap 使用されていたマップ。ロビー地点を含む。
      */
-    fun finishGame(participants: ParticipantScope.All, gameMap: GameMap) {
+     fun finishGame(participants: ParticipantScope.All, gameMap: GameMap) {
         participants.forEach {
             val bukkitPlayer: Player = getBukkitPlayer(it) ?: return@forEach
 
-            bukkitPlayer.teleport(gameMap.lobbyLocation)
+            bukkitPlayer.teleport(gameMap.lobbyPoint.asBukkit())
             bukkitPlayer.inventory.clear()
             bukkitPlayer.updatePlayerListName()
         }
+    }
+
+    private fun PointLocation.asBukkit(): Location {
+        val world = Bukkit.getWorld(this.worldName) ?: Bukkit.getWorlds().first()
+
+        return Location(world, this.x.toDouble(), this.y.toDouble(), this.z.toDouble())
     }
 }
