@@ -10,12 +10,13 @@ import org.bukkit.inventory.ItemStack
 class QuartzDistribute(
     private val getBukkitPlayer: (Participant) -> Player?
 ) {
+
     /**
      * 生存状態の参加者にクオーツを1個配布します。
      *
      * @param participants ゲームの全ての参加者
      */
-    fun distributeQuartzToSurvivors(participants: ParticipantScope.All) {
+     fun distributeQuartzToSurvivors(participants: ParticipantScope.All) {
         participants
             .filter { it.state == ParticipantStates.SURVIVED }
             .forEach {

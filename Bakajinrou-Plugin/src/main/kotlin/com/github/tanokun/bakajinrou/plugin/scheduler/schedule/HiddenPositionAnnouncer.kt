@@ -9,6 +9,7 @@ import org.bukkit.entity.Player
 class HiddenPositionAnnouncer(
     private val getBukkitPlayer: (Participant) -> Player?,
 ) {
+
     /**
      * 以下の役職の付与者一覧を、全ての参加者に表示します。
      * - 人狼
@@ -18,7 +19,7 @@ class HiddenPositionAnnouncer(
      *
      * @see com.github.tanokun.bakajinrou.plugin.formatter.ParticipantsFormatter
      */
-    fun notifyWolfsAndFox(participants: ParticipantScope.All) {
+     fun notifyWolfsAndFox(participants: ParticipantScope.All) {
         val formatter = ParticipantsFormatter(participants.nonSpectators()) { Bukkit.getPlayer(it.uniqueId) }
 
         participants.forEach {

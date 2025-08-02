@@ -11,6 +11,7 @@ import kotlin.time.Duration.Companion.seconds
 class TimeAnnouncer(
     private val getBukkitPlayer: (Participant) -> Player?
 ) {
+
     /**
      * 残り時間をアクションバーに表示します。
      *
@@ -21,7 +22,7 @@ class TimeAnnouncer(
      *
      * @throws IllegalArgumentException 残り時間が0未満の場合
      */
-    fun showRemainingTimeActionBar(participants: ParticipantScope.All, leftSeconds: Long) {
+     fun showRemainingTimeActionBar(participants: ParticipantScope.All, leftSeconds: Long) {
         if (leftSeconds < 0) throw IllegalArgumentException("残り時間は0以上である必要があります。")
 
         val formattedTime = leftSeconds.seconds.toComponents { _, minutes, seconds, _ ->
