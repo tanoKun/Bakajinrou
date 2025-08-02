@@ -1,18 +1,19 @@
 package com.github.tanokun.bakajinrou.plugin.formatter
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.nonSpectators
+import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
+import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
+import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.participant.ParticipantStrategy
-import com.github.tanokun.bakajinrou.plugin.position.citizen.CitizenPosition
-import com.github.tanokun.bakajinrou.plugin.position.citizen.FortunePosition
-import com.github.tanokun.bakajinrou.plugin.position.citizen.KnightPosition
-import com.github.tanokun.bakajinrou.plugin.position.citizen.MediumPosition
-import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotAsFortunePosition
-import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotAsKnightPosition
-import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotAsMediumPosition
-import com.github.tanokun.bakajinrou.plugin.position.fox.FoxThirdPosition
-import com.github.tanokun.bakajinrou.plugin.position.wolf.MadmanSecondPosition
-import com.github.tanokun.bakajinrou.plugin.position.wolf.WolfSecondPosition
+import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.CitizenPosition
+import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.FortunePosition
+import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.KnightPosition
+import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.MediumPosition
+import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.idiot.IdiotAsFortunePosition
+import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.idiot.IdiotAsKnightPosition
+import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.idiot.IdiotAsMediumPosition
 import io.mockk.mockk
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
@@ -53,16 +54,19 @@ class ParticipantsFormatterTest {
 
     @Test
     fun formatWolfTest() {
+        createCaches()
+
         val formatter = ParticipantsFormatter(
             participants = createParticipants(),
-            nameCache = createCaches(),
             playerProvider = { null }
         )
 
         val wolfColor = NamedTextColor.DARK_RED.asHexString()
 
         val expected = component {
-            text("《 人狼 》") color wolfColor deco bold
+            text("《 ") color gray
+            text("人狼") color wolfColor deco bold
+            text(" 》") color gray
             newline()
             text("  ")
             text("wolf1") color wolfColor deco bold
@@ -75,16 +79,19 @@ class ParticipantsFormatterTest {
 
     @Test
     fun formatMadmanTest() {
+        createCaches()
+
         val formatter = ParticipantsFormatter(
             participants = createParticipants(),
-            nameCache = createCaches(),
             playerProvider = { null }
         )
         
         val madmanColor = NamedTextColor.RED.asHexString()
 
         val expected = component {
-            text("《 狂人 》") color madmanColor deco bold
+            text("《 ") color gray
+            text("狂人") color madmanColor deco bold
+            text(" 》") color gray
             newline()
             text("  ")
             text("madman1") color madmanColor deco bold
@@ -97,16 +104,19 @@ class ParticipantsFormatterTest {
 
     @Test
     fun formatFortuneTest() {
+        createCaches()
+
         val formatter = ParticipantsFormatter(
             participants = createParticipants(),
-            nameCache = createCaches(),
             playerProvider = { null }
         )
 
         val fortuneColor = TextColor.color(0x87cefa).asHexString()
 
         val expected = component {
-            text("《 占い師 》") color fortuneColor deco bold
+            text("《 ") color gray
+            text("占い師") color fortuneColor deco bold
+            text(" 》") color gray
             newline()
             text("  ")
             text("fortune1") color fortuneColor deco bold
@@ -120,9 +130,10 @@ class ParticipantsFormatterTest {
 
     @Test
     fun formatMediumTest() {
+        createCaches()
+
         val formatter = ParticipantsFormatter(
             participants = createParticipants(),
-            nameCache = createCaches(),
             playerProvider = { null }
         )
 
@@ -130,7 +141,9 @@ class ParticipantsFormatterTest {
         val mediumColor = TextColor.color(0xff00ff).asHexString()
 
         val expected = component {
-            text("《 霊媒師 》") color mediumColor deco bold
+            text("《 ") color gray
+            text("霊媒師") color mediumColor deco bold
+            text(" 》") color gray
             newline()
             text("  ")
             text("medium1") color mediumColor deco bold
@@ -144,16 +157,19 @@ class ParticipantsFormatterTest {
 
     @Test
     fun formatKnightTest() {
+        createCaches()
+
         val formatter = ParticipantsFormatter(
             participants = createParticipants(),
-            nameCache = createCaches(),
             playerProvider = { null }
         )
 
         val knightColor = TextColor.color(0x00ff7f).asHexString()
 
         val expected = component {
-            text("《 騎士 》") color knightColor deco bold
+            text("《 ") color gray
+            text("騎士") color knightColor deco bold
+            text(" 》") color gray
             newline()
             text("  ")
             text("knight1") color knightColor deco bold
@@ -167,16 +183,19 @@ class ParticipantsFormatterTest {
 
     @Test
     fun formatFoxTest() {
+        createCaches()
+
         val formatter = ParticipantsFormatter(
             participants = createParticipants(),
-            nameCache = createCaches(),
             playerProvider = { null }
         )
 
         val foxColor = NamedTextColor.DARK_PURPLE.asHexString()
 
         val expected = component {
-            text("《 妖狐 》") color foxColor deco bold
+            text("《 ") color gray
+            text("妖狐") color foxColor deco bold
+            text(" 》") color gray
             newline()
             text("  ")
             text("fox1") color foxColor deco bold
@@ -187,16 +206,19 @@ class ParticipantsFormatterTest {
 
     @Test
     fun formatCitizenTest() {
+        createCaches()
+
         val formatter = ParticipantsFormatter(
             participants = createParticipants(),
-            nameCache = createCaches(),
             playerProvider = { null }
         )
 
         val citizenColor = NamedTextColor.BLUE.asHexString()
 
         val expected = component {
-            text("《 市民 》") color citizenColor deco bold
+            text("《 ") color gray
+            text("市民") color citizenColor deco bold
+            text(" 》") color gray
             newline()
             text("  ")
             text("citizen1") color citizenColor deco bold
@@ -208,27 +230,27 @@ class ParticipantsFormatterTest {
     }
 
     fun createParticipants() = listOf(
-        Participant(wolf1UniqueId, WolfSecondPosition, mockk<ParticipantStrategy>()),
-        Participant(wolf2UniqueId, WolfSecondPosition, mockk<ParticipantStrategy>()),
-        Participant(madman1UniqueId, MadmanSecondPosition, mockk<ParticipantStrategy>()),
-        Participant(madman2UniqueId, MadmanSecondPosition, mockk<ParticipantStrategy>()),
+        Participant(wolf1UniqueId, mockk<WolfPosition>(), mockk<ParticipantStrategy>()),
+        Participant(wolf2UniqueId, mockk<WolfPosition>(), mockk<ParticipantStrategy>()),
+        Participant(madman1UniqueId, mockk<MadmanPosition>(), mockk<ParticipantStrategy>()),
+        Participant(madman2UniqueId, mockk<MadmanPosition>(), mockk<ParticipantStrategy>()),
 
-        Participant(fortune1UniqueId, FortunePosition, mockk<ParticipantStrategy>()),
-        Participant(idiotAsFortune1UniqueId, IdiotAsFortunePosition, mockk<ParticipantStrategy>()),
+        Participant(fortune1UniqueId, mockk<FortunePosition>(), mockk<ParticipantStrategy>()),
+        Participant(idiotAsFortune1UniqueId, mockk<IdiotAsFortunePosition>(), mockk<ParticipantStrategy>()),
 
-        Participant(medium1UniqueId, MediumPosition, mockk<ParticipantStrategy>()),
-        Participant(idiotAsMedium1UniqueId, IdiotAsMediumPosition, mockk<ParticipantStrategy>()),
+        Participant(medium1UniqueId, mockk<MediumPosition>(), mockk<ParticipantStrategy>()),
+        Participant(idiotAsMedium1UniqueId, mockk<IdiotAsMediumPosition>(), mockk<ParticipantStrategy>()),
 
-        Participant(knight1UniqueId, KnightPosition, mockk<ParticipantStrategy>()),
-        Participant(idiotAsKnight1UniqueId, IdiotAsKnightPosition, mockk<ParticipantStrategy>()),
+        Participant(knight1UniqueId, mockk<KnightPosition>(), mockk<ParticipantStrategy>()),
+        Participant(idiotAsKnight1UniqueId, mockk<IdiotAsKnightPosition>(), mockk<ParticipantStrategy>()),
 
-        Participant(fox1UniqueId, FoxThirdPosition, mockk<ParticipantStrategy>()),
+        Participant(fox1UniqueId, mockk<FoxPosition>(), mockk<ParticipantStrategy>()),
 
-        Participant(citizen1UniqueId, CitizenPosition, mockk<ParticipantStrategy>()),
-        Participant(citizen2UniqueId, CitizenPosition, mockk<ParticipantStrategy>()),
-    )
+        Participant(citizen1UniqueId, mockk<CitizenPosition>(), mockk<ParticipantStrategy>()),
+        Participant(citizen2UniqueId, mockk<CitizenPosition>(), mockk<ParticipantStrategy>()),
+    ).nonSpectators()
 
-    fun createCaches() = PlayerNameCache().apply {
+    fun createCaches() = PlayerNameCache.apply {
         put(wolf1UniqueId, "wolf1")
         put(wolf2UniqueId, "wolf2")
         put(madman1UniqueId, "madman1")
