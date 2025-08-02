@@ -10,10 +10,10 @@ import org.eclipse.aether.repository.RemoteRepository
 
 class BakaJinrouPluginLoader : PluginLoader {
     override fun classloader(pluginClasspathBuilder: PluginClasspathBuilder) {
-        val resolver = MavenLibraryResolver()
-        resolver.addRepository(
-            RemoteRepository.Builder("xenondevs", "default", "https://repo.xenondevs.xyz/releases/").build()
-        )
+        val resolver = MavenLibraryResolver().apply {
+            addRepository(RemoteRepository.Builder("xenondevs", "default", "https://repo.xenondevs.xyz/releases/").build())
+        }
+
         resolver.addDependency(Dependency(DefaultArtifact("xyz.xenondevs.invui:invui:pom:1.46"), null))
         pluginClasspathBuilder.addLibrary(resolver)
     }
