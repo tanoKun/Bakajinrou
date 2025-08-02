@@ -1,14 +1,15 @@
 package com.github.tanokun.bakajinrou.plugin.gui.ability.fortune
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.plugin.gui.ability.AbilityResult
 import com.github.tanokun.bakajinrou.plugin.gui.ability.UsableAbility
-import com.github.tanokun.bakajinrou.plugin.position.fox.FoxThirdPosition
-import net.kyori.adventure.text.format.TextColor
+import com.github.tanokun.bakajinrou.plugin.participant.position.fox.FoxThirdPosition
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import plutoproject.adventurekt.component
 import plutoproject.adventurekt.text.color
 import plutoproject.adventurekt.text.deco
+import plutoproject.adventurekt.text.raw
 import plutoproject.adventurekt.text.style.bold
 import plutoproject.adventurekt.text.style.gray
 import plutoproject.adventurekt.text.style.white
@@ -22,20 +23,18 @@ abstract class FortuneUsableAbility: UsableAbility {
 
     /**
      * 占い結果を、指定したプレイヤーに送信します。
-     * これは、任意で決めた [positionPrefix] の元、実行することが多いです。
      *
      * @param targetName 対象プレイヤーの名前
-     * @param positionPrefix 公開される役職名
-     * @param color 表示に使用する色
+     * @param abilityResult 占いの結果
      * @param user 占いを行ったプレイヤー
      */
-    fun showResult(targetName: String, positionPrefix: String, color: TextColor, user: Player) {
+    fun showResult(targetName: String, abilityResult: AbilityResult, user: Player) {
         user.sendMessage(
             component {
                 text("占いの結果: 「") color gray deco bold
                 text(targetName) color white deco bold
                 text("」は、「") color gray deco bold
-                text(positionPrefix) color color.asHexString() deco bold
+                raw { abilityResult.result } deco bold
                 text("」です。") color gray deco bold
             }
         )

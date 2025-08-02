@@ -83,13 +83,6 @@ class Participant(
         }
 
     /**
-     * この参加者を非観察者として、プレフィックスを選びます。
-     *
-     * @param viewer 観察者
-     */
-    fun resolvePrefix(viewer: Participant) = position.prefix.resolvePrefix(viewer = viewer, target = this)
-
-    /**
      * @return スペクテイターであることを検出できるかどうか
      */
     fun isVisibleSpectators(): Boolean = isPosition<SpectatorPosition>() || state == ParticipantStates.DEAD

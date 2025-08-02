@@ -8,16 +8,14 @@ import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
-import com.github.tanokun.bakajinrou.plugin.position.citizen.CitizenPosition
-import com.github.tanokun.bakajinrou.plugin.position.citizen.FortunePosition
-import com.github.tanokun.bakajinrou.plugin.position.citizen.KnightPosition
-import com.github.tanokun.bakajinrou.plugin.position.citizen.MediumPosition
-import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotAsFortunePosition
-import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotAsKnightPosition
-import com.github.tanokun.bakajinrou.plugin.position.citizen.idiot.IdiotAsMediumPosition
-import com.github.tanokun.bakajinrou.plugin.position.fox.FoxThirdPosition
-import com.github.tanokun.bakajinrou.plugin.position.wolf.MadmanSecondPosition
-import com.github.tanokun.bakajinrou.plugin.position.wolf.WolfSecondPosition
+import com.github.tanokun.bakajinrou.plugin.participant.position.Positions
+import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.CitizenPosition
+import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.FortunePosition
+import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.KnightPosition
+import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.MediumPosition
+import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.idiot.IdiotAsFortunePosition
+import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.idiot.IdiotAsKnightPosition
+import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.idiot.IdiotAsMediumPosition
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.entity.Player
@@ -42,73 +40,68 @@ class ParticipantsFormatter(
     fun formatWolf(
         playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, Positions.Wolf.color) }
     ): Component = formatPosition<WolfPosition>(
-        Positions.Wolf.color,
-        WolfSecondPosition.prefix.defaultPrefix,
+        Positions.Wolf,
         playerNameFormatter
     )
 
     fun formatMadman(
         playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, Positions.Madman.color) }
     ): Component = formatPosition<MadmanPosition>(
-        Positions.Madman.color,
-        MadmanSecondPosition.prefix.defaultPrefix,
+        Positions.Madman,
         playerNameFormatter
     )
 
     fun formatFortune(
         playerNameFormatter: (Participant) -> Component = { defaultPlayerNameWithIdiotFormatter<IdiotAsFortunePosition>(it, Positions.Fortune.color) }
     ): Component = formatPositionWithIdiot<FortunePosition, IdiotAsFortunePosition>(
-        Positions.Fortune.color,
-        FortunePosition.prefix.defaultPrefix,
+        Positions.Fortune,
         playerNameFormatter
     )
 
     fun formatMedium(
         playerNameFormatter: (Participant) -> Component = { defaultPlayerNameWithIdiotFormatter<IdiotAsMediumPosition>(it, Positions.Medium.color) }
     ): Component = formatPositionWithIdiot<MediumPosition, IdiotAsMediumPosition>(
-        Positions.Medium.color,
-        MediumPosition.prefix.defaultPrefix,
+        Positions.Medium,
         playerNameFormatter
     )
 
     fun formatKnight(
         playerNameFormatter: (Participant) -> Component = { defaultPlayerNameWithIdiotFormatter<IdiotAsKnightPosition>(it, Positions.Knight.color) }
     ): Component = formatPositionWithIdiot<KnightPosition, IdiotAsKnightPosition>(
-        Positions.Knight.color,
-        KnightPosition.prefix.defaultPrefix,
+        Positions.Knight,
         playerNameFormatter
     )
 
     fun formatFox(
         playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, Positions.Fox.color) }
     ): Component = formatPosition<FoxPosition>(
-        Positions.Fox.color,
-        FoxThirdPosition.prefix.defaultPrefix,
+        Positions.Fox,
         playerNameFormatter
     )
 
     fun formatCitizen(
         playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, Positions.Citizen.color) }
     ): Component = formatPosition<CitizenPosition>(
-        Positions.Citizen.color,
-        CitizenPosition.prefix.defaultPrefix,
+        Positions.Citizen,
         playerNameFormatter
     )
-    private inline fun <reified T: Position> formatPosition(positionColor: TextColor, description: String, noinline formatter: (Participant) -> Component): Component {
+    private inline fun <reified T: Position> formatPosition(position: Positions, noinline formatter: (Participant) -> Component): Component {
         val positionLine = positionLineComponent(participants.position<T>(), formatter)
 
         return component {
-            text("《 $description 》") color positionColor.asHexString() deco bold
+            text("《 ") color gray
+            raw { position.createDisplayComponent() } deco bold
+            text(" 》") color gray
             newline()
             text("  ")
             positionLine?.let { raw { it } }
         }
     }
 
-    private inline fun <reified T: Position, reified I: IdiotPosition> formatPositionWithIdiot(positionColor: TextColor, description: String, noinline formatter: (Participant) -> Component): Component {
+    private inline fun <reified T: Position, reified I: IdiotPosition> formatPositionWithIdiot(position: Positions, noinline formatter: (Participant) -> Component): Component {
         val idiotsAsFortune = participants.position<I>()
 
-        val componentAsJob = formatPosition<T>(positionColor, description, formatter)
+        val componentAsJob = formatPosition<T>(position, formatter)
 
         return component {
             raw { componentAsJob }

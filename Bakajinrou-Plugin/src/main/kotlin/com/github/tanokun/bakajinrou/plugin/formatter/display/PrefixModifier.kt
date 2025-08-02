@@ -2,9 +2,9 @@ package com.github.tanokun.bakajinrou.plugin.formatter.display
 
 import com.github.tanokun.bakajinrou.api.ParticipantStates
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.plugin.formatter.getPositionColor
+import com.github.tanokun.bakajinrou.plugin.participant.position.HasPrefix
+import com.github.tanokun.bakajinrou.plugin.participant.prefix.Prefix
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
 import plutoproject.adventurekt.component
 import plutoproject.adventurekt.text.*
 import plutoproject.adventurekt.text.style.bold
@@ -16,21 +16,25 @@ class PrefixModifier(
 ) {
     var comingOut: ComingOut? = null
 
-    private val positionColor: TextColor = getPositionColor(position = target.position)
+    private val prefix: Prefix = (target.position as HasPrefix).prefix
 
     /**
      * 役職別のプレフィックスと、カミングアウトを足し合わせたプレフィックスを作成します。
-     * 主なルールは[com.github.tanokun.bakajinrou.api.participant.position.Prefix]を参照してください。
+     * 主なルールは[com.github.tanokun.bakajinrou.plugin.participant.prefix.DefaultPrefix]を参照してください。
      *
      * @param viewer 観察者
      *
      * @return 統合したプレフィックス、または空のコンポーネント
      *
-     * @see com.github.tanokun.bakajinrou.api.participant.position.Prefix
+     * @see com.github.tanokun.bakajinrou.plugin.participant.prefix.DefaultPrefix
      */
     fun createPrefix(viewer: Participant): Component {
-        val resolvedPrefix = target.resolvePrefix(viewer)?.let {
-            component { text(it) color positionColor.asHexString() with bold }
+        prefix.resolvePrefix(viewer, target)?.let {
+            component { raw(it) with bold }
+        }
+
+        val resolvedPrefix = prefix.resolvePrefix(viewer, target)?.let {
+            component { raw(it) with bold }
         }
 
         val comingOutPrefix = comingOut?.let {

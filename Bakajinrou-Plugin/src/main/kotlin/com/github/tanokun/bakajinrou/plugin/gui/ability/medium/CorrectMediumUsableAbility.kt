@@ -3,7 +3,7 @@ package com.github.tanokun.bakajinrou.plugin.gui.ability.medium
 import com.github.tanokun.bakajinrou.api.ParticipantStates
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
-import com.github.tanokun.bakajinrou.plugin.formatter.getPositionColor
+import com.github.tanokun.bakajinrou.plugin.participant.position.HasPrefix
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 
@@ -20,9 +20,8 @@ object CorrectMediumUsableAbility: MediumUsableAbility() {
             return
         }
 
-        val color = getPositionColor(target.position.publicPosition)
-        val positionPrefix = target.position.publicPositionName()
+        val position = target.position as? HasPrefix ?: return
 
-        this.showResult(targetName, positionPrefix, color, user)
+        this.showResult(targetName, position.abilityResult, user)
     }
 }
