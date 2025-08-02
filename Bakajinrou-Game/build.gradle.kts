@@ -18,7 +18,9 @@ repositories {
 
 dependencies {
     implementation(project(":Bakajinrou-API"))
+
     implementation(libs.kotlinx.coroutines.core)
+    implementation(kotlin("reflect"))
 
     testImplementation(libs.bundles.junit)
     testImplementation(libs.mockk)

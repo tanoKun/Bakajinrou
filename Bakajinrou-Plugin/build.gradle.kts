@@ -35,7 +35,10 @@ dependencies {
     compileOnly(libs.invui)
     implementation(libs.adventurekt)
 
+    implementation(kotlin("reflect"))
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.json)
+
     implementation(libs.bundles.mccoroutine)
 
     implementation(project(":Bakajinrou-API"))
@@ -84,8 +87,9 @@ tasks {
 }
 
 paper {
-    main = "com.github.tanokun.bakajinrou.plugin.BakaJinrou"
+    name = "Bakajinrou"
 
+    main = "com.github.tanokun.bakajinrou.plugin.BakaJinrou"
     loader = "com.github.tanokun.bakajinrou.plugin.BakaJinrouPluginLoader"
 
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
@@ -96,5 +100,11 @@ paper {
     serverDependencies {
         register("CommandAPI")
         register("ProtocolLib")
+    }
+
+    permissions {
+        register("testplugin.command.mapsetting") {
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
     }
 }
