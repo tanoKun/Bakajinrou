@@ -1,9 +1,9 @@
-package com.github.tanokun.bakajinrou.plugin.gui
+package com.github.tanokun.bakajinrou.plugin.gui.ability
 
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
-import com.github.tanokun.bakajinrou.plugin.gui.ability.UsableAbility
+import com.github.tanokun.bakajinrou.plugin.participant.ability.UsableAbility
 import org.bukkit.entity.Player
 import plutoproject.adventurekt.component
 import plutoproject.adventurekt.text.color
