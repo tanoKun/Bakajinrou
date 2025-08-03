@@ -1,8 +1,8 @@
-package com.github.tanokun.bakajinrou.plugin.gui.ability.medium
+package com.github.tanokun.bakajinrou.plugin.participant.ability.medium
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
-import com.github.tanokun.bakajinrou.plugin.gui.ability.AbilityResult
+import com.github.tanokun.bakajinrou.plugin.participant.ability.AbilityResult
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import kotlin.random.Random

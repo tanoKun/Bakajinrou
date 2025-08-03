@@ -1,8 +1,8 @@
-package com.github.tanokun.bakajinrou.plugin.gui.ability.knight
+package com.github.tanokun.bakajinrou.plugin.participant.ability.knight
 
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.plugin.gui.ability.UsableAbility
+import com.github.tanokun.bakajinrou.plugin.participant.ability.UsableAbility
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import plutoproject.adventurekt.component

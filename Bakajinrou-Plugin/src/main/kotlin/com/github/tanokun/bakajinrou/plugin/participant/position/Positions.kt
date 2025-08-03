@@ -12,11 +12,11 @@ sealed class Positions(
 ) {
     object Wolf: Positions("人狼", NamedTextColor.DARK_RED)
     object Madman: Positions("狂人", NamedTextColor.RED)
-    object Citizen: Positions("市民", NamedTextColor.BLUE)
+    object Idiot: Positions("バカ", NamedTextColor.WHITE)
     object Fortune: Positions("占い師", TextColor.color(0x87cefa))
     object Medium: Positions("霊媒師", TextColor.color(0xff00ff))
     object Knight: Positions("騎士", TextColor.color(0x00ff7f))
-    object Idiot: Positions("バカ", NamedTextColor.WHITE)
+    object Citizen: Positions("市民", NamedTextColor.BLUE)
     object Fox: Positions("妖狐", NamedTextColor.DARK_PURPLE)
     object Spectator: Positions("観戦", NamedTextColor.AQUA)
 

@@ -1,7 +1,7 @@
-package com.github.tanokun.bakajinrou.plugin.gui.ability.medium
+package com.github.tanokun.bakajinrou.plugin.participant.ability.medium
 
-import com.github.tanokun.bakajinrou.plugin.gui.ability.AbilityResult
-import com.github.tanokun.bakajinrou.plugin.gui.ability.UsableAbility
+import com.github.tanokun.bakajinrou.plugin.participant.ability.AbilityResult
+import com.github.tanokun.bakajinrou.plugin.participant.ability.UsableAbility
 import org.bukkit.entity.Player
 import plutoproject.adventurekt.component
 import plutoproject.adventurekt.text.color

@@ -4,7 +4,7 @@ import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
 import com.github.tanokun.bakajinrou.plugin.formatter.toTick
-import com.github.tanokun.bakajinrou.plugin.gui.ability.AbilityResult
+import com.github.tanokun.bakajinrou.plugin.participant.ability.AbilityResult
 import com.github.tanokun.bakajinrou.plugin.participant.position.HasPrefix
 import com.github.tanokun.bakajinrou.plugin.participant.position.Positions
 import com.github.tanokun.bakajinrou.plugin.participant.prefix.DefaultPrefix

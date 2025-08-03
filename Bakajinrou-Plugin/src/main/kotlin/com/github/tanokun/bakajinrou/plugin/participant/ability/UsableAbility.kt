@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.gui.ability
+package com.github.tanokun.bakajinrou.plugin.participant.ability
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import org.bukkit.entity.Player

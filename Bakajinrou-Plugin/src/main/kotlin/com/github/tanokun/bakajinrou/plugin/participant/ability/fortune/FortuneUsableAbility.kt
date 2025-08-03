@@ -1,8 +1,8 @@
-package com.github.tanokun.bakajinrou.plugin.gui.ability.fortune
+package com.github.tanokun.bakajinrou.plugin.participant.ability.fortune
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.plugin.gui.ability.AbilityResult
-import com.github.tanokun.bakajinrou.plugin.gui.ability.UsableAbility
+import com.github.tanokun.bakajinrou.plugin.participant.ability.AbilityResult
+import com.github.tanokun.bakajinrou.plugin.participant.ability.UsableAbility
 import com.github.tanokun.bakajinrou.plugin.participant.position.fox.FoxThirdPosition
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player

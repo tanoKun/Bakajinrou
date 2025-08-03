@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.gui.ability
+package com.github.tanokun.bakajinrou.plugin.participant.ability
 
 import com.github.tanokun.bakajinrou.plugin.participant.position.Positions
 import net.kyori.adventure.text.Component
