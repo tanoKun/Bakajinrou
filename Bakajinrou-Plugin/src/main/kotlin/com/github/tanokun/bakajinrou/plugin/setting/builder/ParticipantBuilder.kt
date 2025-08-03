@@ -17,22 +17,22 @@ import java.util.*
 import kotlin.random.Random
 
 class ParticipantBuilder(
-    private val positions: HashMap<Positions, Int>,
+    private val template: HashMap<Positions, Int>,
     candidates: Set<UUID>,
     private val strategy: (uuid: UUID) -> GrantedStrategy,
-    val random: Random,
+    private val random: Random,
 ) {
     private val finalizedParticipants: MutableSet<Participant> = mutableSetOf()
 
     private val remainingCandidates: MutableSet<UUID> = candidates.toMutableSet()
 
     init {
-        if (positions.values.sum() > candidates.size) throw IllegalStateException("現在の参加人数では、選択されている役職が多すぎます。")
+        if (template.values.sum() > candidates.size) throw IllegalStateException("現在の参加人数では、選択されている役職が多すぎます。")
 
     }
 
     fun assignMadmans(): WolfAssigner {
-        val numberOf = positions[Positions.Madman] ?: 0
+        val numberOf = template[Positions.Madman] ?: 0
 
         val madmans = arrayListOf<Participant>()
 
@@ -49,7 +49,7 @@ class ParticipantBuilder(
 
     private inner class WolfAssignerImpl(private val madmans: List<Participant>): WolfAssigner {
         override fun assignWolfs(canDuplicate: Boolean): IdiotAssigner {
-            val numberOf = positions[Positions.Wolf] ?: 0
+            val numberOf = template[Positions.Wolf] ?: 0
 
             val associate = madmans.mapIndexed { index, madman ->
                 if (index <= numberOf - 1) return@mapIndexed madman to index
@@ -76,7 +76,7 @@ class ParticipantBuilder(
         override fun assignIdiots(vararg assign: IdiotPosition): AbilityUsersAssigner {
             if (assign.isEmpty()) throw IllegalArgumentException("振り分けるバカ役職が一つもありません。")
 
-            val numberOf = positions[Positions.Idiot] ?: 0
+            val numberOf = template[Positions.Idiot] ?: 0
 
             repeat(numberOf) {
                 val pull = pullCandidate()
@@ -90,9 +90,9 @@ class ParticipantBuilder(
     private inner class AbilityUsersAssignerImpl: AbilityUsersAssigner {
         override fun assignAbilityUsers(): FoxAssigner {
             mapOf(
-                FortunePosition to (positions[Positions.Fortune] ?: 0),
-                MediumPosition to (positions[Positions.Medium] ?: 0),
-                KnightPosition to (positions[Positions.Knight] ?: 0),
+                FortunePosition to (template[Positions.Fortune] ?: 0),
+                MediumPosition to (template[Positions.Medium] ?: 0),
+                KnightPosition to (template[Positions.Knight] ?: 0),
             ).forEach { position, numberOf ->
                 repeat(numberOf) {
                     val pull = pullCandidate()
@@ -108,7 +108,7 @@ class ParticipantBuilder(
 
     private inner class FoxAssignerImpl: FoxAssigner {
         override fun assignFox(): OtherAssigner {
-            val numberOf = positions[Positions.Fox] ?: 0
+            val numberOf = template[Positions.Fox] ?: 0
 
             repeat(numberOf) {
                 val pull = pullCandidate()

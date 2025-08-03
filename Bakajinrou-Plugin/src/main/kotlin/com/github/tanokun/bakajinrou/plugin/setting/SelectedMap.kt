@@ -15,7 +15,7 @@ import kotlin.time.Duration.Companion.seconds
 /**
  * ユーザーにより選択されたマップをラップし、スケジュール生成などの依存を注入した形で提供します。
  *
- * @property gameMap 選択されたゲームマップ
+ * @property gameMap 選択されたマップ
  * @property timeAnnouncer 残り時間の通知処理を担うクラス
  * @property quartzDistribute クォーツ配布処理を行うクラス
  * @property glowingNotifier 市民の発光などを通知するクラス

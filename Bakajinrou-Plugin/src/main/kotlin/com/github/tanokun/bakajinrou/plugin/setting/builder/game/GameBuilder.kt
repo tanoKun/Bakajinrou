@@ -10,7 +10,6 @@ import com.github.tanokun.bakajinrou.plugin.participant.position.Positions
 import com.github.tanokun.bakajinrou.plugin.participant.position.other.SpectatorOtherPosition
 import com.github.tanokun.bakajinrou.plugin.setting.SelectedMap
 import com.github.tanokun.bakajinrou.plugin.setting.builder.ParticipantBuilder
-import org.bukkit.Bukkit
 import org.bukkit.Server
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitScheduler
@@ -100,11 +99,3 @@ interface ParticipantAssigner {
 interface SpectatorAssigner {
     fun assignSpectators(candidates: Set<UUID>): CreateLineBuilderDsl
 }
-
-fun gameBuilder(
-    random: Random = Random,
-    plugin: Plugin,
-    server: Server = Bukkit.getServer(),
-    bukkitScheduler: BukkitScheduler = server.scheduler,
-    protocolManager: ProtocolManager
-) = GameBuilder(random, plugin, server, bukkitScheduler, protocolManager)

@@ -29,13 +29,17 @@ class DIContext {
         val constructor = type.primaryConstructor
             ?: error("No primary constructor found for ${type.qualifiedName}")
 
-        val args = constructor.parameters.map { param ->
+        val args = constructor.parameters.mapNotNull { param ->
             val klass = param.type.classifier as KClass<*>
 
-            return@map get(klass)
+            if (!param.isOptional) return@mapNotNull param to get(klass)
+
+            val value = getOrNull(klass) ?: return@mapNotNull null
+
+            return@mapNotNull param to value
         }
 
-        return constructor.call(*args.toTypedArray())
+        return constructor.callBy(mapOf(*args.toTypedArray()))
     }
 
     fun getParameters(function: KFunction<*>): Array<Any> {

@@ -3,6 +3,7 @@ package com.github.tanokun.bakajinrou.plugin.setting.builder.game
 import com.github.shynixn.mccoroutine.bukkit.minecraftDispatcher
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.map.GameMap
+import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.game.controller.AttackController
 import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
 import com.github.tanokun.bakajinrou.game.logger.BodyHandler
@@ -66,7 +67,6 @@ class CreateLineBuilderDsl(
     private inner class ControllersCreatorImpl: ControllersCreator() {
         override fun createControllers(
             gameController: () -> JinrouGameController,
-
             attackController: () -> AttackController
         ): ListenersRegisterDsl {
             contexts.apply {
@@ -102,10 +102,10 @@ class CreateLineBuilderDsl(
         abstract fun createJinrouGame(
             provider: () -> JinrouGame = {
                 JinrouGame(
-                    participants = contexts.get(),
-                    { CitizenSideFinisher(it) },
-                    { WolfSideFinisher(it) },
-                    { FoxSideFinisher(it) }
+                    participants = contexts.get<ParticipantScope.All>(),
+                    { CitizenSideFinisher(it.getAllParticipants()) },
+                    { WolfSideFinisher(it.getAllParticipants()) },
+                    { FoxSideFinisher(it.getAllParticipants()) }
                 )
             }
         ): ItemFactoryCreator
