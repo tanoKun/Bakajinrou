@@ -1,13 +1,12 @@
 package com.github.tanokun.bakajinrou.plugin.scheduler.schedule
 
-import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.plugin.formatter.ParticipantsFormatter
+import com.github.tanokun.bakajinrou.plugin.participant.BukkitPlayerProvider
 import org.bukkit.Bukkit
-import org.bukkit.entity.Player
 
 class HiddenPositionAnnouncer(
-    private val getBukkitPlayer: (Participant) -> Player?,
+    private val playerProvider: BukkitPlayerProvider
 ) {
 
     /**
@@ -23,7 +22,7 @@ class HiddenPositionAnnouncer(
         val formatter = ParticipantsFormatter(participants.nonSpectators()) { Bukkit.getPlayer(it.uniqueId) }
 
         participants.forEach {
-            val bukkitPlayer = getBukkitPlayer(it) ?: return@forEach
+            val bukkitPlayer = playerProvider.get(it) ?: return@forEach
 
             bukkitPlayer.sendMessage(formatter.formatWolf())
             bukkitPlayer.sendMessage(formatter.formatFox())

@@ -2,13 +2,13 @@ package com.github.tanokun.bakajinrou.plugin.scheduler.schedule
 
 import com.github.tanokun.bakajinrou.api.map.GameMap
 import com.github.tanokun.bakajinrou.api.map.PointLocation
-import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
 import com.github.tanokun.bakajinrou.plugin.formatter.display.updatePlayerListName
 import com.github.tanokun.bakajinrou.plugin.formatter.toTick
 import com.github.tanokun.bakajinrou.plugin.method.appearance.BowItem
 import com.github.tanokun.bakajinrou.plugin.method.weapon.AttackByArrow
+import com.github.tanokun.bakajinrou.plugin.participant.BukkitPlayerProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.kyori.adventure.sound.Sound
@@ -28,7 +28,7 @@ import plutoproject.adventurekt.text.text
 import kotlin.time.Duration.Companion.seconds
 
 class GameLifecycleUI(
-    private val getBukkitPlayer: (Participant) -> Player?
+    private val playerProvider: BukkitPlayerProvider
 ) {
     /**
      * ゲームの開始時に呼び出します。
@@ -45,7 +45,7 @@ class GameLifecycleUI(
      */
      fun startingGame(participants: ParticipantScope.All, controller: JinrouGameController, gameMap: GameMap) {
         participants.forEach {
-            val bukkitPlayer: Player = getBukkitPlayer(it) ?: return@forEach
+            val bukkitPlayer: Player = playerProvider.get(it) ?: return@forEach
 
             bukkitPlayer.teleport(gameMap.spawnPoint.asBukkit())
             bukkitPlayer.setArrowsInBody(0, false)
@@ -90,7 +90,7 @@ class GameLifecycleUI(
      */
      fun finishGame(participants: ParticipantScope.All, gameMap: GameMap) {
         participants.forEach {
-            val bukkitPlayer: Player = getBukkitPlayer(it) ?: return@forEach
+            val bukkitPlayer: Player = playerProvider.get(it) ?: return@forEach
 
             bukkitPlayer.teleport(gameMap.lobbyPoint.asBukkit())
             bukkitPlayer.inventory.clear()

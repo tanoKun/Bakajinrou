@@ -1,20 +1,19 @@
 package com.github.tanokun.bakajinrou.plugin.scheduler.schedule
 
-import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.plugin.formatter.toTick
+import com.github.tanokun.bakajinrou.plugin.participant.BukkitPlayerProvider
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
-import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import kotlin.time.Duration.Companion.seconds
 
 class GlowingNotifier(
-    private val getBukkitPlayer: (Participant) -> Player?
+    private val playerProvider: BukkitPlayerProvider
 ) {
     /**
      * 残り時間 [glowingStartMinutes] 分の発光お知らせを全ての参加者に表示します。
@@ -24,7 +23,7 @@ class GlowingNotifier(
      */
      fun announceGlowingStart(participants: ParticipantScope.All, glowingStartMinutes: Int) {
         participants.forEach {
-            val bukkitPlayer = getBukkitPlayer(it) ?: return@forEach
+            val bukkitPlayer = playerProvider.get(it) ?: return@forEach
 
             bukkitPlayer.sendMessage(
                 Component.text("[人狼] 残り${glowingStartMinutes}分間から、定期発光が始まります。")
@@ -45,7 +44,7 @@ class GlowingNotifier(
         participants
             .filterNot { it.isPosition<WolfPosition>() || it.isPosition<FoxPosition>() }
             .forEach {
-                val bukkitPlayer = getBukkitPlayer(it) ?: return@forEach
+                val bukkitPlayer = playerProvider.get(it) ?: return@forEach
 
                 val glowingEffect = PotionEffect(PotionEffectType.GLOWING, 5.seconds.toTick(), 1, false, false)
                 bukkitPlayer.addPotionEffect(glowingEffect)

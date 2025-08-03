@@ -1,15 +1,14 @@
 package com.github.tanokun.bakajinrou.plugin.scheduler.schedule
 
-import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
+import com.github.tanokun.bakajinrou.plugin.participant.BukkitPlayerProvider
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
-import org.bukkit.entity.Player
 import kotlin.time.Duration.Companion.seconds
 
 class TimeAnnouncer(
-    private val getBukkitPlayer: (Participant) -> Player?
+    private val playerProvider: BukkitPlayerProvider
 ) {
 
     /**
@@ -30,7 +29,7 @@ class TimeAnnouncer(
         }
 
         participants.forEach {
-            val bukkitPlayer = getBukkitPlayer(it) ?: return@forEach
+            val bukkitPlayer = playerProvider.get(it) ?: return@forEach
 
             bukkitPlayer.sendActionBar(
                 Component.text(formattedTime)

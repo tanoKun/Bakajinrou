@@ -1,14 +1,13 @@
 package com.github.tanokun.bakajinrou.plugin.scheduler.schedule
 
 import com.github.tanokun.bakajinrou.api.ParticipantStates
-import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
+import com.github.tanokun.bakajinrou.plugin.participant.BukkitPlayerProvider
 import org.bukkit.Material
-import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 class QuartzDistribute(
-    private val getBukkitPlayer: (Participant) -> Player?
+    private val playerProvider: BukkitPlayerProvider
 ) {
 
     /**
@@ -20,7 +19,7 @@ class QuartzDistribute(
         participants
             .filter { it.state == ParticipantStates.SURVIVED }
             .forEach {
-                val bukkitPlayer = getBukkitPlayer(it) ?: return@forEach
+                val bukkitPlayer = playerProvider.get(it) ?: return@forEach
 
                 bukkitPlayer.inventory.addItem(ItemStack(Material.QUARTZ))
             }
