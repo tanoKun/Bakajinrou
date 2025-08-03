@@ -1,16 +1,16 @@
 package com.github.tanokun.bakajinrou.plugin.finisher
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizensPosition
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 
 class CitizenSideFinisher(
-    private val game: JinrouGame
+    private val participants: ParticipantScope.All
 ): EachSideFinisher() {
     override fun notifyFinish() {
-        game.getAllParticipants().forEach { participant ->
+        participants.forEach { participant ->
             val bukkitPlayer = getBukkitPlayer(participant) ?: return@forEach
 
             showVictorySideTitle(
