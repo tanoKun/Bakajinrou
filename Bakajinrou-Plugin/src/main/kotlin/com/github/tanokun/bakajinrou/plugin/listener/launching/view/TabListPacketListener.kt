@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.listener.launching.tab
+package com.github.tanokun.bakajinrou.plugin.listener.launching.view
 
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.ProtocolManager
