@@ -1,3 +1,18 @@
+# 目次
+<!-- TOC -->
+* [目次](#目次)
+* [バカ人狼](#バカ人狼)
+  * [動作条件](#動作条件)
+  * [ドキュメント](#ドキュメント)
+    * [使用者](#使用者)
+    * [開発者](#開発者)
+* [バグ、エラー報告](#バグエラー報告)
+  * [エラー時 - 例外スタック](#エラー時---例外スタック)
+  * [発生](#発生)
+  * [再現手順](#再現手順)
+* [ライセンス](#ライセンス)
+<!-- TOC -->
+
 # バカ人狼
 畳サーバーの企画「バカ人狼」を、データパックから Paper 用プラグインに書き直したものです。
 既存の「バカ人狼」と多少の相違点があります。
@@ -21,9 +36,9 @@
 ### 開発者
 - [関心(用語)](doc/develop/vocabulary.md)
 
-## バグ、エラー報告
+# バグ、エラー報告
 これらを [Issue](https://github.com/tanoKun/Bakajinrou/issues) に報告する場合、以下を守ってください。
-### エラー時 - 例外スタック
+## エラー時 - 例外スタック
 全ての例外スタックをコピーしてください。
 
 `java.lang.NullPointerException: Cannot invoke "foo.Bar.baz()"` 
@@ -35,10 +50,10 @@ java.lang.NullPointerException: Cannot invoke "foo.Bar.baz()" because ...
 ```
 のようにしてください。
 
-### 発生
+## 発生
 何が起きたか明記してください。
 
-### 再現手順
+## 再現手順
 なるべく、詳細に書いてください。手順の目安となるのは、
 - イベントとなる行動 (攻撃、右クリック、左クリックなど...)
 - コマンドの入力、実行
@@ -49,7 +64,7 @@ java.lang.NullPointerException: Cannot invoke "foo.Bar.baz()" because ...
 
 
 
-## ライセンス
+# ライセンス
 
 このプロジェクトは [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.en.html) です。
 
