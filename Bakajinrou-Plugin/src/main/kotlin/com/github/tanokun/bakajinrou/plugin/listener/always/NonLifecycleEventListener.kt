@@ -2,6 +2,8 @@ package com.github.tanokun.bakajinrou.plugin.listener.always
 
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.cache.PlayerSkinCache
+import com.github.tanokun.bakajinrou.plugin.participant.position.Positions
+import com.github.tanokun.bakajinrou.plugin.setting.GameSettings
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -9,9 +11,13 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.InventoryHolder
+import plutoproject.adventurekt.component
+import plutoproject.adventurekt.text.raw
+import plutoproject.adventurekt.text.text
 
-class NonLifecycleEventListener: Listener {
+class NonLifecycleEventListener(private val gameSettings: GameSettings): Listener {
     @EventHandler
     fun onFall(e: EntityDamageEvent) {
         if (e.entity !is Player) return
@@ -28,7 +34,25 @@ class NonLifecycleEventListener: Listener {
 
     @EventHandler
     fun onPlayerJoin(e: PlayerJoinEvent) {
-        PlayerSkinCache.put(e.player.uniqueId, e.player.playerProfile)
-        PlayerNameCache.put(e.player.uniqueId, e.player.name)
+        val uniqueId = e.player.uniqueId
+        PlayerSkinCache.put(uniqueId, e.player.playerProfile)
+        PlayerNameCache.put(uniqueId, e.player.name)
+
+        if (!gameSettings.spectators.contains(uniqueId)) {
+            gameSettings.addCandidate(uniqueId)
+            return
+        }
+
+        e.player.playerListName(component {
+            raw { Positions.Spectator.createDisplayComponent() }
+            text(" ${e.player.name}")
+        })
+    }
+
+    @EventHandler
+    fun onPlayerQuit(e: PlayerQuitEvent) {
+        val uniqueId = e.player.uniqueId
+
+        gameSettings.removeCandidate(uniqueId)
     }
 }
