@@ -5,6 +5,7 @@ import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.all
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
+import com.github.tanokun.bakajinrou.plugin.participant.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.participant.ParticipantStrategy
 import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.CitizenPosition
 import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.MediumPosition
@@ -60,7 +61,7 @@ class GameSchedulesTest {
     @Test
     @DisplayName("アクションバーに表示される時間のテスト")
     fun showLeftTimeToActionbarTest() {
-        val timeAnnouncer = TimeAnnouncer { server.getPlayer(it.uniqueId) }
+        val timeAnnouncer = TimeAnnouncer(BukkitPlayerProvider)
         timeAnnouncer.showRemainingTimeActionBar(createParticipants(), 231)
 
         players.forEach { player ->
@@ -89,7 +90,7 @@ class GameSchedulesTest {
     @Test
     @DisplayName("妖狐、人狼は発光せず、村陣営と狂人のみ発光")
     fun doNotGlowWolfsAndFoxButCitizensAndMadman() {
-        val gameSchedules = GlowingNotifier { server.getPlayer(it.uniqueId) }
+        val gameSchedules = GlowingNotifier(BukkitPlayerProvider)
 
         gameSchedules.glowCitizens(createParticipants())
 
