@@ -1,0 +1,76 @@
+{
+  "templates": {
+    "8": {
+      "wolf": 2,
+      "madman": 1,
+      "idiot": 1,
+      "fortune": 1,
+      "medium": 1,
+      "knight": 0,
+      "fox": 0
+    },
+    "9": {
+      "wolf": 2,
+      "madman": 1,
+      "idiot": 1,
+      "fortune": 1,
+      "medium": 1,
+      "knight": 1,
+      "fox": 0
+    },
+    "10": {
+      "wolf": 2,
+      "madman": 1,
+      "idiot": 2,
+      "fortune": 1,
+      "medium": 1,
+      "knight": 1,
+      "fox": 1
+    },
+    "11": {
+      "wolf": 2,
+      "madman": 1,
+      "idiot": 2,
+      "fortune": 1,
+      "medium": 1,
+      "knight": 1,
+      "fox": 1
+    },
+    "12": {
+      "wolf": 3,
+      "madman": 1,
+      "idiot": 2,
+      "fortune": 1,
+      "medium": 1,
+      "knight": 1,
+      "fox": 1
+    },
+    "13": {
+      "wolf": 3,
+      "madman": 1,
+      "idiot": 2,
+      "fortune": 1,
+      "medium": 1,
+      "knight": 1,
+      "fox": 1
+    },
+    "14": {
+      "wolf": 3,
+      "madman": 1,
+      "idiot": 3,
+      "fortune": 1,
+      "medium": 1,
+      "knight": 1,
+      "fox": 1
+    },
+    "15": {
+      "wolf": 3,
+      "madman": 2,
+      "idiot": 3,
+      "fortune": 1,
+      "medium": 1,
+      "knight": 1,
+      "fox": 1
+    }
+  }
+}
