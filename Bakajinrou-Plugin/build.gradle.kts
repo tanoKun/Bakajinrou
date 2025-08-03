@@ -8,6 +8,7 @@ version = projectVersion
 
 plugins {
     kotlin("jvm")
+    kotlin("plugin.serialization") version "2.2.0"
     alias(libs.plugins.paper)
     alias(libs.plugins.shadow)
     alias(libs.plugins.paperweight)
