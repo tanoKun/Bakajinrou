@@ -21,6 +21,34 @@
 ### 開発者
 - [関心(用語)](doc/develop/vocabulary.md)
 
+## バグ、エラー報告
+これらを [Issue](https://github.com/tanoKun/Bakajinrou/issues) に報告する場合、以下を守ってください。
+### エラー時 - 例外スタック
+全ての例外スタックをコピーしてください。
+
+`java.lang.NullPointerException: Cannot invoke "foo.Bar.baz()"` 
+だけではなく、
+```text
+java.lang.NullPointerException: Cannot invoke "foo.Bar.baz()" because ...
+   at your.package.Main.run(Main.kt:42)
+   at org.bukkit.plugin.java.JavaPluginLoader...
+```
+のようにしてください。
+
+### 発生
+何が起きたか明記してください。
+
+### 再現手順
+なるべく、詳細に書いてください。手順の目安となるのは、
+- イベントとなる行動 (攻撃、右クリック、左クリックなど...)
+- コマンドの入力、実行
+- サーバー構成の変更
+- コンフィグの設定
+
+です
+
+
+
 ## ライセンス
 
 このプロジェクトは [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.en.html) です。
