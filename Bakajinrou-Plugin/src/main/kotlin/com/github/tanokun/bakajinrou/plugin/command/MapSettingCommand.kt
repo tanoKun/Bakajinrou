@@ -18,18 +18,46 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bukkit.Location
 import org.bukkit.command.CommandSender
-import plutoproject.adventurekt.component
-import plutoproject.adventurekt.text.color
-import plutoproject.adventurekt.text.deco
-import plutoproject.adventurekt.text.style.bold
-import plutoproject.adventurekt.text.style.gray
-import plutoproject.adventurekt.text.style.red
-import plutoproject.adventurekt.text.text
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-class MapSettingCommand(private val gameMapRegistry: GameMapRegistry, private val scope: CoroutineScope) {
+/**
+ * マップ設定に関する操作を行う管理者向けコマンド `/mapsetting` を定義します。
+ *
+ * このコマンドは、ゲームに使用されるマップ情報(スポーン地点、ロビー地点、開始時間、クオーツ配布時間)を
+ * 登録・編集・削除するために使用されます。
+ * 操作は非同期で行われ、ファイルやデータベースへの書き込みを伴います。
+ *
+ * ## コマンドの構文
+ * ### `/mapsetting create <mapName> <spawn> <lobby>`
+ * 新しいマップを作成します。
+ * - `mapName`: 作成するマップの名前（文字列）
+ * - `spawn`: スポーン地点のロケーション
+ * - `lobby`: ロビー地点のロケーション
+ *
+ * ### `/mapsetting delete <mapName>`
+ * 指定されたマップを削除します。
+ *
+ * ### `/mapsetting update spawn <mapName> <spawn>`
+ * 指定マップのスポーン地点を更新します。
+ *
+ * ### `/mapsetting update lobby <mapName> <lobby>`
+ * 指定マップのロビー地点を更新します。
+ *
+ * ### `/mapsetting update starttime <mapName> <seconds>`
+ * 指定マップのゲーム開始後の制限時間(秒)を変更します。
+ *
+ * ### `/mapsetting update quartztime <mapName> <seconds>`
+ * 指定マップにおいて、ゲーム開始からクオーツを配布するまでの時間(秒)を設定します。
+ *
+ * ## パーミッション
+ * - `bakajinrou.command.mapsetting`
+ *
+ * @property gameMapRegistry マップの作成・更新・削除を管理するレジストリ
+ * @property scope 非同期処理に使用する CoroutineScope
+ */
+class MapSettingCommand(private val gameMapRegistry: GameMapRegistry, private val scope: CoroutineScope): Command() {
     init {
         CommandAPICommand("mapsetting").withPermission("bakajinrou.command.mapsetting")
             .withSubcommand(CommandAPICommand("create")
@@ -43,20 +71,12 @@ class MapSettingCommand(private val gameMapRegistry: GameMapRegistry, private va
 
                     val map = GameMap(mapName, spawnPoint, lobbyPoint, 15.minutes, 3.minutes)
 
-                    sender.sendMessage(component {
-                        text("「${mapName.name}」マップを作成中...") color gray deco bold
-                    })
+                    sender.info("「${mapName.name}」マップを作成中...")
 
                     scope.launch(Dispatchers.IO) {
-                        val message = when (gameMapRegistry.create(map)) {
-                            MapCreationResult.CreationSucceeded ->
-                                component { text("マップの作成に成功しました。") color gray deco bold }
-                            is MapCreationResult.MapAlreadyExists ->
-                                component { text("既に存在するマップのため、作成出来ませんでした。") color red deco bold }
-                        }
-
-                        scope.launch {
-                            sender.sendMessage(message)
+                        when (gameMapRegistry.create(map)) {
+                            MapCreationResult.CreationSucceeded -> sender.info("マップの作成に成功しました。", scope)
+                            is MapCreationResult.MapAlreadyExists -> sender.error("既に存在するマップのため、作成出来ませんでした。", scope)
                         }
                     }
                 })
@@ -67,20 +87,12 @@ class MapSettingCommand(private val gameMapRegistry: GameMapRegistry, private va
                 .executes(CommandExecutor { sender, args ->
                     val mapName = MapName(args["mapName"] as String)
 
-                    sender.sendMessage(component {
-                        text("「${mapName.name}」マップを削除中...") color gray deco bold
-                    })
+                    sender.info("「${mapName.name}」マップを削除中...")
 
                     scope.launch(Dispatchers.IO) {
-                        val message = when (gameMapRegistry.deleteBy(mapName)) {
-                            is MapDeletionResult.DeletionSucceeded ->
-                                component { text("マップの削除に成功しました。") color gray deco bold }
-                            MapDeletionResult.MapNotFound ->
-                                component { text("存在しないマップのため、削除できませんでした。") color red deco bold }
-                        }
-
-                        scope.launch {
-                            sender.sendMessage(message)
+                        when (gameMapRegistry.deleteBy(mapName)) {
+                            is MapDeletionResult.DeletionSucceeded -> sender.info("マップの削除に成功しました。", scope)
+                            MapDeletionResult.MapNotFound -> sender.error("存在しないマップのため、削除できませんでした。", scope)
                         }
                     }
                 })
@@ -94,9 +106,7 @@ class MapSettingCommand(private val gameMapRegistry: GameMapRegistry, private va
                         val mapName = MapName(args["mapName"] as String)
                         val spawnPoint = (args["spawn"] as Location).toPoint()
 
-                        sender.sendMessage(component {
-                            text("「${mapName.name}」マップのスポーンポイントを修正中...") color gray deco bold
-                        })
+                        sender.info("「${mapName.name}」マップのスポーンポイントを修正中...")
 
                         val map = getMap(mapName, sender) ?: return@CommandExecutor
 
@@ -110,9 +120,7 @@ class MapSettingCommand(private val gameMapRegistry: GameMapRegistry, private va
                         val mapName = MapName(args["mapName"] as String)
                         val lobbyPoint = (args["lobby"] as Location).toPoint()
 
-                        sender.sendMessage(component {
-                            text("「${mapName.name}」マップのロビーポイントを修正中...") color gray deco bold
-                        })
+                        sender.info("「${mapName.name}」マップのロビーポイントを修正中...")
 
                         val map = getMap(mapName, sender) ?: return@CommandExecutor
 
@@ -126,9 +134,7 @@ class MapSettingCommand(private val gameMapRegistry: GameMapRegistry, private va
                         val mapName = MapName(args["mapName"] as String)
                         val seconds = args["seconds"] as Int
 
-                        sender.sendMessage(component {
-                            text("「${mapName.name}」マップの制限時間を修正中...") color gray deco bold
-                        })
+                        sender.info("「${mapName.name}」マップの制限時間を修正中...")
 
                         val map = getMap(mapName, sender) ?: return@CommandExecutor
 
@@ -141,10 +147,7 @@ class MapSettingCommand(private val gameMapRegistry: GameMapRegistry, private va
                     .executes(CommandExecutor { sender, args ->
                         val mapName = MapName(args["mapName"] as String)
                         val seconds = args["seconds"] as Int
-
-                        sender.sendMessage(component {
-                            text("「${mapName.name}」マップのクオーツ配布時間を修正中...") color gray deco bold
-                        })
+                        sender.info("「${mapName.name}」マップのクオーツ配布時間を修正中...")
 
                         val map = getMap(mapName, sender) ?: return@CommandExecutor
 
@@ -158,28 +161,20 @@ class MapSettingCommand(private val gameMapRegistry: GameMapRegistry, private va
     private fun Location.toPoint(): PointLocation = PointLocation(world.name, x.roundToInt(), y.roundToInt(), z.roundToInt())
 
     private fun argumentMapName(gameMapRegistry: GameMapRegistry) = TextArgument("mapName")
-        .replaceSuggestions(ArgumentSuggestions.stringCollection { gameMapRegistry.findAll().map { it.mapName.name } })
+        .replaceSuggestions(ArgumentSuggestions.stringCollection { gameMapRegistry.findAll().map { "\"${it.mapName.name}\"" } })
 
     private fun update(map: GameMap, sender: CommandSender) {
         scope.launch(Dispatchers.IO) {
-            val message = when (gameMapRegistry.update(map)) {
-                MapUpdateResult.MapNotFound ->
-                    component { text("存在しないマップのため、修正できませんでした。") color red deco bold }
-                MapUpdateResult.UpdateSucceeded ->
-                    component { text("マップの修正に成功しました。") color gray deco bold }
-            }
-
-            scope.launch {
-                sender.sendMessage(message)
+            when (gameMapRegistry.update(map)) {
+                MapUpdateResult.MapNotFound -> sender.error("存在しないマップのため、修正できませんでした。", scope)
+                MapUpdateResult.UpdateSucceeded ->sender.info("マップの修正に成功しました。", scope)
             }
         }
     }
 
     private fun getMap(mapName: MapName, sender: CommandSender): GameMap? =
         gameMapRegistry.findBy(mapName) ?: let {
-            sender.sendMessage(component {
-                component { text("存在しないマップのため、修正できませんでした。") color red deco bold }
-            })
+            sender.error("存在しないマップのため、修正できませんでした。", scope)
 
             return null
         }
