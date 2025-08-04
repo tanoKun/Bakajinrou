@@ -66,5 +66,5 @@ java.lang.NullPointerException: Cannot invoke "foo.Bar.baz()" because ...
 
 # ライセンス
 
-このプロジェクトは [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.en.html) です。
+このプロジェクトは [独自ライセンス](LICENSE) で公開されています。
 
