@@ -1,3 +1,4 @@
+/*
 package com.github.tanokun.bakajinrou.plugin.gui.setting
 
 import com.github.tanokun.bakajinrou.plugin.setting.GameSettings
@@ -56,4 +57,4 @@ class ReplaceTemplateButton(private val gameSettings: GameSettings, private val 
         clicker.playSound(Sound.sound(NamespacedKey("minecraft", "entity.experience_orb.pickup"), Sound.Source.PLAYER, 1.0f, 1.0f))
         SettingPositionGUI(gameSettings, templates).open(clicker)
     }
-}
+}*/

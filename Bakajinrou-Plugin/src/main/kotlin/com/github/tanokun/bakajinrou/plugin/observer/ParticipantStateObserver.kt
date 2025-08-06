@@ -1,8 +1,10 @@
+/*
 package com.github.tanokun.bakajinrou.plugin.observer
 
 import com.github.tanokun.bakajinrou.api.ParticipantStates
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
+import com.github.tanokun.bakajinrou.plugin.participant.BukkitPlayerProvider
 import kotlinx.coroutines.launch
 import net.minecraft.Optionull
 import net.minecraft.network.chat.RemoteChatSession
@@ -21,9 +23,9 @@ class ParticipantStateObserver(
 ) {
     init {
         participants.forEach {
-            it.observeState(state = ParticipantStates.DEAD, scope = controller.scope, context = asyncContext) {
-                controller.scope.launch(uiContext) {
-                    val participantPlayer = Bukkit.getPlayer(it.uniqueId) ?: return@launch
+            it.observeState(state = ParticipantStates.DEAD, scope = controller.mainDispatcherScope, context = asyncContext) {
+                controller.mainDispatcherScope.launch(uiContext) {
+                    val participantPlayer = BukkitPlayerProvider.get(it.uniqueId) ?: return@launch
 
                     participantPlayer.gameMode = GameMode.SPECTATOR
 
@@ -58,4 +60,4 @@ class ParticipantStateObserver(
     }
 
 
-}
+}*/

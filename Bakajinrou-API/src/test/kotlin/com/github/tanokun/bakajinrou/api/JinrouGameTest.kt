@@ -1,47 +1,45 @@
 package com.github.tanokun.bakajinrou.api
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.all
 import io.mockk.mockk
-import org.junit.jupiter.api.DisplayName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
 import java.util.*
 
 class JinrouGameTest {
-    @Test
-    @DisplayName("重複した参加者がいるゲームは不可")
-    fun cannotDuplicateParticipant() {
-        val duplication = UUID.randomUUID()
-
-        assertThrows<IllegalArgumentException>("重複したプレイヤーが存在します。") {
-            JinrouGame(
-                participants = listOf(
-                    Participant(duplication, mockk(), mockk()),
-                    Participant(duplication, mockk(), mockk()),
-                    Participant(UUID.randomUUID(), mockk(), mockk())
-                ),
-                citizenSideFinisher = mockk(),
-                wolfSideFinisher = mockk(),
-                foxSideFinisher = mockk(),
-            )
-        }
-    }
+    private val testDefaultDispatcher = StandardTestDispatcher()
+    private val testScope = CoroutineScope(testDefaultDispatcher)
 
     @Test
-    @DisplayName("全て重複なしの参加者の場合、ゲームは可能")
-    fun canDoWithoutDuplicateParticipant() {
-        assertDoesNotThrow {
-            JinrouGame(
-                participants = listOf(
-                    Participant(UUID.randomUUID(), mockk(), mockk()),
-                    Participant(UUID.randomUUID(), mockk(), mockk()),
-                    Participant(UUID.randomUUID(), mockk(), mockk())
-                ),
-                citizenSideFinisher = mockk(),
-                wolfSideFinisher = mockk(),
-                foxSideFinisher = mockk(),
-            )
-        }
+    fun observeParticipantsTest() = runTest {
+        val participantA1 = Participant(UUID.randomUUID(), mockk(), mockk())
+        val participantA2 = participantA1.copy(state = ParticipantStates.DEAD)
+        val participantB = Participant(UUID.randomUUID(), mockk(), mockk())
+        val participantC = Participant(UUID.randomUUID(), mockk(), mockk())
+
+        val jinrouGame = JinrouGame(listOf(participantA1, participantB).all())
+        val emitted = mutableListOf<Participant>()
+
+        jinrouGame.observeParticipants(testScope).onEach {
+            emitted.add(it)
+        }.launchIn(testScope)
+
+        jinrouGame.updateParticipants(listOf(participantA1, participantB))
+
+        testDefaultDispatcher.scheduler.advanceUntilIdle()
+        assertEquals(listOf<Participant>(), emitted)
+
+        emitted.clear()
+
+        jinrouGame.updateParticipants(listOf(participantA2, participantB, participantC))
+
+        testDefaultDispatcher.scheduler.advanceUntilIdle()
+        assertEquals(listOf(participantA2, participantC), emitted)
     }
 }

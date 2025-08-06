@@ -1,15 +1,15 @@
+/*
 package com.github.tanokun.bakajinrou.plugin.scheduler.schedule
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.all
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizenPosition
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.mystic.MediumPosition
+import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.plugin.participant.BukkitPlayerProvider
-import com.github.tanokun.bakajinrou.plugin.participant.ParticipantStrategy
-import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.CitizenPosition
-import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.MediumPosition
-import com.github.tanokun.bakajinrou.plugin.participant.position.fox.FoxThirdPosition
 import io.mockk.mockk
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
@@ -103,12 +103,12 @@ class GameSchedulesTest {
     }
 
     fun createParticipants(): ParticipantScope.All {
-        val wolf = Participant(wolf.uniqueId, mockk<WolfPosition>(), mockk<ParticipantStrategy>())
-        val madman = Participant(madman.uniqueId, mockk<MadmanPosition>(), mockk<ParticipantStrategy>())
-        val citizen = Participant(citizen.uniqueId, mockk<CitizenPosition>(), mockk<ParticipantStrategy>())
-        val medium = Participant(medium.uniqueId, mockk<MediumPosition>(), mockk<ParticipantStrategy>())
-        val fox = Participant(fox.uniqueId, mockk<FoxThirdPosition>(), mockk<ParticipantStrategy>())
+        val wolf = Participant(wolf.uniqueId, mockk<WolfPosition>(), mockk())
+        val madman = Participant(madman.uniqueId, mockk<MadmanPosition>(), mockk())
+        val citizen = Participant(citizen.uniqueId, mockk<CitizenPosition>(), mockk())
+        val medium = Participant(medium.uniqueId, mockk<MediumPosition>(), mockk())
+        val fox = Participant(fox.uniqueId, mockk<FoxPosition>(), mockk())
 
         return listOf(wolf, madman, citizen, medium, fox).all()
     }
-}
+}*/

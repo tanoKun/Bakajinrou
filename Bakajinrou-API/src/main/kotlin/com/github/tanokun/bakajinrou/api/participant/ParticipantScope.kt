@@ -1,37 +1,37 @@
 package com.github.tanokun.bakajinrou.api.participant
 
 import com.github.tanokun.bakajinrou.api.ParticipantStates
-import com.github.tanokun.bakajinrou.api.participant.position.Position
+import com.github.tanokun.bakajinrou.api.participant.ParticipantScope.NonSpectators
 import com.github.tanokun.bakajinrou.api.participant.position.SpectatorPosition
 
-sealed class ParticipantScope(participant: List<Participant>): List<Participant> by participant {
-    class All(participant: List<Participant>): ParticipantScope(participant) {
-        fun nonSpectators(): NonSpectators = NonSpectators(this)
+sealed class ParticipantScope(participant: Set<Participant>): Set<Participant> by participant {
+    class All(participant: Set<Participant>): ParticipantScope(participant) {
+        fun excludeSpectators(): NonSpectators = NonSpectators(this)
 
-        fun deadOnly(): All = All(this.filter { it.state == ParticipantStates.DEAD })
+        fun includes(filter: ParticipantFilter) = All(this.filter(filter).toSet())
 
-        fun survivedOnly(): NonSpectators = NonSpectators(this.filter { it.state == ParticipantStates.SURVIVED })
+        fun excludes(filter: ParticipantFilter) = All(this.filterNot(filter).toSet())
 
-        inline fun <reified P: Position> position() = All(this.filter { it.isPosition<P>() })
-
-        inline fun <reified P: Position> excludePosition() = All(this.filterNot { it.isPosition<P>() })
-
-        fun exclude(participant: Participant) = All(this.filterNot { it == participant })
+        fun survivedOnly() = NonSpectators(this.filter { it.state == ParticipantStates.ALIVE }.toSet())
     }
 
+    class NonSpectators(participant: Set<Participant>) : ParticipantScope(participant.filterNot { it.isPosition<SpectatorPosition>() }.toSet()) {
+        fun includes(filter: ParticipantFilter) = NonSpectators(this.filter(filter).toSet())
 
-    class NonSpectators(participant: List<Participant>) : ParticipantScope(participant.filterNot { it.isPosition<SpectatorPosition>() }) {
-        fun survivedOnly(): NonSpectators = NonSpectators(this.filter { it.state == ParticipantStates.SURVIVED })
-
-        fun deadOnly(): NonSpectators = NonSpectators(this.filter { it.state == ParticipantStates.DEAD })
-
-        inline fun <reified P: Position> position() = NonSpectators(this.filter { it.isPosition<P>() })
-
-        inline fun <reified P: Position> excludePosition() = NonSpectators(this.filterNot { it.isPosition<P>() })
-
-        fun exclude(participant: Participant) = NonSpectators(this.filterNot { it == participant })
+        fun excludes(filter: ParticipantFilter) = NonSpectators(this.filterNot(filter).toSet())
     }
 }
 
-fun List<Participant>.all() = ParticipantScope.All(this)
-fun List<Participant>.nonSpectators() = ParticipantScope.NonSpectators(this)
+typealias ParticipantFilter = ((Participant) -> Boolean)
+
+infix fun ParticipantFilter.or(other: ParticipantFilter): ParticipantFilter = { t ->
+    this(t) || other(t)
+}
+
+infix fun ParticipantFilter.and(other: ParticipantFilter): ParticipantFilter = { t ->
+    this(t) && other(t)
+}
+
+fun Iterable<Participant>.all() = ParticipantScope.All(this.toSet())
+
+fun Iterable<Participant>.excludeSpectators() = NonSpectators(this.toSet())

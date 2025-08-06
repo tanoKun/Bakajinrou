@@ -1,5 +1,6 @@
 package com.github.tanokun.bakajinrou.game.cache
 
+import com.github.tanokun.bakajinrou.api.participant.Participant
 import java.util.*
 
 object PlayerNameCache {
@@ -10,4 +11,6 @@ object PlayerNameCache {
     }
 
     fun get(uniqueId: UUID): String? = caches[uniqueId]
+
+    fun get(participant: Participant): String? = caches[participant.uniqueId]
 }

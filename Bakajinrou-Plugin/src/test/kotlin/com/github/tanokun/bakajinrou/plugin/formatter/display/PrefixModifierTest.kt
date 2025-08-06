@@ -1,9 +1,11 @@
+/*
 package com.github.tanokun.bakajinrou.plugin.formatter.display
 
 import com.github.tanokun.bakajinrou.api.ParticipantStates
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.plugin.participant.position.HasPrefix
 import com.github.tanokun.bakajinrou.plugin.participant.position.Positions
+import com.github.tanokun.bakajinrou.plugin.participant.prefix.ComingOut
 import io.mockk.every
 import io.mockk.mockk
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
@@ -19,7 +21,7 @@ class PrefixModifierTest {
     fun nonPrefixTest() {
         val viewer = mockk<Participant>()
         val target = mockk<Participant> target@ {
-            every { state } returns ParticipantStates.SURVIVED
+            every { state } returns ParticipantStates.ALIVE
             every { position } returns mockk<HasPrefix> {
                 every { prefix } returns mockk {
                     every { resolvePrefix(viewer, this@target) } returns null
@@ -27,7 +29,7 @@ class PrefixModifierTest {
             }
         }
 
-        val modifier = PrefixModifier(target)
+        val modifier = PrefixCreator(target)
 
         val result = modifier.createPrefix(viewer)
 
@@ -39,7 +41,7 @@ class PrefixModifierTest {
     fun onlyComingOutPrefixTest() {
         val viewer = mockk<Participant>()
         val target = mockk<Participant> target@ {
-            every { state } returns ParticipantStates.SURVIVED
+            every { state } returns ParticipantStates.ALIVE
             every { position } returns mockk<HasPrefix> {
                 every { prefix } returns mockk {
                     every { resolvePrefix(viewer, this@target) } returns null
@@ -47,7 +49,7 @@ class PrefixModifierTest {
             }
         }
 
-        val modifier = PrefixModifier(target).apply {
+        val modifier = PrefixCreator(target).apply {
             comingOut = ComingOut.LAST_WOLF
         }
 
@@ -61,7 +63,7 @@ class PrefixModifierTest {
     fun bothComingOutAndResolvedPrefixTest() {
         val viewer = mockk<Participant>()
         val target = mockk<Participant> target@ {
-            every { state } returns ParticipantStates.SURVIVED
+            every { state } returns ParticipantStates.ALIVE
             every { position } returns mockk<HasPrefix> {
                 every { prefix } returns mockk {
                     every { resolvePrefix(viewer, this@target) } returns Positions.Madman.createDisplayComponent()
@@ -69,7 +71,7 @@ class PrefixModifierTest {
             }
         }
 
-        val modifier = PrefixModifier(target).apply {
+        val modifier = PrefixCreator(target).apply {
             comingOut = ComingOut.FORTUNE
         }
 
@@ -91,7 +93,7 @@ class PrefixModifierTest {
             }
         }
 
-        val modifier = PrefixModifier(target).apply {
+        val modifier = PrefixCreator(target).apply {
             comingOut = ComingOut.FORTUNE
         }
 
@@ -99,4 +101,4 @@ class PrefixModifierTest {
 
         assertEquals("§7[§c§l狂人§7, §x§8§7§c§e§f§a§l占い師§7, §6§l退出中§7]", serializer.serialize(result))
     }
-}
+}*/

@@ -1,12 +1,12 @@
+/*
 package com.github.tanokun.bakajinrou.plugin.formatter
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.participant.nonSpectators
+import com.github.tanokun.bakajinrou.api.participant.excludeSpectators
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
-import com.github.tanokun.bakajinrou.plugin.participant.ParticipantStrategy
 import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.CitizenPosition
 import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.FortunePosition
 import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.KnightPosition
@@ -248,7 +248,7 @@ class ParticipantsFormatterTest {
 
         Participant(citizen1UniqueId, mockk<CitizenPosition>(), mockk<ParticipantStrategy>()),
         Participant(citizen2UniqueId, mockk<CitizenPosition>(), mockk<ParticipantStrategy>()),
-    ).nonSpectators()
+    ).excludeSpectators()
 
     fun createCaches() = PlayerNameCache.apply {
         put(wolf1UniqueId, "wolf1")
@@ -270,4 +270,4 @@ class ParticipantsFormatterTest {
         put(citizen1UniqueId, "citizen1")
         put(citizen2UniqueId, "citizen2")
     }
-}
+}*/

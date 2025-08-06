@@ -1,49 +1,32 @@
 package com.github.tanokun.bakajinrou.plugin.scheduler
 
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
-import com.github.tanokun.bakajinrou.game.scheduler.schedule.OnCancellationTimeSchedule
-import com.github.tanokun.bakajinrou.game.scheduler.schedule.OnLaunchingTimeSchedule
-import com.github.tanokun.bakajinrou.game.scheduler.schedule.TimeSchedule
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitScheduler
 import org.bukkit.scheduler.BukkitTask
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 class JinrouGameScheduler(
-    startTime: Long,
-    timeSchedules: List<TimeSchedule>,
+    startTime: Duration,
     private val bukkitScheduler: BukkitScheduler,
     private val plugin: Plugin
-) : GameScheduler(startTime, timeSchedules) {
-    private var state: SchedulerState = SchedulerState.NOT_YET_LAUNCH
-
+) : GameScheduler(startTime), Runnable {
     private var bukkitTask: BukkitTask? = null
 
     override fun launch() {
-        if (state == SchedulerState.ACTIVE) throw IllegalStateException("二重起動はできません。")
-        if (state == SchedulerState.CANCELED) throw IllegalStateException("既に停止されたスケジューラーです。")
+        super.launch()
 
-        state = SchedulerState.ACTIVE
-
-        tryCall(OnLaunchingTimeSchedule::class)
-
-        bukkitTask = bukkitScheduler.runTaskTimer(plugin, this, 0, 20)
+        bukkitTask = bukkitScheduler.runTaskTimer(plugin, this, 20, 20)
     }
 
-    override fun cancel() {
-        if (state == SchedulerState.NOT_YET_LAUNCH) throw IllegalStateException("まだ起動されていないスケジューラーです。")
-        if (state == SchedulerState.CANCELED) throw IllegalStateException("既に停止されています。")
-
-        state = SchedulerState.CANCELED
+    override fun abort() {
+        super.abort()
 
         bukkitTask?.cancel()
-        tryCall(OnCancellationTimeSchedule::class)
     }
 
-    override fun isActive(): Boolean = state == SchedulerState.ACTIVE
+    override fun overtime() { bukkitTask?.cancel() }
 
-    private enum class SchedulerState {
-        NOT_YET_LAUNCH,
-        ACTIVE,
-        CANCELED;
-    }
+    override fun run() { advance(1.seconds) }
 }

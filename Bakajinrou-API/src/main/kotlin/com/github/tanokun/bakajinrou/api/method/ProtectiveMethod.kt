@@ -1,10 +1,12 @@
 package com.github.tanokun.bakajinrou.api.method
 
-import com.github.tanokun.bakajinrou.api.attack.AttackResult
-import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.protect.ProtectResult
 
-interface ProtectiveMethod: GrantedMethod {
-    val priority: ActivationPriority
+abstract class ProtectiveMethod: GrantedMethod {
+    abstract val priority: ActivationPriority
+
+    var isActive: Boolean = false
+        internal set
 
     /**
      * 指定された攻撃手段による攻撃を、この防御アイテムが防御できるかを判定します。
@@ -13,15 +15,5 @@ interface ProtectiveMethod: GrantedMethod {
      *
      * @return 防御結果
      */
-    fun verifyProtect(method: AttackMethod): AttackResult
-
-    /**
-     * この防御アイテムが防御可能な状態かを返します。
-     * 防御不可能な場合は消費されません。
-     *
-     * @param of 防御者
-     *
-     * @return 防御可能であれば true、そうでなければ false
-     */
-    fun isActive(of: Participant): Boolean
+    abstract fun verifyProtect(method: AttackMethod): ProtectResult
 }

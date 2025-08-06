@@ -1,12 +1,13 @@
+/*
 package com.github.tanokun.bakajinrou.plugin.gui.ability
 
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.cache.PlayerSkinCache
+import com.github.tanokun.bakajinrou.plugin.participant.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.participant.ability.UsableAbility
 import net.kyori.adventure.sound.Sound
-import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
@@ -31,7 +32,7 @@ class UsableAbilityButton(
     private val method: GrantedMethod
 ): AbstractItem() {
     override fun getItemProvider(): ItemProvider {
-        val name = Bukkit.getPlayer(candidate.uniqueId)?.name ?: PlayerNameCache.get(candidate.uniqueId) ?: "unknownPlayer"
+        val name = BukkitPlayerProvider.get(candidate)?.name ?: PlayerNameCache.get(candidate) ?: "unknownPlayer"
         val texture = PlayerSkinCache.getTexture(candidate.uniqueId) ?: ""
 
         val displayName = component {
@@ -54,4 +55,4 @@ class UsableAbilityButton(
 
         clicker.closeInventory()
     }
-}
+}*/

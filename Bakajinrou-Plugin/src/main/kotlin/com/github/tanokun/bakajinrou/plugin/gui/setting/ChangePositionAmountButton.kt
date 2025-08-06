@@ -1,3 +1,4 @@
+/*
 package com.github.tanokun.bakajinrou.plugin.gui.setting
 
 import com.github.tanokun.bakajinrou.plugin.participant.position.Positions
@@ -108,4 +109,4 @@ class ChangePositionAmountButton(private val position: Positions, private val se
             text("」の予約数を${settings.getAmountBy(position)}人にしました。") color gray deco bold
         })
     }
-}
+}*/

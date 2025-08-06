@@ -1,165 +1,165 @@
 package com.github.tanokun.bakajinrou.plugin.setting.builder
 
-import com.github.tanokun.bakajinrou.api.participant.GrantedStrategy
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
-import com.github.tanokun.bakajinrou.api.participant.nonSpectators
-import com.github.tanokun.bakajinrou.api.participant.position.citizen.IdiotPosition
-import com.github.tanokun.bakajinrou.plugin.participant.position.Positions
-import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.CitizenPosition
-import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.FortunePosition
-import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.KnightPosition
-import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.MediumPosition
-import com.github.tanokun.bakajinrou.plugin.participant.position.fox.FoxThirdPosition
-import com.github.tanokun.bakajinrou.plugin.participant.position.wolf.MadmanSecondPosition
-import com.github.tanokun.bakajinrou.plugin.participant.position.wolf.WolfSecondPosition
+import com.github.tanokun.bakajinrou.api.participant.excludeSpectators
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizenPosition
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot.IdiotPosition
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.mystic.FortunePosition
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.mystic.KnightPosition
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.mystic.MediumPosition
+import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
+import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
+import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
+import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategy
+import com.github.tanokun.bakajinrou.plugin.setting.RequestedPositions
 import java.util.*
 import kotlin.random.Random
 
 class ParticipantBuilder(
-    private val template: HashMap<Positions, Int>,
-    candidates: Set<UUID>,
-    private val strategy: (uuid: UUID) -> GrantedStrategy,
+    private val template: HashMap<RequestedPositions, Int>,
+    private val candidates: Set<UUID>,
     private val random: Random,
 ) {
-    private val finalizedParticipants: MutableSet<Participant> = mutableSetOf()
-
-    private val remainingCandidates: MutableSet<UUID> = candidates.toMutableSet()
-
     init {
         if (template.values.sum() > candidates.size) throw IllegalStateException("現在の参加人数では、選択されている役職が多すぎます。")
 
     }
 
-    fun assignMadmans(): WolfAssigner {
-        val numberOf = template[Positions.Madman] ?: 0
 
-        val madmans = arrayListOf<Participant>()
+    class MadmanAssigner private constructor(
+        internal val template: Map<RequestedPositions, Int>,
+        internal val random: Random,
+        internal val madmans: Set<Participant>,
+        internal val remainingCandidates: Set<UUID>,
+    ) {
+        companion object {
+            fun ParticipantBuilder.assignMadmans(): MadmanAssigner {
+                val amount = template[RequestedPositions.MADMAN] ?: 0
 
-        repeat(numberOf) {
-            val pull = pullCandidate()
+                val pull = candidates.shuffled(random).take(amount)
 
-            madmans.add(Participant(pull, MadmanSecondPosition, strategy(pull)))
-        }
-
-        finalizedParticipants.addAll(madmans)
-
-        return WolfAssignerImpl(madmans)
-    }
-
-    private inner class WolfAssignerImpl(private val madmans: List<Participant>): WolfAssigner {
-        override fun assignWolfs(canDuplicate: Boolean): IdiotAssigner {
-            val numberOf = template[Positions.Wolf] ?: 0
-
-            val associate = madmans.mapIndexed { index, madman ->
-                if (index <= numberOf - 1) return@mapIndexed madman to index
-                if (canDuplicate) return@mapIndexed madman to random.nextInt(numberOf)
-
-                return@mapIndexed madman to -1
-            }
-
-            repeat(numberOf) {
-                val pull = pullCandidate()
-                val knownByMadmans = associate
-                    .filter { (_, index) -> index == it }
-                    .map { (madman, _) -> madman }
-                    .nonSpectators()
-
-                finalizedParticipants.add(Participant(pull, WolfSecondPosition(knownByMadmans), strategy(pull)))
-            }
-
-            return IdiotAssignerImpl()
-        }
-    }
-
-    private inner class IdiotAssignerImpl: IdiotAssigner {
-        override fun assignIdiots(vararg assign: IdiotPosition): AbilityUsersAssigner {
-            if (assign.isEmpty()) throw IllegalArgumentException("振り分けるバカ役職が一つもありません。")
-
-            val numberOf = template[Positions.Idiot] ?: 0
-
-            repeat(numberOf) {
-                val pull = pullCandidate()
-                finalizedParticipants.add(Participant(pull, assign.random(random), strategy(pull)))
-            }
-
-            return AbilityUsersAssignerImpl()
-        }
-    }
-
-    private inner class AbilityUsersAssignerImpl: AbilityUsersAssigner {
-        override fun assignAbilityUsers(): FoxAssigner {
-            mapOf(
-                FortunePosition to (template[Positions.Fortune] ?: 0),
-                MediumPosition to (template[Positions.Medium] ?: 0),
-                KnightPosition to (template[Positions.Knight] ?: 0),
-            ).forEach { position, numberOf ->
-                repeat(numberOf) {
-                    val pull = pullCandidate()
-                    finalizedParticipants.add(Participant(pull, position, strategy(pull)))
+                val madmans = pull.map {
+                    Participant(it, MadmanPosition, GrantedStrategy(mapOf()))
                 }
+
+                return MadmanAssigner(template, random, madmans.toSet(), candidates - pull)
             }
-
-
-
-            return FoxAssignerImpl()
         }
     }
 
-    private inner class FoxAssignerImpl: FoxAssigner {
-        override fun assignFox(): OtherAssigner {
-            val numberOf = template[Positions.Fox] ?: 0
+    class WolfAssigner private constructor(
+        internal val template: Map<RequestedPositions, Int>,
+        internal val random: Random,
+        internal val assignedParticipants: Set<Participant>,
+        internal val remainingCandidates: Set<UUID>,
+    ) {
+        companion object {
+            fun MadmanAssigner.assignWolfs(canDuplicate: Boolean): WolfAssigner {
+                val amount = template[RequestedPositions.WOLF] ?: 0
 
-            repeat(numberOf) {
-                val pull = pullCandidate()
+                val pull = remainingCandidates.shuffled(random).take(amount)
 
-                finalizedParticipants.add(Participant(pull, FoxThirdPosition, strategy(pull)))
+                val associate = madmans.mapIndexed { index, madman ->
+                    if (index <= amount - 1) return@mapIndexed madman to index
+                    if (canDuplicate) return@mapIndexed madman to random.nextInt(amount)
+
+                    return@mapIndexed madman to -1
+                }
+
+                val wolfs = pull.mapIndexed { pullIndex, uniqueId ->
+                    val knownByMadmans = associate
+                        .filter { (_, index) -> index == pullIndex }
+                        .map { (madman, _) -> madman }
+                        .excludeSpectators()
+
+                    Participant(uniqueId, WolfPosition(knownByMadmans), GrantedStrategy(mapOf()))
+                }
+
+                return WolfAssigner(template, random, madmans + wolfs, remainingCandidates - pull)
             }
-
-            return OtherAssignerImpl()
         }
     }
 
-    private inner class OtherAssignerImpl: OtherAssigner {
-        override fun assignOtherToCitizens(): ParticipantScope.NonSpectators {
-            remainingCandidates.forEach {
-                finalizedParticipants.add(Participant(it, CitizenPosition, strategy(it)))
-            }
+    class IdiotAssigner private constructor(
+        internal val template: Map<RequestedPositions, Int>,
+        internal val random: Random,
+        internal val assignedParticipants: Set<Participant>,
+        internal val remainingCandidates: Set<UUID>,
+    ) {
+        companion object {
+            fun WolfAssigner.assignIdiots(vararg assign: IdiotPosition): IdiotAssigner {
 
-            return finalizedParticipants.toList().nonSpectators()
+                val amount = template[RequestedPositions.IDIOT] ?: 0
+
+                if (assign.isEmpty() && amount > 0) throw IllegalArgumentException("振り分けるバカ役職が一つもありません。")
+
+                val pull = remainingCandidates.shuffled(random).take(amount)
+
+                val idiots = pull.map {
+                    Participant(it, assign.random(random), GrantedStrategy(mapOf()))
+                }
+
+                return IdiotAssigner(template, random, assignedParticipants + idiots, remainingCandidates - pull)
+            }
         }
     }
 
+    class AbilityUsersAssigner private constructor(
+        internal val template: Map<RequestedPositions, Int>,
+        internal val random: Random,
+        internal val assignedParticipants: Set<Participant>,
+        internal val remainingCandidates: Set<UUID>,
+    ) {
+        companion object {
+            fun IdiotAssigner.assignAbilityUsers(): AbilityUsersAssigner {
+                val positions = listOf(
+                    List(template[RequestedPositions.FORTUNE] ?: 0) { FortunePosition },
+                    List(template[RequestedPositions.MEDIUM] ?: 0) { MediumPosition },
+                    List(template[RequestedPositions.KNIGHT] ?: 0) { KnightPosition },
+                ).flatten()
 
-    private fun pullCandidate(): UUID {
-        val pull = remainingCandidates.random(random)
-        remainingCandidates.remove(pull)
+                val pull = remainingCandidates.shuffled(random).take(positions.size)
 
-        return pull
+                val assigned = pull.mapIndexed { index, uniqueId ->
+                    Participant(uniqueId, positions[index], GrantedStrategy(mapOf()))
+                }
+
+                return AbilityUsersAssigner(template, random, assignedParticipants + assigned, remainingCandidates - pull)
+            }
+        }
     }
 
-}
+    class FoxAssigner private constructor(
+        internal val assignedParticipants: Set<Participant>,
+        internal val remainingCandidates: Set<UUID>,
+    ) {
+        companion object {
+            fun AbilityUsersAssigner.assignFox(): FoxAssigner {
+                val amount = template[RequestedPositions.FOX] ?: 0
 
+                val pull = remainingCandidates.shuffled(random).take(amount)
 
-interface WolfAssigner {
-    /**
-     * @param canDuplicate 人狼とそれを知る狂人が、1対多であることを容認します。
-     */
-    fun assignWolfs(canDuplicate: Boolean): IdiotAssigner
-}
+                val fox = pull.map {
+                    Participant(it, FoxPosition, GrantedStrategy(mapOf()))
+                }
 
-interface IdiotAssigner {
-    fun assignIdiots(vararg assign: IdiotPosition): AbilityUsersAssigner
-}
+                return FoxAssigner(assignedParticipants + fox, remainingCandidates - pull)
+            }
+        }
+    }
 
-interface AbilityUsersAssigner {
-    fun assignAbilityUsers(): FoxAssigner
-}
+    class CitizenAssigner private constructor() {
+        companion object {
+            fun FoxAssigner.assignCitizens(): ParticipantScope.NonSpectators {
+                val pull = remainingCandidates
 
-interface FoxAssigner {
-    fun assignFox(): OtherAssigner
-}
+                val citizens = pull.map {
+                    Participant(it, CitizenPosition, GrantedStrategy(mapOf()))
+                }
 
-interface OtherAssigner {
-    fun assignOtherToCitizens(): ParticipantScope.NonSpectators
+                return (assignedParticipants + citizens).excludeSpectators()
+            }
+        }
+    }
 }

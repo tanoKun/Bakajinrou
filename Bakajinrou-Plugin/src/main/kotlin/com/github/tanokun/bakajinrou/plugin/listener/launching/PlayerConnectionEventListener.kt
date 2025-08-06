@@ -1,3 +1,4 @@
+/*
 package com.github.tanokun.bakajinrou.plugin.listener.launching
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
@@ -37,4 +38,4 @@ class PlayerConnectionEventListener(
         bodyHandler.showBodies(participant.uniqueId)
         event.player.updatePlayerListName()
     }
-})
+})*/

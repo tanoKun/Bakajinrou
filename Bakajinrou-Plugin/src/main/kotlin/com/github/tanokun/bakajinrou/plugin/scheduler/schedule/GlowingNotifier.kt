@@ -1,8 +1,9 @@
 package com.github.tanokun.bakajinrou.plugin.scheduler.schedule
 
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
-import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
-import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
+import com.github.tanokun.bakajinrou.api.participant.isFox
+import com.github.tanokun.bakajinrou.api.participant.isWolf
+import com.github.tanokun.bakajinrou.api.participant.or
 import com.github.tanokun.bakajinrou.plugin.formatter.toTick
 import com.github.tanokun.bakajinrou.plugin.participant.BukkitPlayerProvider
 import net.kyori.adventure.text.Component
@@ -42,7 +43,7 @@ class GlowingNotifier(
      */
      fun glowCitizens(participants: ParticipantScope.All) {
         participants
-            .filterNot { it.isPosition<WolfPosition>() || it.isPosition<FoxPosition>() }
+            .excludes(::isWolf or ::isFox)
             .forEach {
                 val bukkitPlayer = playerProvider.get(it) ?: return@forEach
 

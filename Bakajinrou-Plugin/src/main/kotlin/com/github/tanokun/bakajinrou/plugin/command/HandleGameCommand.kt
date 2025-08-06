@@ -1,12 +1,13 @@
+/*
 package com.github.tanokun.bakajinrou.plugin.command
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
-import com.github.tanokun.bakajinrou.plugin.finisher.SystemFinisher
 import com.github.tanokun.bakajinrou.plugin.setting.GameBuildResult
 import com.github.tanokun.bakajinrou.plugin.setting.GameSettings
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.executors.CommandExecutor
+
+*/
 /**
  * ゲームの開始・リセットを制御する `/start`, `/reset` コマンドを定義します。
  *
@@ -26,11 +27,10 @@ import dev.jorel.commandapi.executors.CommandExecutor
  * - `bakajinrou.command.gamesetting`
  *
  * @property gameSettings ゲームに必要な構成
- */
+ *//*
+
 class HandleGameCommand(gameSettings: GameSettings): Command() {
     private var currentController: JinrouGameController? = null
-
-    private var currentGame: JinrouGame? = null
 
     init {
         CommandAPICommand("start").withPermission("bakajinrou.command.gamesetting")
@@ -56,8 +56,6 @@ class HandleGameCommand(gameSettings: GameSettings): Command() {
                 currentController = controller.apply {
                     launch()
                 }
-
-                currentGame = game
             })
             .register()
 
@@ -68,13 +66,10 @@ class HandleGameCommand(gameSettings: GameSettings): Command() {
                     return@CommandExecutor
                 }
 
-                val jinrouGame = currentGame ?: return@CommandExecutor
+                controller.finishWithWonCitizen()
 
-                controller.finish(SystemFinisher(jinrouGame.getAllParticipants()))
-
-                this.currentGame = null
                 this.currentController = null
             })
             .register()
     }
-}
+}*/

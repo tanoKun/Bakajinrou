@@ -1,3 +1,4 @@
+/*
 package com.github.tanokun.bakajinrou.plugin.scheduler.schedule
 
 import com.github.tanokun.bakajinrou.api.map.GameMap
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.title.Title
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
@@ -30,7 +32,8 @@ import kotlin.time.Duration.Companion.seconds
 class GameLifecycleUI(
     private val playerProvider: BukkitPlayerProvider
 ) {
-    /**
+    */
+/**
      * ゲームの開始時に呼び出します。
      *
      * 副作用:
@@ -42,13 +45,15 @@ class GameLifecycleUI(
      * @param participants ゲームの全ての参加者
      * @param controller ゲームを制御するコントローラ。コルーチンのスコープも含む
      * @param gameMap 使用されるマップ
-     */
+     *//*
+
      fun startingGame(participants: ParticipantScope.All, controller: JinrouGameController, gameMap: GameMap) {
         participants.forEach {
             val bukkitPlayer: Player = playerProvider.get(it) ?: return@forEach
 
             bukkitPlayer.teleport(gameMap.spawnPoint.asBukkit())
             bukkitPlayer.setArrowsInBody(0, false)
+            bukkitPlayer.gameMode = GameMode.ADVENTURE
 
             val startTitle = Title.title(
                 component {
@@ -63,7 +68,7 @@ class GameLifecycleUI(
             bukkitPlayer.showTitle(startTitle)
             bukkitPlayer.addPotionEffect(PotionEffect(PotionEffectType.SPEED, 10.seconds.toTick(), 2, true, false))
             bukkitPlayer.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, 10.seconds.toTick(), 1, true, false))
-            controller.scope.launch {
+            controller.mainDispatcherScope.launch {
                 delay(10.seconds)
                 it.grantMethod(BowItem())
                 it.grantMethod(AttackByArrow(controller))
@@ -77,7 +82,8 @@ class GameLifecycleUI(
         )
     }
 
-    /**
+    */
+/**
      * ゲーム終了時に呼び出します。
      *
      * 副作用:
@@ -87,7 +93,8 @@ class GameLifecycleUI(
      *
      * @param participants ゲームの全ての参加者
      * @param gameMap 使用されていたマップ。ロビー地点を含む。
-     */
+     *//*
+
      fun finishGame(participants: ParticipantScope.All, gameMap: GameMap) {
         participants.forEach {
             val bukkitPlayer: Player = playerProvider.get(it) ?: return@forEach
@@ -103,4 +110,4 @@ class GameLifecycleUI(
 
         return Location(world, this.x.toDouble(), this.y.toDouble(), this.z.toDouble())
     }
-}
+}*/

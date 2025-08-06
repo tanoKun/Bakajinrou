@@ -1,18 +1,25 @@
 package com.github.tanokun.bakajinrou.plugin.finisher
 
-import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
+import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.api.WonInfo
+import com.github.tanokun.bakajinrou.api.participant.position.SpectatorPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
+import com.github.tanokun.bakajinrou.plugin.participant.BukkitPlayerProvider
+import kotlinx.coroutines.CoroutineScope
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 
 class WolfSideFinisher(
-    private val participants: ParticipantScope.All
-): EachSideFinisher() {
-    override fun notifyFinish() {
-        participants.forEach { participant ->
-            val bukkitPlayer = getBukkitPlayer(participant) ?: return@forEach
+    jinrouGame: JinrouGame,
+    scope: CoroutineScope
+): EachSideFinisher(jinrouGame, scope) {
+    override fun notify(wonInfo: WonInfo) {
+        if (wonInfo !is WonInfo.Wolfs) return
+
+        wonInfo.participants.forEach { participant ->
+            val bukkitPlayer = BukkitPlayerProvider.get(participant) ?: return@forEach
 
             showVictorySideTitle(
                 player = bukkitPlayer,
@@ -20,6 +27,8 @@ class WolfSideFinisher(
                     .decorate(TextDecoration.BOLD)
                     .color(TextColor.color(0x8B0000))
             )
+
+            if (participant.isPosition<SpectatorPosition>()) return@forEach
 
             if (participant.isPosition<WolfPosition>() || participant.isPosition<MadmanPosition>()) sendVictoryMessage(bukkitPlayer)
             else sendLoseMessage(bukkitPlayer)

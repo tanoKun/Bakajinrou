@@ -1,3 +1,4 @@
+/*
 package com.github.tanokun.bakajinrou.plugin.gui.setting
 
 import com.github.tanokun.bakajinrou.plugin.participant.position.Positions
@@ -52,4 +53,4 @@ class SettingPositionGUI(gameSettings: GameSettings, templates: DistributionTemp
             .build()
             .open()
     }
-}
+}*/

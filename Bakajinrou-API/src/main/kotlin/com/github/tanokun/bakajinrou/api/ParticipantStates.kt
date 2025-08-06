@@ -5,14 +5,14 @@ import com.github.tanokun.bakajinrou.api.ParticipantStates.*
 
 /**
  * 参加者のプレイ状態を表します。また、状態遷移条件は以下の通りです。
- * - (生存)[SURVIVED] ⇒ (死亡)[DEAD]
- * - (ゲーム中断)[SUSPENDED] ⇒ (生存)[SURVIVED]
+ * - (生存)[ALIVE] ⇒ (死亡)[DEAD]
+ * - (ゲーム中断)[SUSPENDED] ⇒ (生存)[ALIVE]
  */
 enum class ParticipantStates {
     /**
      * 生存状態を表します。
      */
-    SURVIVED,
+    ALIVE,
 
     /**
      * 生存状態を前提として以下の状態を示します。

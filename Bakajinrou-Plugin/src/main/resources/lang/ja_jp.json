@@ -1,0 +1,58 @@
+{
+  "vocabularies": {
+    "formatter.participant.citizens.citizen": "<citizen><arg-0></citizen>",
+    "formatter.participant.idiot": "<idiot><arg-0></idiot>",
+    "formatter.participant.citizens.idiot.fortune": "<fortune><arg-0></fortune>",
+    "formatter.participant.citizens.idiot.medium": "<medium><arg-0></medium>",
+    "formatter.participant.citizens.idiot.knight": "<knight><arg-0></knight>",
+    "formatter.participant.citizens.mystic.fortune": "<fortune><arg-0></fortune>",
+    "formatter.participant.citizens.mystic.medium": "<medium><arg-0></medium>",
+    "formatter.participant.citizens.mystic.knight": "<knight><arg-0></knight>",
+    "formatter.participant.wolf": "<wolf><arg-0></wolf>",
+    "formatter.participant.madman": "<madman><arg-0></madman>",
+    "formatter.participant.fox": "<fox><arg-0></fox>",
+    "formatter.participant.spectator": "<spectator><arg-0></spectator>",
+    "formatter.participant.state.suspended": "<suspended><arg-0></suspended>",
+
+    "formatter.category.wolf": "<wolf><bold>《 人狼 》</bold></wolf>",
+    "formatter.category.madman": "<madman><bold>《 狂人 》</bold></madman>",
+    "formatter.category.fortune": "<fortune><bold>《 占い師 》</bold></fortune>",
+    "formatter.category.medium": "<medium><bold>《 霊媒師 》</bold></medium>",
+    "formatter.category.knight": "<knight><bold>《 騎士 》</bold></knight>",
+    "formatter.category.citizen": "<citizen><bold>《 市民 》</bold></citizen>",
+    "formatter.category.fox": "<fox><bold>《 妖狐 》</bold></fox>",
+    "formatter.category.spectator": "<spectator><bold>《 観戦者 》</bold></spectator>",
+
+    "method.protective.fake.totem": "...",
+    "method.protective.fake.shield": "...",
+    "method.protective.resistance": "...",
+
+    "method.attack.damage.potion": "...",
+    "method.attack.sword": "...",
+    "method.attack.arrow": "...",
+    "method.ability.fortune": "...",
+    "method.ability.medium": "...",
+
+    "ability.result.wolf": "<wolf>人狼<wolf>",
+    "ability.result.fox": "<fox>妖狐<fox>",
+    "ability.result.citizens": "<citizen>村人<citizen>",
+
+    "prefix.citizens.citizen": "<citizen>村人<citizen>",
+    "prefix.citizens.idiot.fortune": "<idiot>バカ占い師<idiot>",
+    "prefix.citizens.idiot.medium": "<idiot>バカ霊媒師<idiot>",
+    "prefix.citizens.idiot.knight": "<idiot>バカ騎士<idiot>",
+    "prefix.citizens.mystic.fortune": "<mystic>占い師<mystic>",
+    "prefix.citizens.mystic.medium": "<mystic>霊能者<mystic>",
+    "prefix.citizens.mystic.knight": "<mystic>騎士<mystic>",
+
+    "prefix.wolf": "<wolf>人狼<wolf>",
+    "prefix.madman": "<madman>狂人<madman>",
+    "prefix.fox": "<fox>妖狐<fox>",
+    "prefix.spectator": "<spectator>観戦者<spectator>",
+
+    "prefix.coming.out.last.wolf": "<wolf>ラスト人狼CO<wolf>",
+    "prefix.coming.out.fortune": "<mystic>占い師CO<mystic>",
+    "prefix.coming.out.medium": "<mystic>霊能者CO<mystic>",
+    "prefix.coming.out.knight": "<mystic>騎士CO<mystic>"
+  }
+}

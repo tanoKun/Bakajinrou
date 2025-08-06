@@ -3,9 +3,11 @@ package com.github.tanokun.bakajinrou.plugin.formatter.display
 import com.comphenix.protocol.wrappers.EnumWrappers
 import com.comphenix.protocol.wrappers.PlayerInfoData
 import com.comphenix.protocol.wrappers.WrappedChatComponent
+import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import io.papermc.paper.adventure.PaperAdventure
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.translation.Translator
 import org.bukkit.entity.Player
 import plutoproject.adventurekt.component
 import plutoproject.adventurekt.text.raw
@@ -13,15 +15,16 @@ import plutoproject.adventurekt.text.text
 import java.util.*
 
 class TabListModifier(
-    private val viewer: Participant,
-    private val prefixModifiers: List<PrefixModifier>
+    private val game: JinrouGame,
+    translator: Translator
 ) {
+    val prefixCreator = PrefixCreator(translator)
 
-    fun modifyByUpdateGameMode(contents: List<PlayerInfoData>): List<PlayerInfoData>  {
+    fun modifyByUpdateGameMode(viewerUniqueId: UUID, contents: List<PlayerInfoData>): List<PlayerInfoData> {
+        val viewer = game.getParticipant(viewerUniqueId) ?: return contents
+
         return contents.map { entry ->
-            if (prefixModifiers.firstOrNull { it.target.uniqueId == entry.profileId } == null) return@map entry
-
-            val gameType = if (isVisibleSpectator(entry.profileId)) entry.gameMode else EnumWrappers.NativeGameMode.SURVIVAL
+            val gameType = if (isVisibleSpectator(viewer, entry.profileId)) entry.gameMode else EnumWrappers.NativeGameMode.SURVIVAL
 
             return@map PlayerInfoData(
                 entry.profileId,
@@ -35,13 +38,16 @@ class TabListModifier(
         }
     }
 
-    fun modifyByUpdateDisplayName(contents: List<PlayerInfoData>): List<PlayerInfoData>  {
+    fun modifyByUpdateDisplayName(viewerPlayer: Player, contents: List<PlayerInfoData>): List<PlayerInfoData>  {
+        val viewer = game.getParticipant(viewerPlayer.uniqueId) ?: return contents
+        val viewerLocale = viewerPlayer.locale()
+
         return contents.map { entry ->
-            val gameType = if (isVisibleSpectator(entry.profileId)) entry.gameMode else EnumWrappers.NativeGameMode.SURVIVAL
-            val prefixModifier = prefixModifiers.firstOrNull { it.target.uniqueId == entry.profileId } ?: return@map entry
+            val gameType = if (isVisibleSpectator(viewer, entry.profileId)) entry.gameMode else EnumWrappers.NativeGameMode.SURVIVAL
+            val target = game.getParticipant(entry.profileId) ?: return@map entry
 
             val displayName = component {
-                val prefix = prefixModifier.createPrefix(viewer = viewer)
+                val prefix = prefixCreator.createPrefix(viewer = viewer, target = target, locale = viewerLocale)
 
                 if (prefix != Component.text("")) {
                     raw { prefix }
@@ -64,7 +70,7 @@ class TabListModifier(
     }
 
 
-    fun isVisibleSpectator(uniqueId: UUID) = viewer.isVisibleSpectators() || uniqueId == viewer.uniqueId
+    fun isVisibleSpectator(viewer: Participant, uniqueId: UUID) = viewer.isVisibleSpectators() || uniqueId == viewer.uniqueId
 }
 
 fun Player.updatePlayerListName() {

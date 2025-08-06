@@ -22,6 +22,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)
 
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.bundles.junit)
     testImplementation(libs.mockk)
     testImplementation(kotlin("test"))

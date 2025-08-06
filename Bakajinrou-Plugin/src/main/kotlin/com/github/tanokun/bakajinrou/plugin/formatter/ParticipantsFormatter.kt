@@ -3,26 +3,29 @@ package com.github.tanokun.bakajinrou.plugin.formatter
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.position.Position
-import com.github.tanokun.bakajinrou.api.participant.position.citizen.IdiotPosition
-import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizenPosition
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot.IdiotAsFortunePosition
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot.IdiotAsKnightPosition
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot.IdiotAsMediumPosition
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot.IdiotPosition
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.mystic.FortunePosition
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.mystic.KnightPosition
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.mystic.MediumPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
+import com.github.tanokun.bakajinrou.api.translate.TranslationKey
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
-import com.github.tanokun.bakajinrou.plugin.participant.position.Positions
-import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.CitizenPosition
-import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.FortunePosition
-import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.KnightPosition
-import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.MediumPosition
-import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.idiot.IdiotAsFortunePosition
-import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.idiot.IdiotAsKnightPosition
-import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.idiot.IdiotAsMediumPosition
+import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
+import com.github.tanokun.bakajinrou.plugin.localization.UITranslationKeys.Formatter
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
-import org.bukkit.entity.Player
 import plutoproject.adventurekt.component
-import plutoproject.adventurekt.text.*
-import plutoproject.adventurekt.text.style.bold
+import plutoproject.adventurekt.text.color
+import plutoproject.adventurekt.text.newline
+import plutoproject.adventurekt.text.raw
 import plutoproject.adventurekt.text.style.gray
+import plutoproject.adventurekt.text.text
+import java.util.*
+
 
 /**
  * ```
@@ -33,75 +36,89 @@ import plutoproject.adventurekt.text.style.gray
  */
 class ParticipantsFormatter(
     private val participants: ParticipantScope.NonSpectators,
-    private val playerProvider: (Participant) -> Player?
+    private val locale: Locale,
+    private val translator: JinrouTranslator
 ) {
     private val nameCache = PlayerNameCache
 
     fun formatWolf(
-        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, Positions.Wolf.color) }
+        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, participantKey = Formatter.Participant.WOLF) }
     ): Component = formatPosition<WolfPosition>(
-        Positions.Wolf,
+        categoryKey = Formatter.Category.WOLF,
         playerNameFormatter
     )
 
     fun formatMadman(
-        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, Positions.Madman.color) }
+        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, participantKey = Formatter.Participant.MADMAN) }
     ): Component = formatPosition<MadmanPosition>(
-        Positions.Madman,
+        categoryKey = Formatter.Category.MADMAN,
         playerNameFormatter
     )
 
     fun formatFortune(
-        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameWithIdiotFormatter<IdiotAsFortunePosition>(it, Positions.Fortune.color) }
+        playerNameFormatter: (Participant) -> Component = {
+            defaultPlayerNameWithIdiotFormatter<IdiotAsFortunePosition>(it,
+                realKeys = Formatter.Participant.Mystic.FORTUNE,
+                idiotKeys = Formatter.Participant.Idiot.FORTUNE
+            )
+        }
     ): Component = formatPositionWithIdiot<FortunePosition, IdiotAsFortunePosition>(
-        Positions.Fortune,
+        categoryKey = Formatter.Category.FORTUNE,
         playerNameFormatter
     )
 
     fun formatMedium(
-        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameWithIdiotFormatter<IdiotAsMediumPosition>(it, Positions.Medium.color) }
+        playerNameFormatter: (Participant) -> Component = {
+            defaultPlayerNameWithIdiotFormatter<IdiotAsMediumPosition>(it,
+                realKeys = Formatter.Participant.Mystic.MEDIUM,
+                idiotKeys = Formatter.Participant.Idiot.MEDIUM
+            )
+        }
     ): Component = formatPositionWithIdiot<MediumPosition, IdiotAsMediumPosition>(
-        Positions.Medium,
+        categoryKey = Formatter.Category.MEDIUM,
         playerNameFormatter
     )
 
     fun formatKnight(
-        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameWithIdiotFormatter<IdiotAsKnightPosition>(it, Positions.Knight.color) }
+        playerNameFormatter: (Participant) -> Component = {
+            defaultPlayerNameWithIdiotFormatter<IdiotAsKnightPosition>(it,
+                realKeys = Formatter.Participant.Mystic.KNIGHT,
+                idiotKeys = Formatter.Participant.Idiot.KNIGHT
+            )
+        }
     ): Component = formatPositionWithIdiot<KnightPosition, IdiotAsKnightPosition>(
-        Positions.Knight,
+        categoryKey = Formatter.Category.KNIGHT,
         playerNameFormatter
     )
 
     fun formatFox(
-        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, Positions.Fox.color) }
-    ): Component = formatPosition<FoxPosition>(
-        Positions.Fox,
+        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, participantKey = Formatter.Participant.FOX) }
+    ): Component = formatPosition<com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition>(
+        categoryKey = Formatter.Category.FOX,
         playerNameFormatter
     )
 
     fun formatCitizen(
-        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, Positions.Citizen.color) }
+        playerNameFormatter: (Participant) -> Component = { defaultPlayerNameComponent(it, participantKey = Formatter.Participant.CITIZEN) }
     ): Component = formatPosition<CitizenPosition>(
-        Positions.Citizen,
+        categoryKey = Formatter.Category.CITIZEN,
         playerNameFormatter
     )
-    private inline fun <reified T: Position> formatPosition(position: Positions, noinline formatter: (Participant) -> Component): Component {
-        val positionLine = positionLineComponent(participants.position<T>(), formatter)
+    private inline fun <reified T: Position> formatPosition(categoryKey: TranslationKey, noinline formatter: (Participant) -> Component): Component {
+        val positionLine = positionLineComponent(participants.includes { it.isPosition<T>() }, formatter)
 
         return component {
-            text("《 ") color gray
-            raw { position.createDisplayComponent() } deco bold
-            text(" 》") color gray
+            raw { translator.translate(Component.translatable(categoryKey.key), locale) }
             newline()
             text("  ")
             positionLine?.let { raw { it } }
         }
     }
 
-    private inline fun <reified T: Position, reified I: IdiotPosition> formatPositionWithIdiot(position: Positions, noinline formatter: (Participant) -> Component): Component {
-        val idiotsAsFortune = participants.position<I>()
+    private inline fun <reified T: Position, reified I: IdiotPosition> formatPositionWithIdiot(categoryKey: TranslationKey, noinline formatter: (Participant) -> Component): Component {
+        val idiotsAsFortune = participants.includes { it.isPosition<I>() }
 
-        val componentAsJob = formatPosition<T>(position, formatter)
+        val componentAsJob = formatPosition<T>(categoryKey, formatter)
 
         return component {
             raw { componentAsJob }
@@ -122,22 +139,23 @@ class ParticipantsFormatter(
                 }
             }
 
-    private fun defaultPlayerNameComponent(participant: Participant, textColor: TextColor): Component {
-        val playerName = playerProvider(participant)?.name ?: nameCache.get(participant.uniqueId) ?: "unknownPlayer"
+    private fun defaultPlayerNameComponent(target: Participant, participantKey: TranslationKey): Component {
+        val playerName = component { text(nameCache.get(target) ?: "unknown") }
 
-        return component {
-            text(playerName) color textColor.asHexString() deco bold
-        }
+        return translator.translate(Component.translatable(participantKey.key).arguments(playerName), locale)
     }
 
-    private inline fun <reified I: IdiotPosition> defaultPlayerNameWithIdiotFormatter(participant: Participant, positionColor: TextColor): Component {
-        if (participant.position is I) {
-            return component {
-                raw { defaultPlayerNameComponent(participant, positionColor) }
-                text("(バカ)") color positionColor.asHexString() deco bold
-            }
+    private inline fun <reified I: IdiotPosition> defaultPlayerNameWithIdiotFormatter(
+        target: Participant,
+        realKeys: TranslationKey,
+        idiotKeys: TranslationKey,
+    ): Component {
+        val playerName = component { text(nameCache.get(target) ?: "unknown") }
+
+        if (target.position is I) {
+            return translator.translate(Component.translatable(idiotKeys.key).arguments(playerName), locale)
         }
 
-        return defaultPlayerNameComponent(participant, positionColor)
+        return defaultPlayerNameComponent(target, realKeys)
     }
 }

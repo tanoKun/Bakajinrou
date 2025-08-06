@@ -1,3 +1,4 @@
+/*
 package com.github.tanokun.bakajinrou.plugin.command
 
 import com.github.tanokun.bakajinrou.api.map.MapName
@@ -26,6 +27,7 @@ import plutoproject.adventurekt.text.color
 import plutoproject.adventurekt.text.raw
 import plutoproject.adventurekt.text.text
 
+*/
 /**
  * ゲームの事前設定を行う `/jobs`, `/spectators`, `/map` コマンドを定義します。
  *
@@ -53,7 +55,8 @@ import plutoproject.adventurekt.text.text
  * - `bakajinrou.command.gamesetting`
  *
  * @property gameSettings ゲームの設定情報
- */
+ *//*
+
 class GameSettingCommand(gameSettings: GameSettings, templates: DistributionTemplates, mapRegistry: GameMapRegistry): Command() {
     init {
         val nonSpectatorArgument = PlayerArgument("target").replaceSuggestions(
@@ -97,7 +100,7 @@ class GameSettingCommand(gameSettings: GameSettings, templates: DistributionTemp
             )
             .withSubcommand(CommandAPICommand("remove")
                 .withArguments(PlayerArgument("target").replaceSuggestions(
-                    ArgumentSuggestions.stringCollection { gameSettings.spectators.mapNotNull { Bukkit.getPlayer(it)?.name } })
+                    ArgumentSuggestions.stringCollection { gameSettings.spectators.mapNotNull { BukkitPlayerProvider.get(it)?.name } })
                 )
                 .executesPlayer(PlayerCommandExecutor { sender, args ->
                     val target = args["target"] as Player
@@ -146,4 +149,4 @@ class GameSettingCommand(gameSettings: GameSettings, templates: DistributionTemp
             )
             .register()
     }
-}
+}*/

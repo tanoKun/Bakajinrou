@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.setting.template
 
-import com.github.tanokun.bakajinrou.plugin.participant.position.Positions
+import com.github.tanokun.bakajinrou.plugin.setting.RequestedPositions
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -18,31 +18,31 @@ class DistributionTemplates(private val templates: HashMap<Int, DistributionTemp
     ) {
         init {
             val roles = listOf(
-                Positions.Wolf.displayName to wolf,
-                Positions.Madman.displayName to madman,
-                Positions.Fox.displayName to fox,
-                Positions.Idiot.displayName to idiot,
-                Positions.Fortune.displayName to fortune,
-                Positions.Medium.displayName to medium,
-                Positions.Knight.displayName to knight
+                RequestedPositions.WOLF to wolf,
+                RequestedPositions.MADMAN to madman,
+                RequestedPositions.FOX to fox,
+                RequestedPositions.IDIOT to idiot,
+                RequestedPositions.FORTUNE to fortune,
+                RequestedPositions.MEDIUM to medium,
+                RequestedPositions.KNIGHT to knight
             )
 
-            roles.forEach { (name, count) ->
-                require(count >= 0) { "$name の人数は 0 以上である必要があります（現在: $count）" }
+            roles.forEach { (position, count) ->
+                require(count >= 0) { "${position.name} の人数は 0 以上である必要があります（現在: $count）" }
             }
         }
 
-        fun getPositions(): Map<Positions, Int> =
+        fun getPositions(): Map<RequestedPositions, Int> =
             hashMapOf(
-                Positions.Wolf to wolf,
-                Positions.Madman to madman,
-                Positions.Idiot to idiot,
-                Positions.Fortune to fortune,
-                Positions.Medium to medium,
-                Positions.Knight to knight,
-                Positions.Fox to fox
+                RequestedPositions.WOLF to wolf,
+                RequestedPositions.MADMAN to madman,
+                RequestedPositions.IDIOT to idiot,
+                RequestedPositions.FORTUNE to fortune,
+                RequestedPositions.MEDIUM to medium,
+                RequestedPositions.KNIGHT to knight,
+                RequestedPositions.FOX to fox
             )
     }
 
-    fun getPositions(amount: Int): Map<Positions, Int>? = templates[amount]?.getPositions()
+    fun getPositions(amount: Int): Map<RequestedPositions, Int>? = templates[amount]?.getPositions()
 }

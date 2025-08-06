@@ -1,12 +1,17 @@
 package com.github.tanokun.bakajinrou.plugin.setting
 
+/*
+
 import com.comphenix.protocol.ProtocolManager
 import com.github.shynixn.mccoroutine.bukkit.asyncDispatcher
 import com.github.shynixn.mccoroutine.bukkit.minecraftDispatcher
 import com.github.tanokun.bakajinrou.api.JinrouGame
-import com.github.tanokun.bakajinrou.api.participant.StrategyIntegrity
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot.IdiotAsFortunePosition
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot.IdiotAsKnightPosition
+import com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot.IdiotAsMediumPosition
 import com.github.tanokun.bakajinrou.game.controller.JinrouGameController
 import com.github.tanokun.bakajinrou.game.logger.DebugLogger
+import com.github.tanokun.bakajinrou.plugin.setting.RequestedPositions
 import com.github.tanokun.bakajinrou.plugin.finisher.CitizenSideFinisher
 import com.github.tanokun.bakajinrou.plugin.listener.launching.PlayerConnectionEventListener
 import com.github.tanokun.bakajinrou.plugin.listener.launching.attack.OnAttackByBowEventListener
@@ -14,9 +19,9 @@ import com.github.tanokun.bakajinrou.plugin.listener.launching.attack.OnAttackBy
 import com.github.tanokun.bakajinrou.plugin.listener.launching.attack.OnAttackBySwordEventListener
 import com.github.tanokun.bakajinrou.plugin.listener.launching.item.OnCraftEventListener
 import com.github.tanokun.bakajinrou.plugin.listener.launching.item.OptionalMethodEventListener
-import com.github.tanokun.bakajinrou.plugin.listener.launching.item.SecretItemPacketListener
 import com.github.tanokun.bakajinrou.plugin.listener.launching.item.TransportMethodEventListener
-import com.github.tanokun.bakajinrou.plugin.listener.launching.view.PlayerChatPacketListener
+import com.github.tanokun.bakajinrou.plugin.listener.launching.view.PlayerChatEventListener
+import com.github.tanokun.bakajinrou.plugin.listener.launching.view.SecretItemPacketListener
 import com.github.tanokun.bakajinrou.plugin.listener.launching.view.TabListPacketListener
 import com.github.tanokun.bakajinrou.plugin.observer.ParticipantStateObserver
 import com.github.tanokun.bakajinrou.plugin.participant.BukkitPlayerProvider
@@ -26,6 +31,9 @@ import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.idiot.I
 import com.github.tanokun.bakajinrou.plugin.participant.position.citizen.idiot.IdiotAsMediumPosition
 import com.github.tanokun.bakajinrou.plugin.scheduler.schedule.GameLifecycleUI
 import com.github.tanokun.bakajinrou.plugin.setting.builder.game.*
+import kotlinx.coroutines.launch
+import net.minecraft.commands.execution.tasks.ContinuationTask.schedule
+import net.minecraft.world.level.block.CaveVines.use
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
 import java.util.*
@@ -44,36 +52,33 @@ class GameSettings(private val plugin: Plugin, private val protocolManager: Prot
 
     private val selectedPositions =
         hashMapOf(
-            Positions.Wolf to 3,
-            Positions.Madman to 1,
-            Positions.Idiot to 3,
-            Positions.Fortune to 1,
-            Positions.Medium to 1,
-            Positions.Knight to 1,
-            Positions.Fox to 1
+            RequestedPositions.WOLF to 3,
+            RequestedPositions.MADMAN to 1,
+            RequestedPositions.IDIOT to 3,
+            RequestedPositions.FORTUNE to 1,
+            RequestedPositions.MEDIUM to 1,
+            RequestedPositions.KNIGHT to 1,
+            RequestedPositions.FOX to 1
         )
 
     var selectedMap: SelectedMap? = null
 
-    fun getAmountBy(positions: Positions): Int {
-        if (positions == Positions.Spectator) throw IllegalArgumentException("スペクテイターは予約役職ではありません。")
-
+    fun getAmountBy(positions: RequestedPositions): Int {
         return selectedPositions[positions] ?: 0
     }
 
 
-    fun updateAmount(positions: Positions, amount: Int) {
+    fun updateAmount(positions: RequestedPositions, amount: Int) {
         if (amount < 0) throw IllegalArgumentException("予約役職を、0未満にはできません。")
-        if (positions == Positions.Spectator) throw IllegalArgumentException("スペクテイターを予約役職にはできません。")
 
         selectedPositions[positions] = amount
     }
 
-    fun increase(positions: Positions) {
+    fun increase(positions: RequestedPositions) {
         updateAmount(positions, getAmountBy(positions) + 1)
     }
 
-    fun decrease(positions: Positions) {
+    fun decrease(positions: RequestedPositions) {
         updateAmount(positions, getAmountBy(positions) - 1)
     }
 
@@ -104,7 +109,7 @@ class GameSettings(private val plugin: Plugin, private val protocolManager: Prot
                     inject()
                 }
                 .setGameMap(it)
-                .assignParticipants(selectedPositions, candidates, StrategyIntegrity()) { builder ->
+                .assignParticipants(selectedPositions, candidates) { builder ->
                     builder
                         .assignMadmans()
                         .assignWolfs(true)
@@ -112,6 +117,9 @@ class GameSettings(private val plugin: Plugin, private val protocolManager: Prot
                         .assignAbilityUsers()
                         .assignFox()
                         .assignOtherToCitizens()
+                }
+                .injection {
+
                 }
                 .assignSpectators(spectators)
                 .createGameLogger()
@@ -125,7 +133,7 @@ class GameSettings(private val plugin: Plugin, private val protocolManager: Prot
                     use<OnAttackBySwordEventListener>()
                     use<OnAttackByPotionEventListener>()
 
-                    use<PlayerChatPacketListener>()
+                    use<PlayerChatEventListener>()
 
                     //Item系統
                     use<OnCraftEventListener>()
@@ -158,8 +166,8 @@ class GameSettings(private val plugin: Plugin, private val protocolManager: Prot
     }
 }
 
-fun CitizenSideFinisher.onOverTime(controller: JinrouGameController) {
-    controller.finish(this)
+fun onOverTime(game: JinrouGame, controller: JinrouGameController) {
+    controller.mainDispatcherScope.launch { game.notifyWonCitizenFinish() }
 }
 
 sealed interface GameBuildResult {
@@ -167,4 +175,4 @@ sealed interface GameBuildResult {
     object IllegalSelectedPositions: GameBuildResult
     class SucceedCreation(val jinrouGame: JinrouGame, val gameController: JinrouGameController): GameBuildResult
 
-}
+}*/

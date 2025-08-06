@@ -1,20 +1,18 @@
 package com.github.tanokun.bakajinrou.game.scheduler
 
-import com.github.tanokun.bakajinrou.game.scheduler.schedule.OnCancellationByOvertimeSchedule
-import com.github.tanokun.bakajinrou.game.scheduler.schedule.OnlyOnceSchedule
-import com.github.tanokun.bakajinrou.game.scheduler.schedule.TimeSchedule
-import kotlin.reflect.KClass
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.shareIn
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
-abstract class GameScheduler(
-    private val startTime: Long,
-    schedules: List<TimeSchedule>,
-): Runnable {
-    private var leftTime: Long = startTime
-
-    private val schedules = schedules.toMutableList()
+abstract class GameScheduler(startTime: Duration) {
+    private val _state = MutableStateFlow<ScheduleState>(ScheduleState.Pending(startTime))
 
     init {
-        if (startTime < 0) throw IllegalArgumentException("スケジューラーは1秒以上動かせる必要があります。")
+        if (startTime < 0.seconds) throw IllegalArgumentException("スケジューラーは1秒以上動かせる必要があります。")
     }
 
     /**
@@ -23,7 +21,16 @@ abstract class GameScheduler(
      * @throws IllegalStateException 2重起動時
      * @throws IllegalStateException 既に停止されている場合
      */
-    abstract fun launch()
+    open fun launch() {
+        val previousState = _state.value
+
+        if (previousState is ScheduleState.Active) throw IllegalStateException("二重起動はできません。")
+        if (previousState is ScheduleState.Cancelled) throw IllegalStateException("既に停止されたスケジューラーです。")
+
+        previousState as ScheduleState.Pending
+
+        _state.value = previousState.launch()
+    }
 
     /**
      * スケジューラーを停止します。非稼働時に停止はできません。
@@ -31,44 +38,45 @@ abstract class GameScheduler(
      * @throws IllegalStateException 非稼働時
      * @throws IllegalStateException 既に停止されている場合
      */
-    abstract fun cancel()
+    open fun abort() {
+        val previousState = _state.value
+
+        if (previousState is ScheduleState.Pending) throw IllegalStateException("まだ起動されていないスケジューラーです。")
+        if (previousState is ScheduleState.Cancelled) throw IllegalStateException("既に停止されています。")
+
+        previousState as ScheduleState.Active
+
+        _state.value = previousState.abort()
+    }
+
+    /**
+     * スケジューラーが時間切れで終了するときに呼び出されます。
+     */
+    abstract fun overtime()
 
     /**
      * スケジュールが実行中か判定します。
+     * キャンセル、まだスタートされていないものは停止判定です。
      *
-     * @return スケジュールの状態
+     * @return 実行中true 停止中false
      */
-    abstract fun isActive(): Boolean
+    fun isActive(): Boolean {
+        val state = _state.value
 
-    /**
-     * スケジュールの追加を行います
-     *
-     * @throws IllegalStateException 起動後にスケジュールを入れてしまった場合
-     */
-    fun addSchedule(schedule: TimeSchedule) {
-        if (isActive()) throw IllegalStateException("起動後にスケジュールは追加できません")
+        return (state is ScheduleState.Active)
 
-        schedules.add(schedule)
     }
 
-    protected fun <E: TimeSchedule> tryCall(e: KClass<E>) {
-        schedules
-            .filterIsInstance(e.java)
-            .forEach { it.tryCall(startSeconds = startTime, leftSeconds = leftTime) }
-    }
-
-    override fun run() {
+    protected fun advance(time: Duration) {
         if (!isActive()) throw IllegalStateException("このスケジューラーはアクティブではありません。")
 
-        schedules
-            .filterNot { it is OnlyOnceSchedule }
-            .forEach { it.tryCall(startSeconds = startTime, leftSeconds = leftTime) }
+        val previousState = _state.value as ScheduleState.Active
+        _state.value = previousState.advance(time)
 
-        leftTime--
-
-        if (leftTime <= 0) {
-            tryCall(OnCancellationByOvertimeSchedule::class)
-            if (isActive()) cancel()
-        }
+        if (_state.value is ScheduleState.Cancelled.Overtime) overtime()
     }
+
+    fun observe(scope: CoroutineScope): Flow<ScheduleState> =
+        _state.shareIn(scope, started = SharingStarted.Eagerly, replay = 1)
+
 }

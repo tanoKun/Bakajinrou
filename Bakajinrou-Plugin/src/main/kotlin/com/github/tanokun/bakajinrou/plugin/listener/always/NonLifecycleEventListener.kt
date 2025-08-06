@@ -1,3 +1,4 @@
+/*
 package com.github.tanokun.bakajinrou.plugin.listener.always
 
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
@@ -55,4 +56,4 @@ class NonLifecycleEventListener(private val gameSettings: GameSettings): Listene
 
         gameSettings.removeCandidate(uniqueId)
     }
-}
+}*/

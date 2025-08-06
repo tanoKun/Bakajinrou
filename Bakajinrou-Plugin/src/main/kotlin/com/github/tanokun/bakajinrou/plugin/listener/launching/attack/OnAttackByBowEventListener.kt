@@ -1,8 +1,9 @@
+/*
 package com.github.tanokun.bakajinrou.plugin.listener.launching.attack
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.attack.method.other.ArrowMethod
-import com.github.tanokun.bakajinrou.game.controller.AttackController
+import com.github.tanokun.bakajinrou.game.attack.AttackController
 import com.github.tanokun.bakajinrou.plugin.listener.LifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.method.appearance.BowItem
 import com.github.tanokun.bakajinrou.plugin.method.getGrantedMethodByItemStack
@@ -51,4 +52,4 @@ class OnAttackByBowEventListener(
 
         attackController.shootArrow(shooter, arrowMethod)
     }
-})
+})*/

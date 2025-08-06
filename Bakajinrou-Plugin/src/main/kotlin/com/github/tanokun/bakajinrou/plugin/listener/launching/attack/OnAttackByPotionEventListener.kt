@@ -1,9 +1,10 @@
+/*
 package com.github.tanokun.bakajinrou.plugin.listener.launching.attack
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.attack.method.effect.DamagePotionEffect
-import com.github.tanokun.bakajinrou.api.participant.nonSpectators
-import com.github.tanokun.bakajinrou.game.controller.AttackController
+import com.github.tanokun.bakajinrou.api.participant.excludeSpectators
+import com.github.tanokun.bakajinrou.game.attack.AttackController
 import com.github.tanokun.bakajinrou.plugin.listener.LifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.method.getGrantedMethodByItemStack
 import org.bukkit.entity.Player
@@ -31,7 +32,7 @@ class OnAttackByPotionEventListener(
             .filterIsInstance<Player>()
             .mapNotNull { jinrouGame.getParticipant(it.uniqueId) }
 
-        attackController.attack(by = shooter, victims = victims.nonSpectators(), attackMethod)
+        attackController.attack(by = shooter, victims = victims.excludeSpectators(), attackMethod)
     }
 
     register<ProjectileLaunchEvent> { event ->
@@ -45,4 +46,4 @@ class OnAttackByPotionEventListener(
 
         attackController.throwPotion(shooter, damagePotionEffectMethod)
     }
-})
+})*/

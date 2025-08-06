@@ -1,8 +1,9 @@
+/*
 package com.github.tanokun.bakajinrou.plugin.listener.launching.attack
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.attack.method.item.SwordItem
-import com.github.tanokun.bakajinrou.game.controller.AttackController
+import com.github.tanokun.bakajinrou.game.attack.AttackController
 import com.github.tanokun.bakajinrou.plugin.listener.LifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.method.getGrantedMethodByItemStack
 import org.bukkit.entity.Player
@@ -34,4 +35,4 @@ class OnAttackBySwordEventListener(
 
         attackController.attack(by = attacker, victim = victim, attackMethod)
     }
-})
+})*/

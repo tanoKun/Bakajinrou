@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.api.method
 
-import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.translate.TranslationKey
 import java.util.*
 
 /**
@@ -10,9 +10,5 @@ import java.util.*
 interface GrantedMethod {
     val uniqueId: UUID
 
-    /**
-     * この手段を消費したときに呼び出されます。
-     * 呼び出し時点で、手段が剝奪されているとは限りません。
-     */
-    fun onConsume(consumer: Participant)
+    val assetKey: TranslationKey
 }

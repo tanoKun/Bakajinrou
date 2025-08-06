@@ -1,3 +1,4 @@
+/*
 package com.github.tanokun.bakajinrou.plugin.listener.launching.item
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
@@ -45,4 +46,4 @@ class OptionalMethodEventListener(
         val method = (consumer.getGrantedMethodByItemStack(item) as? OptionalMethod.ClickMethod) ?: return@register
         method.onConsume(consumer = consumer)
     }
-})
+})*/

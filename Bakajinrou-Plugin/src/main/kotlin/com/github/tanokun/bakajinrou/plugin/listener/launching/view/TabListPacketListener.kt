@@ -6,33 +6,27 @@ import com.comphenix.protocol.events.ListenerPriority
 import com.comphenix.protocol.wrappers.EnumWrappers
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.plugin.formatter.display.PrefixModifier
 import com.github.tanokun.bakajinrou.plugin.formatter.display.TabListModifier
 import com.github.tanokun.bakajinrou.plugin.listener.packet.LifecyclePacketListener
+import com.github.tanokun.bakajinrou.plugin.participant.BukkitPlayerProvider
+import net.kyori.adventure.translation.Translator
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket
-import org.bukkit.Bukkit
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.plugin.Plugin
 import java.util.*
 
 class TabListPacketListener(
-    plugin: Plugin, jinrouGame: JinrouGame, protocolManager: ProtocolManager
+    plugin: Plugin, jinrouGame: JinrouGame, protocolManager: ProtocolManager, translator: Translator
 ) : LifecyclePacketListener(plugin, protocolManager, {
-    val participants = jinrouGame.getAllParticipants()
+    val tabModifier = TabListModifier(jinrouGame, translator)
 
-    val prefixModifiers = participants.map { PrefixModifier(it) }
-
-    val suspendedPlayers = arrayListOf<UUID>()
-
-    val tabModifiers = participants
-        .associate { it.uniqueId to TabListModifier(viewer = it, prefixModifiers) }
+    val suspendedPlayers = mutableSetOf<UUID>()
 
     register(packet = PacketType.Play.Server.PLAYER_INFO, listenerPriority = ListenerPriority.LOW) { event, packet, receiver ->
         if (!packet.playerInfoActions.read(0).contains(EnumWrappers.PlayerInfoAction.UPDATE_GAME_MODE)) return@register
-        val tabModifier = tabModifiers[receiver.uniqueId] ?: return@register
 
         val copy = packet.deepClone().apply {
-            playerInfoDataLists.write(1, tabModifier.modifyByUpdateGameMode(packet.playerInfoDataLists.read(1)))
+            playerInfoDataLists.write(1, tabModifier.modifyByUpdateGameMode(receiver.uniqueId, packet.playerInfoDataLists.read(1)))
         }
 
         event.packet = copy
@@ -40,10 +34,9 @@ class TabListPacketListener(
 
     register(packet = PacketType.Play.Server.PLAYER_INFO, listenerPriority = ListenerPriority.LOW) { event, packet, receiver ->
         if (!packet.playerInfoActions.read(0).contains(EnumWrappers.PlayerInfoAction.UPDATE_DISPLAY_NAME)) return@register
-        val tabModifier = tabModifiers[receiver.uniqueId] ?: return@register
 
         val copy = packet.deepClone().apply {
-            playerInfoDataLists.write(1, tabModifier.modifyByUpdateDisplayName(packet.playerInfoDataLists.read(1)))
+            playerInfoDataLists.write(1, tabModifier.modifyByUpdateDisplayName(receiver, packet.playerInfoDataLists.read(1)))
         }
 
         event.packet = copy
@@ -59,10 +52,10 @@ class TabListPacketListener(
     }
 
     onCancellation {
-        val packet = ClientboundPlayerInfoRemovePacket(suspendedPlayers.filter { Bukkit.getPlayer(it) == null })
+        val packet = ClientboundPlayerInfoRemovePacket(suspendedPlayers.filter { BukkitPlayerProvider.get(it) == null })
 
-        participants.forEach {
-            val player = (Bukkit.getPlayer(it.uniqueId) as? CraftPlayer) ?: return@forEach
+        jinrouGame.getAllParticipants().forEach {
+            val player = (BukkitPlayerProvider.get(it) as? CraftPlayer) ?: return@forEach
             player.handle.connection.send(packet)
         }
     }

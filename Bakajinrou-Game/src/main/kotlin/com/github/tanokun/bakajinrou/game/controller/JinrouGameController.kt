@@ -1,21 +1,17 @@
 package com.github.tanokun.bakajinrou.game.controller
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
-import com.github.tanokun.bakajinrou.api.finishing.GameFinisher
+import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
-import com.github.tanokun.bakajinrou.game.scheduler.schedule.onCancellation
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import java.util.logging.Logger
-import kotlin.coroutines.CoroutineContext
 
 class JinrouGameController(
     private val game: JinrouGame,
     private val scheduler: GameScheduler,
-    private val debug: Logger,
-    uiDispatcher: CoroutineContext
+    debug: Logger,
+    mainScope: CoroutineScope
 ) {
     private val job: Job = SupervisorJob()
 
@@ -23,16 +19,14 @@ class JinrouGameController(
         debug.severe(throwable.stackTraceToString())
     }
 
-    val scope: CoroutineScope = CoroutineScope(job + uiDispatcher + exceptionHandler)
+    val mainDispatcherScope: CoroutineScope = CoroutineScope(mainScope.coroutineContext + exceptionHandler + job)
+
+    private val _initFlow: MutableSharedFlow<Participant> = MutableSharedFlow()
 
     init {
-        require(game.judge() == null) {
+/*        require(game.judge() == null) {
             "始めるにあたって、不十分な役職配布です。"
-        }
-
-        scheduler.addSchedule(onCancellation {
-            job.cancel()
-        })
+        }*/
     }
 
     /**
@@ -41,18 +35,11 @@ class JinrouGameController(
      *
      * 前提条件:
      * - ゲームがアクティブであること
-     *
-     * 副作用：
-     * - [GameFinisher] を使用し、ゲーム終了通知を送信
-     * - ゲームスケジューラの停止
-     *
-     * @param finisher ゲームの終了を処理する
      */
-    fun finish(finisher: GameFinisher) {
+    fun finish() {
         if (!scheduler.isActive()) return
 
-        finisher.notifyFinish()
-        scheduler.cancel()
+        scheduler.abort()
     }
 
     /**
@@ -66,8 +53,34 @@ class JinrouGameController(
     fun launch() {
         if (scheduler.isActive()) return
 
+
+        mainDispatcherScope.launch {
+            game.getAllParticipants().forEach {
+                _initFlow.emit(it)
+            }
+        }
+
         scheduler.launch()
-        val allParticipants = game.getAllParticipants()
-        game.getAllParticipants().forEach { it.position.doAtStarting(it, allParticipants) }
     }
+
+    /**
+     * ゲームを強制終了します。
+     */
+    fun notifySystemFinish() = mainDispatcherScope.launch { game.notifySystemFinish() }
+
+    /**
+     * ゲームを市民の勝利で終了します。
+     */
+    fun finishWithWonCitizen() = mainDispatcherScope.launch { game.notifyWonCitizenFinish() }
+
+    /**
+     * 全参加者の初期化完了までの通知を返す [Flow] を提供します。
+     *
+     * この Flow は、全参加者を1度購読すると、自動的に購読を終了します。
+     *
+     * @return 初期化される各 [Participant] を通知する[Flow]
+     */
+    fun observeParticipantAtLaunched() = _initFlow
+        .take(game.getAllParticipants().size)
+        .shareIn(mainDispatcherScope, SharingStarted.Eagerly, replay = 1)
 }
