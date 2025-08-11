@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.game.participant.observer.initialization
+package com.github.tanokun.bakajinrou.game.participant.initialization
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.observer.Observer
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 
 /**
- * 指定した条件の参加者に対して、自動的に初期化処理を実行するクラス。
+ * 指定した条件の参加者に対して、自動的に初期化処理を実行するクラス
  *
  * ゲーム開始時に、フィルターを満たす者に対して初期化が行われます。
  * たとえば「能力者のみ初期化」など、役職や生存者に応じた絞り込みが可能です。
@@ -20,14 +20,14 @@ import kotlinx.coroutines.launch
  * - フィルターに一致しない参加者には処理されません。
  * - 同一役職を複数収集をすると、多重初期化の可能性があります。
  */
-abstract class ParticipantInitializer(jinrouGame: JinrouGame, gameController: JinrouGameSession, filter: ParticipantFilter): Observer {
+abstract class ParticipantInitializer(game: JinrouGame, gameController: JinrouGameSession, filter: ParticipantFilter): Observer {
     init {
         gameController.mainDispatcherScope.launch {
             gameController.observeParticipantAtLaunched()
-                .mapNotNull { jinrouGame.getParticipant(it) }
+                .mapNotNull { game.getParticipant(it) }
                 .filter(filter)
                 .collect {
-                    launch { initialize(it.participantId, jinrouGame.getCurrentParticipants()) }
+                    launch { initialize(it.participantId, game.getCurrentParticipants()) }
                 }
         }
     }
