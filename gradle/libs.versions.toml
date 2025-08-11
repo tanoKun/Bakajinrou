@@ -12,6 +12,7 @@ kotlinx-serialization-json = "1.9.0"
 mccoroutine = "2.22.0"
 kotlin-result = "2.1.0"
 koin-bom = "4.0.3"
+kotest = "5.9.0"
 
 [libraries]
 commandapi = { module = "dev.jorel:commandapi-bukkit-core", version.ref = "commandapi" }
@@ -26,7 +27,10 @@ junit-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", ver
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
-kotlin-result = { group = "com.michael-bull.kotlin-result", name = "kotlin-result", version.ref = "kotlin-result" }
+kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-framework-engine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
+kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
 mccoroutine-bukkit-api = { module = "com.github.shynixn.mccoroutine:mccoroutine-bukkit-api", version.ref = "mccoroutine" }
 mccoroutine-bukkit-core = { module = "com.github.shynixn.mccoroutine:mccoroutine-bukkit-core", version.ref = "mccoroutine" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin-bom" }
@@ -36,6 +40,7 @@ commandapi = ["commandapi", "commandapi-toolkit"]
 mocks = ["mockk", "mockkbukkit"]
 junit = ["junit-api", "junit-params"]
 mccoroutine = ["mccoroutine-bukkit-api", "mccoroutine-bukkit-core"]
+kotest = ["kotest-assertions-core", "kotest-runner-junit5", "kotest-framework-engine", "kotest-property"]
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version = "9.0.0-rc1" }
