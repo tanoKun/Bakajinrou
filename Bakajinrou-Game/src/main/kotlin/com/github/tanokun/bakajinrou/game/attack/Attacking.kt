@@ -8,8 +8,12 @@ import com.github.tanokun.bakajinrou.api.attack.method.AttackMethod
 import com.github.tanokun.bakajinrou.api.method.MethodId
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedReason
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.shareIn
 import kotlin.reflect.KClass
 
 /**
@@ -18,12 +22,6 @@ import kotlin.reflect.KClass
  * 実際の攻撃は、各 [AttackMethod] に委譲します。
  * 攻撃後には攻撃手段の消費処理を行い、使用済みの手段を攻撃者から剥奪します。
  *
- * このクラスの責務：
- * - 各攻撃手段に攻撃処理を委譲する
- * - 使用済みの手段を消費、剥奪する
-
- *
- * @see AttackMethod.attack
  * @see com.github.tanokun.bakajinrou.api.attack.method.SwordMethod
  * @see com.github.tanokun.bakajinrou.api.attack.method.ArrowMethod
  * @see com.github.tanokun.bakajinrou.api.attack.method.DamagePotionMethod
@@ -65,7 +63,7 @@ class Attacking(private val game: JinrouGame) {
 
         attackResolutions.forEach {
             game.updateParticipant(it.victimId) { victim ->
-                val victimAfterConsumption = it.result.consumeProtectiveMethods.fold(victim) { acc, method ->
+                val victimAfterConsumption = it.result.consumedProtectiveMethods.fold(victim) { acc, method ->
                     acc.removeMethod(method)
                 }
 
@@ -95,4 +93,8 @@ class Attacking(private val game: JinrouGame) {
             current.grantMethod(ArrowMethod(reason = GrantedReason.SYSTEM))
         }
     }
+
+    fun observeAttack(scope: CoroutineScope): Flow<AttackResolution> =
+        _attackResolution.shareIn(scope, SharingStarted.Eagerly, replay = 1)
+
 }

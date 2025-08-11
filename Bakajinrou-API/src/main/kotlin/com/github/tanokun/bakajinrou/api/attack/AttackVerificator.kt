@@ -27,7 +27,7 @@ object AttackVerificator {
      */
     fun attack(attackMethod: AttackMethod, victim: Participant): AttackByMethodResult {
         val consumedProtections = arrayListOf<ProtectiveMethod>()
-        for (protectiveMethod in victim.getActiveProtectiveMethods()) {
+        for (protectiveMethod in victim.getValidProtectiveMethods()) {
             consumedProtections.add(protectiveMethod)
 
             when (protectiveMethod.verifyProtect(method = attackMethod)) {

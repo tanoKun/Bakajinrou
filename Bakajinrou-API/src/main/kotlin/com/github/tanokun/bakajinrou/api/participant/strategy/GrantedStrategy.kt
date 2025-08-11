@@ -46,9 +46,9 @@ data class GrantedStrategy(
      *
      * @return 防御可能な手段
      */
-    fun getActiveProtectiveMethods(): List<ProtectiveMethod> =
+    fun getValidProtectiveMethods(): List<ProtectiveMethod> =
         strategies.values
             .filterIsInstance<ProtectiveMethod>()
-            .filter { it.isActive }
+            .filter { it.isValid }
             .sortedBy { it.priority }
 }

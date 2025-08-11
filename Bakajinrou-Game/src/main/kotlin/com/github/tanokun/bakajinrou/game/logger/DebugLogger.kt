@@ -17,7 +17,7 @@ class DebugLogger(
         val victim = attackResolution.victimId.uniqueId
 
         when (attackResolution) {
-            is AttackResolution.Alive -> logger.info("Attack protected: ${nameCache.get(attacker)}($attacker) -> ${nameCache.get(victim)}($victim) methods>[attack: $attackMethod, protective: ${attackResolution.result.consumeProtectiveMethods}]")
+            is AttackResolution.Alive -> logger.info("Attack protected: ${nameCache.get(attacker)}($attacker) -> ${nameCache.get(victim)}($victim) methods>[attack: $attackMethod, protective: ${attackResolution.result.consumedProtectiveMethods}]")
             is AttackResolution.Killed -> logger.info("Attack succeeded: ${nameCache.get(attacker)}($attacker) -> ${nameCache.get(victim)}($victim) methods>[method: $attackMethod]")
         }
     }

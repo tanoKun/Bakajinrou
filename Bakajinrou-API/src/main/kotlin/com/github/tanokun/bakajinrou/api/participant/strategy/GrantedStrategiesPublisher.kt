@@ -11,12 +11,12 @@ import kotlinx.coroutines.flow.*
  *
  * UI 表示やログ、通知などにご活用いただけます。
  *
- * @property jinrouGame ゲームの状態を保持しているインスタンス
+ * @property game ゲームの状態を保持しているインスタンス
  */
-class GrantedStrategiesPublisher(private val jinrouGame: JinrouGame, scope: CoroutineScope) {
+class GrantedStrategiesPublisher(private val game: JinrouGame, scope: CoroutineScope) {
 
     private val _differenceFlow: SharedFlow<MethodDifference> = flow {
-        jinrouGame.observeParticipants(scope).collect { difference ->
+        game.observeParticipants(scope).collect { difference ->
             val previous = difference.before?.strategy
             val current = difference.after.strategy
 

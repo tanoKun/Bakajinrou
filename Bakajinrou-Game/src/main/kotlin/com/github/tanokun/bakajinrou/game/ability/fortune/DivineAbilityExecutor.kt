@@ -16,9 +16,9 @@ import kotlinx.coroutines.flow.shareIn
  * - 占い能力消費による、参加者エンティティの状態更新
  * - 占い結果のイベント通知
  *
- * @property jinrouGame 実行中のゲーム
+ * @property game 実行中のゲーム
  */
-class DivineAbilityExecutor(private val jinrouGame: JinrouGame) {
+class DivineAbilityExecutor(private val game: JinrouGame) {
     private val _divine = MutableSharedFlow<DivineResult>()
 
     /**
@@ -35,7 +35,7 @@ class DivineAbilityExecutor(private val jinrouGame: JinrouGame) {
         val result = divineResult(ability, fortuneId, targetId)
 
         if (result is DivineResult.FoundResult) {
-            jinrouGame.updateParticipant(fortuneId) { current ->
+            game.updateParticipant(fortuneId) { current ->
                 current.removeMethod(ability)
             }
         }
@@ -44,8 +44,8 @@ class DivineAbilityExecutor(private val jinrouGame: JinrouGame) {
     }
 
     private fun divineResult(ability: DivineAbility, fortuneId: ParticipantId, targetId: ParticipantId): DivineResult {
-        if (!jinrouGame.existParticipant(fortuneId)) return DivineResult.NotFoundError(fortuneId, targetId)
-        val target = jinrouGame.getParticipant(targetId) ?: return DivineResult.NotFoundError(fortuneId, targetId)
+        if (!game.existParticipant(fortuneId)) return DivineResult.NotFoundError(fortuneId, targetId)
+        val target = game.getParticipant(targetId) ?: return DivineResult.NotFoundError(fortuneId, targetId)
 
         val result = ability.divine(target)
 

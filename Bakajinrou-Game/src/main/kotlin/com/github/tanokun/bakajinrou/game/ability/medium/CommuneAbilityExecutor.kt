@@ -17,9 +17,9 @@ import kotlinx.coroutines.flow.shareIn
  * - 霊媒能力消費による、参加者エンティティの状態更新
  * - 霊媒結果のイベント通知
  *
- * @property jinrouGame 実行中のゲーム
+ * @property game 実行中のゲーム
  */
-class CommuneAbilityExecutor(private val jinrouGame: JinrouGame) {
+class CommuneAbilityExecutor(private val game: JinrouGame) {
     private val _commune = MutableSharedFlow<CommuneResult>()
 
     /**
@@ -36,7 +36,7 @@ class CommuneAbilityExecutor(private val jinrouGame: JinrouGame) {
         val result = communeResult(ability, mediumId, targetId)
 
         if (result is CommuneResult.Success)
-            jinrouGame.updateParticipant(mediumId) { current ->
+            game.updateParticipant(mediumId) { current ->
                 current.removeMethod(ability)
             }
 
@@ -45,8 +45,8 @@ class CommuneAbilityExecutor(private val jinrouGame: JinrouGame) {
     }
 
     private fun communeResult(ability: CommuneAbility, mediumId: ParticipantId, targetId: ParticipantId): CommuneResult {
-        if (!jinrouGame.existParticipant(mediumId)) return CommuneResult.NotFoundError(mediumId, targetId)
-        val target = jinrouGame.getParticipant(targetId) ?: return CommuneResult.NotFoundError(mediumId, targetId)
+        if (!game.existParticipant(mediumId)) return CommuneResult.NotFoundError(mediumId, targetId)
+        val target = game.getParticipant(targetId) ?: return CommuneResult.NotFoundError(mediumId, targetId)
 
         val result = ability.commune(target)
 

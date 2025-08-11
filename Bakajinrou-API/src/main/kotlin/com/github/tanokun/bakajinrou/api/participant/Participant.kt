@@ -100,7 +100,7 @@ data class Participant(
 
     fun hasGrantedMethod(uniqueId: MethodId): Boolean = strategy.getMethod(uniqueId) != null
 
-    fun getActiveProtectiveMethods(): List<ProtectiveMethod> = strategy.getActiveProtectiveMethods()
+    fun getValidProtectiveMethods(): List<ProtectiveMethod> = strategy.getValidProtectiveMethods()
 
     fun completelyEquals(other: Any?): Boolean {
         if (this === other) return true
