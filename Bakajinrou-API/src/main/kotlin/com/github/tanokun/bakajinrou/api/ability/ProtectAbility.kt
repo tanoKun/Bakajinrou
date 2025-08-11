@@ -1,13 +1,14 @@
 package com.github.tanokun.bakajinrou.api.ability
 
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
+import com.github.tanokun.bakajinrou.api.protect.ProtectVerificator
 import com.github.tanokun.bakajinrou.api.protect.method.ProtectiveMethod
 import com.github.tanokun.bakajinrou.api.translate.MethodAssetKeys
 
 /**
- * 能力 の一種である **騎士** を表す抽象クラス。
+ * 能力(Ability)の一種であり、「騎士」のように他者を守る能力を表す抽象クラス
  *
- * 手段によって守ります。
+ * この能力は、それ自体が直接的な防御を行うのではなく、実行時に防御手段を生成します。
  */
 abstract class ProtectAbility: Ability {
     /**
@@ -18,13 +19,24 @@ abstract class ProtectAbility: Ability {
     override val transportable: Boolean = false
 
     /**
-     * 守るための手段を取得します。
+     * この能力を行使した際に、加護として使用される 防御手段 を生成して取得します。
      *
-     * @return 防御手段
+     * @param verificator 防御手段が有効かどうかを検証するクラス
+     * @return 実際に防御を行うための[ProtectiveMethod]のインスタンス
      */
-    abstract fun protect(): ProtectiveMethod
+    abstract fun protect(verificator: ProtectVerificator): ProtectiveMethod
 
-    override fun asTransferred(): GrantedMethod = throw IllegalStateException("この手段は譲渡できません。")
+    /**
+     * この手段は譲渡不可能なため、このメソッドを呼び出すことはできません。
+     * 誤って呼び出された場合は常に[UnsupportedOperationException]をスローします。
+     *
+     * @throws UnsupportedOperationException 常にスローされます。
+     */
+    @Deprecated(
+        message = "ProtectAbility is not transferable.",
+        level = DeprecationLevel.ERROR
+    )
+    override fun asTransferred(): GrantedMethod = throw UnsupportedOperationException()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
