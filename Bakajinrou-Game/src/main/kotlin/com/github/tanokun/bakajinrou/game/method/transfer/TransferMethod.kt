@@ -3,6 +3,7 @@ package com.github.tanokun.bakajinrou.game.method.transfer
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.method.MethodId
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
+import com.github.tanokun.bakajinrou.api.protect.method.ProtectiveMethod
 
 /**
  * 参加者間での手段譲渡を表現します。
@@ -29,10 +30,12 @@ class TransferMethod(private val game: JinrouGame) {
         val from = game.getParticipant(fromId) ?: return false
         if (!game.existParticipant(toId)) return false
 
-        val method = from.getGrantedMethod(methodId) ?: return false
+        val origin = from.getGrantedMethod(methodId) ?: return false
 
-        game.updateParticipant(fromId) { current -> current.removeMethod(method) }
-        game.updateParticipant(toId) { current -> current.grantMethod(method) }
+        val grantMethod = if (origin is ProtectiveMethod) origin.asTransferred(toId) else origin
+
+        game.updateParticipant(fromId) { current -> current.removeMethod(origin) }
+        game.updateParticipant(toId) { current -> current.grantMethod(grantMethod) }
 
         return true
     }
