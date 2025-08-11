@@ -6,7 +6,7 @@ import com.github.tanokun.bakajinrou.plugin.common.cache.PlayerSkinCache
 import com.github.tanokun.bakajinrou.plugin.common.setting.GameSettings
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameBuilderDI
 import com.github.tanokun.bakajinrou.plugin.interaction.player.handle.command.HandleGameCommand
-import com.github.tanokun.bakajinrou.plugin.interaction.player.listen.NonLifecycleEventListener
+import com.github.tanokun.bakajinrou.plugin.interaction.player.initializer.NonLifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.interaction.player.setting.command.GameSettingCommand
 import com.github.tanokun.bakajinrou.plugin.interaction.player.setting.command.MapSettingCommand
 import dev.jorel.commandapi.CommandAPICommand

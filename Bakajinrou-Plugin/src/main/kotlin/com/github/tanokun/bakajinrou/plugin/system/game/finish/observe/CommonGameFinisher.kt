@@ -4,7 +4,7 @@ import com.github.tanokun.bakajinrou.api.WonInfo
 import com.github.tanokun.bakajinrou.api.map.GameMap
 import com.github.tanokun.bakajinrou.api.observer.Observer
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
-import com.github.tanokun.bakajinrou.plugin.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.system.game.launch.observe.asBukkit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.take
@@ -19,7 +19,7 @@ import org.bukkit.GameMode
  *
  * 監視対象が "ゲーム終了" であるため、その時点で監視は自動終了します。
  *
- * @property playerProvider BukkitのPlayerオブジェクトを取得するためのプロバイダー
+ * @property playerProvider BukkitのPlayerオブジェクトを取得するための Provider
  * @property game 監視対象のゲームセッション
  * @property gameMap ゲームマップ情報
  * @property topScope このクラスの全てのコルーチンが動作する、上位のコルーチンスコープ
