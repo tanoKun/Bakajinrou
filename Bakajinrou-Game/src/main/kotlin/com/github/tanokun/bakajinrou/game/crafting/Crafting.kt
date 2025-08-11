@@ -7,15 +7,18 @@ import com.github.tanokun.bakajinrou.api.advantage.SpeedMethod
 import com.github.tanokun.bakajinrou.api.attack.method.DamagePotionMethod
 import com.github.tanokun.bakajinrou.api.attack.method.SwordMethod
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
+import com.github.tanokun.bakajinrou.api.method.asMethodId
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedReason
 import com.github.tanokun.bakajinrou.api.protect.method.ResistanceMethod
 import com.github.tanokun.bakajinrou.api.protect.method.ShieldMethod
+import com.github.tanokun.bakajinrou.game.protect.ProtectVerificatorProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.shareIn
+import java.util.*
 import kotlin.random.Random
 
 /**
@@ -31,7 +34,8 @@ import kotlin.random.Random
  */
 class Crafting(
     private val game: JinrouGame,
-    private val random: Random
+    private val random: Random,
+    private val provider: ProtectVerificatorProvider,
 ) {
 
     private val _crafting = MutableSharedFlow<CraftingInfo>(replay = 1)
@@ -47,11 +51,14 @@ class Crafting(
      */
     fun observeCrafting(scope: CoroutineScope): Flow<CraftingInfo> = _crafting.shareIn(scope, SharingStarted.Eagerly, replay = 1)
 
-    private val crafting = listOf<(JinrouGame) -> GrantedMethod>(
+    private val crafting = listOf<(ParticipantId) -> GrantedMethod>(
         { SwordMethod(reason = GrantedReason.CRAFTING) },
         { DamagePotionMethod(reason = GrantedReason.CRAFTING) },
-        { ResistanceMethod(reason = GrantedReason.CRAFTING) },
-        { ShieldMethod(reason = GrantedReason.CRAFTING) },
+        { id -> ResistanceMethod(reason = GrantedReason.CRAFTING, verificator = provider.getResistanceVerificator(false)) },
+        { id ->
+            val methodId = UUID.randomUUID().asMethodId()
+            ShieldMethod(reason = GrantedReason.CRAFTING, verificator = provider.getShieldVerificator(id, methodId))
+        },
         { SpeedMethod(reason = GrantedReason.CRAFTING) },
         { InvisibilityMethod(reason = GrantedReason.CRAFTING) },
         { ExchangeMethod(reason = GrantedReason.CRAFTING) }
@@ -65,7 +72,7 @@ class Crafting(
      */
     suspend fun randomlyCrafting(participantId: ParticipantId, style: CraftingStyle) {
         val participant = game.getParticipant(participantId) ?: return
-        val method = crafting.random(random).invoke(game)
+        val method = crafting.random(random).invoke(participantId)
 
         game.updateParticipant(participantId) { current ->
             current.grantMethod(method)
