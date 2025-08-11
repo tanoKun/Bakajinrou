@@ -3,8 +3,7 @@ package com.github.tanokun.bakajinrou.api.participant.prefix
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
-import com.github.tanokun.bakajinrou.api.translate.TranslationKey
-import com.github.tanokun.bakajinrou.api.translate.TranslationKeys
+import com.github.tanokun.bakajinrou.api.translate.PrefixKeys
 
 /**
  * viewerを基準にして人狼のプレフィックスを決定します。
@@ -15,13 +14,13 @@ import com.github.tanokun.bakajinrou.api.translate.TranslationKeys
  * - その他 -> null
  **/
 class WolfPrefix(private val knownByMadmans: ParticipantScope.NonSpectators): PrefixSource {
-    private val translationKey: TranslationKey = TranslationKeys.Prefix.WOLF
+    private val prefixKey: PrefixKeys = PrefixKeys.WOLF
 
-    override fun getVisibleSource(viewer: Participant, target: Participant): TranslationKey? {
-        if (viewer.isDead()) return translationKey
-        if (viewer.isPosition<WolfPosition>()) return translationKey
-        if (knownByMadmans.contains(viewer)) return translationKey
-        if (target == viewer) return translationKey
+    override fun getVisibleSource(viewer: Participant, target: Participant): PrefixKeys? {
+        if (viewer.isDead()) return prefixKey
+        if (viewer.isPosition<WolfPosition>()) return prefixKey
+        if (knownByMadmans.contains(viewer)) return prefixKey
+        if (target == viewer) return prefixKey
 
         return null
     }

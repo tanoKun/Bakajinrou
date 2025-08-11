@@ -1,15 +1,14 @@
 package com.github.tanokun.bakajinrou.api.participant.prefix
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.translate.TranslationKey
-import com.github.tanokun.bakajinrou.api.translate.TranslationKeys
+import com.github.tanokun.bakajinrou.api.translate.PrefixKeys
 
-enum class ComingOut(private val translationKey: TranslationKey): PrefixSource {
-    LAST_WOLF(TranslationKeys.Prefix.ComingOut.LAST_WOLF),
-    FORTUNE(TranslationKeys.Prefix.ComingOut.FORTUNE),
-    MEDIUM(TranslationKeys.Prefix.ComingOut.MEDIUM),
-    KNIGHT(TranslationKeys.Prefix.ComingOut.KNIGHT),
+enum class ComingOut(private val translationKey: PrefixKeys.ComingOut): PrefixSource {
+    LAST_WOLF(PrefixKeys.ComingOut.LAST_WOLF),
+    FORTUNE(PrefixKeys.ComingOut.FORTUNE),
+    MEDIUM(PrefixKeys.ComingOut.MEDIUM),
+    KNIGHT(PrefixKeys.ComingOut.KNIGHT),
     ;
 
-    override fun getVisibleSource(viewer: Participant, target: Participant): TranslationKey = translationKey
+    override fun getVisibleSource(viewer: Participant, target: Participant): PrefixKeys = translationKey
 }

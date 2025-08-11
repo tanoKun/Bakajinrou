@@ -2,15 +2,15 @@ package com.github.tanokun.bakajinrou.api.participant
 
 import com.github.tanokun.bakajinrou.api.ParticipantStates
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
-import com.github.tanokun.bakajinrou.api.method.ProtectiveMethod
+import com.github.tanokun.bakajinrou.api.method.MethodId
 import com.github.tanokun.bakajinrou.api.participant.position.Position
 import com.github.tanokun.bakajinrou.api.participant.position.SpectatorPosition
 import com.github.tanokun.bakajinrou.api.participant.prefix.ComingOut
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategy
-import java.util.*
+import com.github.tanokun.bakajinrou.api.protect.method.ProtectiveMethod
 
 data class Participant(
-    val uniqueId: UUID,
+    val participantId: ParticipantId,
     val position: Position,
     internal val strategy: GrantedStrategy,
     internal val state: ParticipantStates =
@@ -96,7 +96,33 @@ data class Participant(
 
     fun removeMethod(method: GrantedMethod) = copy(strategy = strategy.remove(method))
 
-    fun getGrantedMethod(uniqueId: UUID): GrantedMethod? = strategy.getMethod(uniqueId)
+    fun getGrantedMethod(uniqueId: MethodId): GrantedMethod? = strategy.getMethod(uniqueId)
+
+    fun hasGrantedMethod(uniqueId: MethodId): Boolean = strategy.getMethod(uniqueId) != null
 
     fun getActiveProtectiveMethods(): List<ProtectiveMethod> = strategy.getActiveProtectiveMethods()
+
+    fun completelyEquals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Participant) return false
+
+        if (participantId != other.participantId) return false
+        if (position != other.position) return false
+        if (strategy != other.strategy) return false
+        if (state != other.state) return false
+        if (comingOut != other.comingOut) return false
+
+        return true
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Participant) return false
+
+        if (participantId != other.participantId) return false
+        return true
+    }
+
+    override fun hashCode(): Int = participantId.hashCode()
+
 }

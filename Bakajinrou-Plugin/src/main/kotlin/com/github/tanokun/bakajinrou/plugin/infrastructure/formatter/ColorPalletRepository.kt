@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.infrastructure.formatter
 
-import com.github.tanokun.bakajinrou.plugin.formatter.ColorPallet
+import com.github.tanokun.bakajinrou.plugin.common.formatter.ColorPallet
 import kotlinx.serialization.json.Json
 import org.bukkit.plugin.Plugin
 import java.io.File

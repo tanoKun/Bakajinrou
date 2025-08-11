@@ -4,6 +4,10 @@ import com.github.tanokun.bakajinrou.game.scheduler.ScheduleState.Active
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
+/**
+ * スケジュールの時間をステートとして管理します。
+ * Pending -> Active -> Cancelled を基本とします。
+ */
 sealed interface ScheduleState {
     val startTime: Duration
 
@@ -11,13 +15,19 @@ sealed interface ScheduleState {
         fun launch(): Active.Launched = LaunchedImpl(startTime)
     }
 
-    sealed interface Active {
+    sealed interface Active: ScheduleState {
+        val passedTime: Duration
+
+        val remainingTime: Duration
+            get() = startTime - passedTime
+
         interface Launched: ScheduleState, Active
-        interface InProgress: ScheduleState, Active { val passedTime: Duration }
+        interface InProgress: ScheduleState, Active
 
         fun advance(time: Duration): ScheduleState
 
         fun abort(): Cancelled.Aborted
+
     }
 
     sealed interface Cancelled {
@@ -26,11 +36,10 @@ sealed interface ScheduleState {
     }
 }
 
-private abstract class ActiveImpl(override val startTime: Duration, private val passedTime: Duration) : Active.Launched {
+private abstract class ActiveImpl(override val startTime: Duration, override val passedTime: Duration) : Active.Launched {
     override fun advance(time: Duration): ScheduleState {
-        val remainTime = startTime - passedTime
         val nextState =
-            if (remainTime < time) OverTimeImpl(startTime)
+            if (remainingTime < time) OverTimeImpl(startTime)
             else InProgressImpl(startTime, passedTime + time)
 
         return nextState

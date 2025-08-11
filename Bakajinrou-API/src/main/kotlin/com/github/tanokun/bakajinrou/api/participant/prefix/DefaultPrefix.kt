@@ -1,16 +1,13 @@
 package com.github.tanokun.bakajinrou.api.participant.prefix
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.translate.TranslationKey
+import com.github.tanokun.bakajinrou.api.translate.PrefixKeys
 
-/**
- *
- */
-class DefaultPrefix(private val translationKey: TranslationKey): PrefixSource {
+class DefaultPrefix(private val prefixKey: PrefixKeys): PrefixSource {
 
-    override fun getVisibleSource(viewer: Participant, target: Participant): TranslationKey? {
-        if (viewer.isDead()) return translationKey
-
+    override fun getVisibleSource(viewer: Participant, target: Participant): PrefixKeys? {
+        if (viewer.isDead()) return prefixKey
+        if (viewer == target) return prefixKey
 
         return null
     }

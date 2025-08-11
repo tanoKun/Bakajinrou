@@ -4,7 +4,6 @@ import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 class GameMapTest {
     private val point1 = PointLocation("testWorld", 1, 1, 1)
@@ -12,11 +11,11 @@ class GameMapTest {
 
     @Test
     fun serializeTest() {
-        val gameMap = GameMap(MapName("testMap"), point1, point2, 15.minutes, 1.minutes + 30.seconds)
+        val gameMap = GameMap(MapName("testMap"), point1, point2, 15.minutes)
         val encode = Json.encodeToString(gameMap)
 
         assertEquals(
-            "{\"mapName\":{\"name\":\"testMap\"},\"spawnPoint\":{\"worldName\":\"testWorld\",\"x\":1,\"y\":1,\"z\":1},\"lobbyPoint\":{\"worldName\":\"testWorld2\",\"x\":2,\"y\":2,\"z\":2},\"startTime\":\"PT15M\",\"delayToGiveQuartz\":\"PT1M30S\"}",
+            "{\"mapName\":{\"name\":\"testMap\"},\"spawnPoint\":{\"worldName\":\"testWorld\",\"x\":1,\"y\":1,\"z\":1},\"lobbyPoint\":{\"worldName\":\"testWorld2\",\"x\":2,\"y\":2,\"z\":2},\"startTime\":\"PT15M\"}",
             encode
         )
 

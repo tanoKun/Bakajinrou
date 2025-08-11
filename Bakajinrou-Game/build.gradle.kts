@@ -22,6 +22,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(kotlin("reflect"))
 
+    testImplementation(libs.bundles.kotest)
     testImplementation(libs.bundles.junit)
     testImplementation(libs.mockk)
     testImplementation(kotlin("test"))

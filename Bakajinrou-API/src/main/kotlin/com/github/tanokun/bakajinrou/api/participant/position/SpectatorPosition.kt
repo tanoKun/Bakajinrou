@@ -1,13 +1,13 @@
 package com.github.tanokun.bakajinrou.api.participant.position
 
-import com.github.tanokun.bakajinrou.api.ability.AbilityResultSource
+import com.github.tanokun.bakajinrou.api.ability.ResultSource
 import com.github.tanokun.bakajinrou.api.participant.prefix.LiteralPrefix
 import com.github.tanokun.bakajinrou.api.participant.prefix.PrefixSource
-import com.github.tanokun.bakajinrou.api.translate.TranslationKeys
+import com.github.tanokun.bakajinrou.api.translate.PrefixKeys
 
-class SpectatorPosition: Position {
-    override val prefixSource: PrefixSource = LiteralPrefix(TranslationKeys.Prefix.SPECTATOR)
+object SpectatorPosition: Position {
+    override val prefixSource: PrefixSource = LiteralPrefix(PrefixKeys.SPECTATOR)
 
-    override val abilityResult: AbilityResultSource = AbilityResultSource.CITIZENS
+    override val abilityResult: ResultSource = ResultSource.CITIZENS
 
 }

@@ -1,12 +1,16 @@
 package com.github.tanokun.bakajinrou.api
 
 import com.github.tanokun.bakajinrou.api.participant.*
+import com.github.tanokun.bakajinrou.api.participant.position.isCitizens
+import com.github.tanokun.bakajinrou.api.participant.position.isFox
+import com.github.tanokun.bakajinrou.api.participant.position.isWolf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
-import java.util.*
+import kotlinx.coroutines.sync.withLock
 
 class JinrouGame(
+    private val mutexProvider: UpdateMutexProvider,
     participants: ParticipantScope.All,
 ) {
     private val _participants = MutableStateFlow(participants)
@@ -38,12 +42,12 @@ class JinrouGame(
     /**
      * ゲームを強制終了することを通知します。
      */
-    suspend fun notifySystemFinish() = _systemFinish.emit(WonInfo.System(_participants.value))
+    suspend fun notifyWonBySystem() = _systemFinish.emit(WonInfo.System(_participants.value))
 
     /**
      * ゲームを市民の勝利で終了することを通知します。
      */
-    suspend fun notifyWonCitizenFinish() = _systemFinish.emit(WonInfo.Citizens(_participants.value))
+    suspend fun notifyWonCitizen() = _systemFinish.emit(WonInfo.Citizens(_participants.value))
 
     /**
      * 現在の参加者の状態に基づいてゲームの勝敗を判定します。
@@ -58,9 +62,8 @@ class JinrouGame(
      * @return ゲームの勝利を表す [WonInfo]。勝敗未確定の場合は null
      */
     fun judge(): WonInfo? {
-
         val survivors = _participants.value.survivedOnly()
-        val citizens = survivors.includes(::isCitizen)
+        val citizens = survivors.includes(::isCitizens)
         val wolfs = survivors.includes(::isWolf)
         val fox = survivors.includes(::isFox)
 
@@ -87,52 +90,74 @@ class JinrouGame(
      * @return 状態が変更されたときに通知される [Flow]
      */
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun observeParticipants(scope: CoroutineScope): Flow<Participant> =
-        _participants
-            .scan<ParticipantScope.All, Pair<ParticipantScope.All?, ParticipantScope.All>>(null to _participants.value) { acc, current ->
-                acc.second to current
+    fun observeParticipants(scope: CoroutineScope): Flow<ParticipantDifference> = _participants
+        .scan<ParticipantScope.All, Pair<ParticipantScope.All?, ParticipantScope.All>>(null to _participants.value) { acc, current ->
+            acc.second to current
+        }
+        .drop(1)
+        .flatMapConcat { (previous, current) ->
+            val changed = current.mapNotNull { currentPart ->
+                val previousPart = previous?.find { it.participantId == currentPart.participantId }
+                if (currentPart.completelyEquals(previousPart)) return@mapNotNull null
+
+                return@mapNotNull ParticipantDifference(previousPart, currentPart)
             }
-            .drop(1)
-            .flatMapConcat { (previous, current) ->
-                val changed = current.filter { currentPart ->
-                    val previousPart = previous?.find { it.uniqueId == currentPart.uniqueId }
-                    previousPart != currentPart
-                }
 
-                changed.asFlow()
-            }.shareIn(scope, SharingStarted.Eagerly, replay = 1)
-
-
-    private fun updateParticipants(participantScope: ParticipantScope.All) {
-        _participants.value = participantScope
-    }
-
-    fun updateParticipant(participant: Participant) {
-        updateParticipants(listOf(participant))
-    }
+            changed.asFlow()
+        }
+        .shareIn(scope, SharingStarted.Eagerly, replay = 1)
 
     /**
-     * 指定された参加者の情報を更新します。
+     * 指定されたIDの参加者に対して、アトミックな更新処理をスレッドセーフに実行します。
      *
-     * @param participants 更新対象の参加者
-     */
-    fun updateParticipants(participants: List<Participant>) {
-        val updateUuids = participants.map { it.uniqueId }
-        val newParticipants = _participants.value.filterNot { updateUuids.contains(it.uniqueId) } + participants
+     * このメソッドは、対象となる参加者ID専用のロックを取得し、`transform`ラムダを実行します。
+     * これにより、同じ参加者に対する複数の更新処理が同時に実行されるのを防ぎます。
+     * また、内部で`StateFlow`の状態を更新する際も、アトミック性が保証されるように設計されています。
+     * 異なる参加者IDに対する更新処理は、並行して実行可能です。
 
-        updateParticipants(newParticipants.all())
+     * `transform`ラムダの内部で、**同じ、あるいは別の`updateParticipant`メソッドを再帰的に、または間接的に呼び出すことは絶対に避けてください。**
+     * @param participantId 更新対象の参加者のId
+     * @param transform 現在の参加者状態を受け取り、変更後の新しい状態を返す関数
+     *
+     * @throws IllegalArgumentException 指定されたIDの参加者が存在しない場合
+     * @throws IllegalArgumentException 異なる参加者を編集した場合
+     */
+    suspend fun updateParticipant(participantId: ParticipantId, transform: (current: Participant) -> Participant) {
+        mutexProvider.get(participantId).withLock {
+            val current = getParticipant(participantId) ?: throw IllegalArgumentException("存在しない参加者です。")
+
+            val update = transform(current)
+
+            if (update.participantId != participantId) throw IllegalArgumentException("異なる参加者は編集できません。")
+
+            val newParticipants = _participants.value.filterNot { participantId == it.participantId } + update
+
+            _participants.value = newParticipants.all()
+        }
+    }
+
+    suspend fun addParticipant(participant: Participant) {
+        mutexProvider.get(participant.participantId).withLock {
+            if (existParticipant(participant.participantId)) throw IllegalArgumentException("既に存在する参加者は追加できません。")
+
+            val newParticipants = _participants.value + participant
+
+            _participants.value = newParticipants.all()
+        }
     }
 
     /**
      * すべての参加者を取得します。
      */
-    fun getAllParticipants() = _participants.value
+    fun getCurrentParticipants() = _participants.value
 
     /**
      * 指定された ID の参加者を取得します。
      *
-     * @param uniqueId 対象のユニークID
+     * @param participantId
      * @return 該当する参加者、存在しない場合は null
      */
-    fun getParticipant(uniqueId: UUID) = _participants.value.firstOrNull { it.uniqueId == uniqueId }
+    fun getParticipant(participantId: ParticipantId) = _participants.value.firstOrNull { it.participantId == participantId }
+
+    fun existParticipant(participantId: ParticipantId) = getParticipant(participantId) != null
 }

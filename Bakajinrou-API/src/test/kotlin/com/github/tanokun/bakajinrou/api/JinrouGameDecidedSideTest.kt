@@ -2,6 +2,7 @@ package com.github.tanokun.bakajinrou.api
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.all
+import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizensPosition
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
@@ -83,12 +84,13 @@ class JinrouGameDecidedSideTest {
     private fun createJinrouGame(
         isDeadCitizen1: Boolean, isDeadCitizen2: Boolean, isDeadFox: Boolean, isDeadWolf: Boolean, isDeadMadman: Boolean,
     ) = JinrouGame(
+        UpdateMutexProvider(),
         setOf(
-            Participant(UUID.randomUUID(), mockk<CitizensPosition>(), mockk<GrantedStrategy>()).apply { if (isDeadCitizen1) dead() },
-            Participant(UUID.randomUUID(), mockk<CitizensPosition>(), mockk<GrantedStrategy>()).apply { if (isDeadCitizen2) dead() },
-            Participant(UUID.randomUUID(), mockk<FoxPosition>(), mockk<GrantedStrategy>()).apply { if (isDeadFox) dead() },
-            Participant(UUID.randomUUID(), mockk<WolfPosition>(), mockk<GrantedStrategy>()).apply { if (isDeadWolf) dead() },
-            Participant(UUID.randomUUID(), mockk<MadmanPosition>(), mockk<GrantedStrategy>()).apply { if (isDeadMadman) dead() },
+            Participant(UUID.randomUUID().asParticipantId(), mockk<CitizensPosition>(), mockk<GrantedStrategy>()).let { if (isDeadCitizen1) it.dead() else it },
+            Participant(UUID.randomUUID().asParticipantId(), mockk<CitizensPosition>(), mockk<GrantedStrategy>()).let { if (isDeadCitizen2) it.dead() else it },
+            Participant(UUID.randomUUID().asParticipantId(), mockk<FoxPosition>(), mockk<GrantedStrategy>()).let { if (isDeadFox) it.dead() else it },
+            Participant(UUID.randomUUID().asParticipantId(), mockk<WolfPosition>(), mockk<GrantedStrategy>()).let { if (isDeadWolf) it.dead() else it },
+            Participant(UUID.randomUUID().asParticipantId(), mockk<MadmanPosition>(), mockk<GrantedStrategy>()).let { if (isDeadMadman) it.dead() else it },
         ).all(),
     )
 }

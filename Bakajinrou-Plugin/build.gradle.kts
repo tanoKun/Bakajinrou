@@ -47,6 +47,7 @@ dependencies {
     implementation(project(":Bakajinrou-API"))
     implementation(project(":Bakajinrou-Game"))
 
+    testImplementation(libs.bundles.kotest)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.bundles.mocks)
 

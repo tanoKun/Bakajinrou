@@ -2,6 +2,7 @@ package com.github.tanokun.bakajinrou.plugin.listener
 
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent
 import com.destroystokyo.paper.event.player.PlayerJumpEvent
+import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListener
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

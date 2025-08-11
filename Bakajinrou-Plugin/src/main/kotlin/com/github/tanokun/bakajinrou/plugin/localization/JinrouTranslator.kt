@@ -1,8 +1,10 @@
 package com.github.tanokun.bakajinrou.plugin.localization
 
-import com.github.tanokun.bakajinrou.plugin.formatter.ColorPallet
+import com.github.tanokun.bakajinrou.api.translate.TranslationKey
+import com.github.tanokun.bakajinrou.plugin.common.formatter.ColorPallet
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.ComponentLike
 import net.kyori.adventure.text.TranslatableComponent
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.minimessage.MiniMessage
@@ -34,6 +36,12 @@ class JinrouTranslator(
                 .build()
         )
     }
+
+    fun translate(translationKey: TranslationKey, locale: Locale) = translate(Component.translatable(translationKey.key), locale)
+
+    fun translate(translationKey: TranslationKey, locale: Locale, vararg arguments: ComponentLike) =
+        translate(Component.translatable(translationKey.key).arguments(*arguments), locale)
+
 
     private fun getMiniMessageFormat(key: String, locale: Locale): String? {
         val dictionary = dictionaries[locale] ?: dictionaries[Locale.JAPAN] ?: return null

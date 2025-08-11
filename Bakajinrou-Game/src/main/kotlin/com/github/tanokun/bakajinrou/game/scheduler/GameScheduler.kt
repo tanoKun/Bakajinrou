@@ -76,6 +76,11 @@ abstract class GameScheduler(startTime: Duration) {
         if (_state.value is ScheduleState.Cancelled.Overtime) overtime()
     }
 
+    /**
+     * @return 現状のスケジュールの状態
+     */
+    fun getCurrentState() = _state.value
+
     fun observe(scope: CoroutineScope): Flow<ScheduleState> =
         _state.shareIn(scope, started = SharingStarted.Eagerly, replay = 1)
 

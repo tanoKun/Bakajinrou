@@ -1,17 +1,22 @@
 package com.github.tanokun.bakajinrou.game.attack
 
 import com.github.tanokun.bakajinrou.api.attack.AttackByMethodResult
-import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 
 sealed interface AttackResolution {
+    val attackerId: ParticipantId
+    val victimId: ParticipantId
+    val result: AttackByMethodResult
 
     data class Killed(
-        val attacker: Participant,
-        val result: AttackByMethodResult.SucceedAttack
+        override val attackerId: ParticipantId,
+        override val victimId: ParticipantId,
+        override val result: AttackByMethodResult.SucceedAttack
     ) : AttackResolution
 
     data class Alive(
-        val attacker: Participant,
-        val result: AttackByMethodResult.Protected
+        override val attackerId: ParticipantId,
+        override val victimId: ParticipantId,
+        override val result: AttackByMethodResult.Protected
     ) : AttackResolution
 }

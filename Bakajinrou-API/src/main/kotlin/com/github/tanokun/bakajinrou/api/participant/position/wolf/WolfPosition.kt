@@ -1,9 +1,9 @@
 package com.github.tanokun.bakajinrou.api.participant.position.wolf
 
-import com.github.tanokun.bakajinrou.api.ability.AbilityResultSource
+import com.github.tanokun.bakajinrou.api.ability.ResultSource
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
-import com.github.tanokun.bakajinrou.api.participant.isMadman
 import com.github.tanokun.bakajinrou.api.participant.position.Position
+import com.github.tanokun.bakajinrou.api.participant.position.isMadman
 import com.github.tanokun.bakajinrou.api.participant.prefix.PrefixSource
 import com.github.tanokun.bakajinrou.api.participant.prefix.WolfPrefix
 
@@ -25,5 +25,5 @@ class WolfPosition(knownByMadmans: ParticipantScope.NonSpectators): Position {
 
     override val prefixSource: PrefixSource = WolfPrefix(knownByMadmans)
 
-    override val abilityResult: AbilityResultSource = AbilityResultSource.WOLF
+    override val abilityResult: ResultSource = ResultSource.WOLF
 }

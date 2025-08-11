@@ -1,11 +1,11 @@
 package com.github.tanokun.bakajinrou.api.participant.strategy
 
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
-import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 
 interface MethodDifference {
-    val participant: Participant
+    val participantId: ParticipantId
 
-    data class MethodAdded(override val participant: Participant, val addedMethod: GrantedMethod): MethodDifference
-    data class MethodRemoved(override val participant: Participant, val removedMethod: GrantedMethod): MethodDifference
+    data class Granted(override val participantId: ParticipantId, val grantedMethod: GrantedMethod): MethodDifference
+    data class Removed(override val participantId: ParticipantId, val removedMethod: GrantedMethod): MethodDifference
 }

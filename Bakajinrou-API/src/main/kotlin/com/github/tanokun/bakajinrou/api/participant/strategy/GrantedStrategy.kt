@@ -1,11 +1,11 @@
 package com.github.tanokun.bakajinrou.api.participant.strategy
 
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
-import com.github.tanokun.bakajinrou.api.method.ProtectiveMethod
-import java.util.*
+import com.github.tanokun.bakajinrou.api.method.MethodId
+import com.github.tanokun.bakajinrou.api.protect.method.ProtectiveMethod
 
 data class GrantedStrategy(
-    internal val strategies: Map<UUID, GrantedMethod>,
+    internal val strategies: Map<MethodId, GrantedMethod>,
 ) {
     /**
      * 手段を参加者に付与します。既に所持する手段は持つ取得することができません。
@@ -15,9 +15,9 @@ data class GrantedStrategy(
      * @throws IllegalArgumentException 重複した手段を追加する場合
      */
     fun grant(method: GrantedMethod): GrantedStrategy {
-        if (strategies.contains(method.uniqueId)) throw IllegalArgumentException("すでに所持している手段です。")
+        if (strategies.contains(method.methodId)) throw IllegalArgumentException("すでに所持している手段です。(methodId: ${method.methodId})")
 
-        return this.copy(strategies = strategies + (method.uniqueId to method))
+        return this.copy(strategies = strategies + (method.methodId to method))
     }
 
     /**
@@ -28,23 +28,21 @@ data class GrantedStrategy(
      * @throws IllegalArgumentException 存在しない手段を剥奪する場合
      */
     fun remove(method: GrantedMethod): GrantedStrategy {
-        if (strategies.contains(method.uniqueId)) throw IllegalArgumentException("所有していない手段です。")
+        if (!strategies.contains(method.methodId)) throw IllegalArgumentException("所有していない手段です。(methodId: ${method.methodId})")
 
-        return this.copy(strategies = strategies - method.uniqueId)
+        return this.copy(strategies = strategies - method.methodId)
     }
 
     /**
-     * @param uniqueId 取得したい手段のUUID
+     * @param methodId 取得したい手段のId
      *
      * @return 対応する手段
      */
-    fun getMethod(uniqueId: UUID): GrantedMethod? = strategies[uniqueId]
+    fun getMethod(methodId: MethodId): GrantedMethod? = strategies[methodId]
 
     /**
      * 呼び出し時点で、防御可能な手段を取得します。
      * Listのインデックスが若い順に使用優先度が高いです。
-     *
-     * @param holder 所有者
      *
      * @return 防御可能な手段
      */

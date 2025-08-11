@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.infrastructure.template
 
-import com.github.tanokun.bakajinrou.plugin.setting.template.DistributionTemplates
+import com.github.tanokun.bakajinrou.plugin.common.setting.template.DistributionTemplates
 import kotlinx.serialization.json.Json
 import org.bukkit.plugin.Plugin
 import java.io.File

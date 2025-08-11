@@ -1,15 +1,16 @@
 package com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
-import com.github.tanokun.bakajinrou.api.ability.fortune.FakeFortuneAbility
+import com.github.tanokun.bakajinrou.api.ability.fortune.FakeDivineAbility
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
-import com.github.tanokun.bakajinrou.api.translate.TranslationKeys
+import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedReason
+import com.github.tanokun.bakajinrou.api.translate.PrefixKeys
 
 object IdiotAsFortunePosition: IdiotPosition(
-    realKey = TranslationKeys.Prefix.Citizens.Mystic.FORTUNE,
-    idiotKey = TranslationKeys.Prefix.Citizens.Idiot.FORTUNE
+    realKey =  PrefixKeys.Idiot.FORTUNE,
+    fakeKey =  PrefixKeys.Mystic.FORTUNE
 ) {
-    override fun inherentMethods(game: JinrouGame): List<GrantedMethod> {
-        return listOf(FakeFortuneAbility(game))
+
+    override fun inherentMethods(): List<GrantedMethod> {
+        return listOf(FakeDivineAbility(reason = GrantedReason.INITIALIZE))
     }
 }

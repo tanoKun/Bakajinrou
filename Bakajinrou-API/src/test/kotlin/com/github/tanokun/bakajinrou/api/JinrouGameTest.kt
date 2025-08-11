@@ -1,45 +1,52 @@
 package com.github.tanokun.bakajinrou.api
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.ParticipantDifference
 import com.github.tanokun.bakajinrou.api.participant.all
+import com.github.tanokun.bakajinrou.api.participant.asParticipantId
+import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.util.*
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class JinrouGameTest {
-    private val testDefaultDispatcher = StandardTestDispatcher()
+    private val testDefaultDispatcher = UnconfinedTestDispatcher()
     private val testScope = CoroutineScope(testDefaultDispatcher)
 
     @Test
-    fun observeParticipantsTest() = runTest {
-        val participantA1 = Participant(UUID.randomUUID(), mockk(), mockk())
+    @DisplayName("変更者のみ通知する")
+    fun observeParticipantsTest() = runTest(UnconfinedTestDispatcher()) {
+        val participantA1 = Participant(UUID.randomUUID().asParticipantId(), mockk(), mockk())
         val participantA2 = participantA1.copy(state = ParticipantStates.DEAD)
-        val participantB = Participant(UUID.randomUUID(), mockk(), mockk())
-        val participantC = Participant(UUID.randomUUID(), mockk(), mockk())
+        val participantB = Participant(UUID.randomUUID().asParticipantId(), mockk(), mockk())
+        val participantC = Participant(UUID.randomUUID().asParticipantId(), mockk(), mockk())
 
-        val jinrouGame = JinrouGame(listOf(participantA1, participantB).all())
-        val emitted = mutableListOf<Participant>()
+        val jinrouGame = JinrouGame(UpdateMutexProvider(), listOf(participantA1, participantB).all())
+        val emitted = mutableListOf<ParticipantDifference>()
 
-        jinrouGame.observeParticipants(testScope).onEach {
-            emitted.add(it)
-        }.launchIn(testScope)
+        testScope.launch {
+            jinrouGame.observeParticipants(this).collect {
+                emitted.add(it)
+            }
+        }
 
-        jinrouGame.updateParticipants(listOf(participantA1, participantB))
+        jinrouGame.updateParticipant(participantA1.participantId) { current -> current }
+        jinrouGame.updateParticipant(participantB.participantId) { current -> current }
 
-        testDefaultDispatcher.scheduler.advanceUntilIdle()
-        assertEquals(listOf<Participant>(), emitted)
+        emitted shouldBe listOf()
 
         emitted.clear()
 
-        jinrouGame.updateParticipants(listOf(participantA2, participantB, participantC))
+        jinrouGame.updateParticipant(participantA1.participantId) { current -> participantA2 }
+        jinrouGame.addParticipant(participantC)
 
-        testDefaultDispatcher.scheduler.advanceUntilIdle()
-        assertEquals(listOf(participantA2, participantC), emitted)
+        emitted shouldBe listOf(ParticipantDifference(participantA1, participantA2), ParticipantDifference(null, participantC))
     }
 }

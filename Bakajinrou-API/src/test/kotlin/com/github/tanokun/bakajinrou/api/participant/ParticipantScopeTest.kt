@@ -3,6 +3,9 @@ package com.github.tanokun.bakajinrou.api.participant
 import com.github.tanokun.bakajinrou.api.ParticipantStates
 import com.github.tanokun.bakajinrou.api.participant.position.SpectatorPosition
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizensPosition
+import com.github.tanokun.bakajinrou.api.participant.position.isCitizens
+import com.github.tanokun.bakajinrou.api.participant.position.isMadman
+import com.github.tanokun.bakajinrou.api.participant.position.isWolf
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import io.mockk.mockk
@@ -12,10 +15,10 @@ import org.junit.jupiter.api.Test
 import java.util.*
 
 class ParticipantScopeTest {
-    private val wolf = Participant(UUID.randomUUID(), mockk<WolfPosition>(), mockk(), ParticipantStates.ALIVE)
-    private val madman = Participant(UUID.randomUUID(), mockk<MadmanPosition>(), mockk(), ParticipantStates.ALIVE)
-    private val citizen = Participant(UUID.randomUUID(), mockk<CitizensPosition>(), mockk(), ParticipantStates.ALIVE)
-    private val spectator = Participant(UUID.randomUUID(), mockk<SpectatorPosition>(), mockk(), ParticipantStates.ALIVE)
+    private val wolf = Participant(UUID.randomUUID().asParticipantId(), mockk<WolfPosition>(), mockk(), ParticipantStates.ALIVE)
+    private val madman = Participant(UUID.randomUUID().asParticipantId(), mockk<MadmanPosition>(), mockk(), ParticipantStates.ALIVE)
+    private val citizen = Participant(UUID.randomUUID().asParticipantId(), mockk<CitizensPosition>(), mockk(), ParticipantStates.ALIVE)
+    private val spectator = Participant(UUID.randomUUID().asParticipantId(), mockk<SpectatorPosition>(), mockk(), ParticipantStates.ALIVE)
 
     private val all = ParticipantScope.All(setOf(wolf, madman, citizen, spectator))
 
