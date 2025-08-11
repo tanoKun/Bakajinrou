@@ -56,7 +56,7 @@ class HandleGameCommand(gameSettings: GameSettings, translator: JinrouTranslator
                     is GameBuildResult.SucceedCreation -> {
                         sender.info("ゲームを開始します...")
 
-                        result.jinrouGame to result.gameSession
+                        result.game to result.gameSession
                     }
                 }
 

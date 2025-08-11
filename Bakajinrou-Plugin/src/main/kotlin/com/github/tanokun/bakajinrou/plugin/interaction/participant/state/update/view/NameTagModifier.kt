@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.participant.state.update.view
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.plugin.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import io.papermc.paper.adventure.PaperAdventure
 import net.kyori.adventure.text.Component
