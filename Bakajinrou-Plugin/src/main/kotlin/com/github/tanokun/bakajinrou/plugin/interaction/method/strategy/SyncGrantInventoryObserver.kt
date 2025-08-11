@@ -9,7 +9,7 @@ import com.github.tanokun.bakajinrou.game.crafting.Crafting
 import com.github.tanokun.bakajinrou.game.crafting.CraftingInfo
 import com.github.tanokun.bakajinrou.game.crafting.CraftingStyle
 import com.github.tanokun.bakajinrou.game.logger.DebugLogger
-import com.github.tanokun.bakajinrou.plugin.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
@@ -30,7 +30,7 @@ import kotlin.time.Duration.Companion.seconds
  * - 同期はサスペンドで行われ、オンライン状態になるまで待機します。
  * - 不正なクラフトアイテムの場合、タイムアウトする場合があります。
  */
-abstract class GrantSyncInventoryObserver(
+abstract class SyncGrantInventoryObserver(
     private val grantedStrategiesPublisher: GrantedStrategiesPublisher,
     private val mainScope: CoroutineScope,
     private val playerProvider: BukkitPlayerProvider,

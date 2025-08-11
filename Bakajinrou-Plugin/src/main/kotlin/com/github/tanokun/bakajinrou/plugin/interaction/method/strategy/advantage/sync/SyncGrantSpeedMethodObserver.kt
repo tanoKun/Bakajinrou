@@ -1,14 +1,14 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.advantage.grant.observe
+package com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.advantage.sync
 
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
 import com.github.tanokun.bakajinrou.api.translate.MethodAssetKeys
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
 import com.github.tanokun.bakajinrou.game.logger.DebugLogger
-import com.github.tanokun.bakajinrou.plugin.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item.ItemViewer.createBasicItem
+import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.formatter.toTick
-import com.github.tanokun.bakajinrou.plugin.interaction.method.adapter.ItemViewer.createBasicItem
-import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.GrantSyncInventoryObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.SyncGrantInventoryObserver
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import kotlinx.coroutines.CoroutineScope
 import org.bukkit.Color
@@ -20,18 +20,18 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import kotlin.time.Duration.Companion.seconds
 
-class AddSyncInvisibilityMethodObserver(
+class SyncGrantSpeedMethodObserver(
     grantedStrategiesPublisher: GrantedStrategiesPublisher,
     mainScope: CoroutineScope,
     playerProvider: BukkitPlayerProvider,
     crafting: Crafting,
     logger: DebugLogger,
     private val translator: JinrouTranslator,
-): GrantSyncInventoryObserver(grantedStrategiesPublisher, mainScope, playerProvider, crafting, logger, MethodAssetKeys.Advantage.INVISIBILITY) {
+): SyncGrantInventoryObserver(grantedStrategiesPublisher, mainScope, playerProvider, crafting, logger, MethodAssetKeys.Advantage.SPEED) {
     private val effectTime = 30.seconds
 
     override fun createItem(player: Player, add: MethodDifference.Granted): ItemStack {
-        val item = createBasicItem(Material.POTION,
+        val item = createBasicItem(Material.SPLASH_POTION,
             isGlowing = false,
             isVisible = true,
             method = add.grantedMethod,
@@ -41,9 +41,9 @@ class AddSyncInvisibilityMethodObserver(
 
         item.editMeta {
             it as PotionMeta
-            it.color = Color.fromRGB(0x7F8392)
+            it.color = Color.fromRGB(0xCDFFF3)
             it.addCustomEffect(
-                PotionEffect(PotionEffectType.INVISIBILITY, effectTime.toTick(), 1, false, true),
+                PotionEffect(PotionEffectType.SPEED, effectTime.toTick(), 2, false, true),
                 true
             )
         }

@@ -1,11 +1,11 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.remove.observe
+package com.github.tanokun.bakajinrou.plugin.interaction.method.strategy
 
 import com.github.tanokun.bakajinrou.api.observer.Observer
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
 import com.github.tanokun.bakajinrou.game.logger.DebugLogger
-import com.github.tanokun.bakajinrou.plugin.BukkitPlayerProvider
-import com.github.tanokun.bakajinrou.plugin.interaction.method.adapter.ItemPersistent.getRawUuid
+import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item.ItemPersistent.getRawUuid
+import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.filterIsInstance
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
  * - 同期はサスペンドで行われ、オンライン状態になるまで待機します。
  * - 不正なクラフトアイテムの場合、タイムアウトする場合があります。
  */
-class RemoveSyncInventoryObserver(
+class SyncRemoveInventoryObserver(
     private val grantedStrategiesPublisher: GrantedStrategiesPublisher,
     private val mainScope: CoroutineScope,
     private val playerProvider: BukkitPlayerProvider,
@@ -51,7 +51,7 @@ class RemoveSyncInventoryObserver(
                 .firstOrNull { it?.getRawUuid() == methodId.uniqueId }
 
             remove?.let { player.inventory.remove(it) }
-            
+
         }
     }
 }
