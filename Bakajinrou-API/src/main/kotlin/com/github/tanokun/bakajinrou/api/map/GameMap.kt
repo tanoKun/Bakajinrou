@@ -9,5 +9,4 @@ data class GameMap(
     val spawnPoint: PointLocation,
     val lobbyPoint: PointLocation,
     val startTime: Duration,
-    val delayToGiveQuartz: Duration
 )
