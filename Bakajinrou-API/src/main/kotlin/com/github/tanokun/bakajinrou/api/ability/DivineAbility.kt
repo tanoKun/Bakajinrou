@@ -5,7 +5,7 @@ import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.translate.MethodAssetKeys
 
 /**
- * 能力 の一種である **占い** を表す抽象クラス。
+ * 能力 の一種である **占い** を表す抽象クラス
  *
  * 参加者を占い、「人狼」「妖狐」「市民」のいずれかを判定します。
  * 他の能力や手段と異なり、途中で付与されることはなく、通常は役職に紐づいています。

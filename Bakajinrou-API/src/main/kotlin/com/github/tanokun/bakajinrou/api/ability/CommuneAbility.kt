@@ -7,7 +7,7 @@ import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.translate.MethodAssetKeys
 
 /**
- * 能力 の一種である **霊媒** を表す抽象クラス。
+ * 能力 の一種である **霊媒** を表す抽象クラス
  *
  * - 死亡している参加者を霊媒し、「人狼」「妖狐」「市民」を判定します。
  * - 実装クラスで [commune] を具体化し、判定ロジックを提供します。
