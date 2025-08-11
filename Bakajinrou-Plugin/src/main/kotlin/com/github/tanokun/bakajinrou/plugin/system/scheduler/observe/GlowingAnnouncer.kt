@@ -10,7 +10,7 @@ import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.ScheduleState
 import com.github.tanokun.bakajinrou.game.scheduler.every
 import com.github.tanokun.bakajinrou.game.scheduler.moment
-import com.github.tanokun.bakajinrou.plugin.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.formatter.toTick
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
@@ -25,7 +25,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class GlowingAnnouncer(
     private val scheduler: GameScheduler,
-    private val jinrouGame: JinrouGame,
+    private val game: JinrouGame,
     private val translator: JinrouTranslator,
     private val mainScope: CoroutineScope,
     private val playerProvider: BukkitPlayerProvider
@@ -72,7 +72,7 @@ class GlowingAnnouncer(
         scheduler.observe(mainScope)
             .moment(7.minutes)
             .collect { state ->
-                announceGlowing(jinrouGame.getCurrentParticipants())
+                announceGlowing(game.getCurrentParticipants())
             }
 
         scheduler.observe(mainScope)
@@ -80,7 +80,7 @@ class GlowingAnnouncer(
             .filter { it.remainingTime in 0.seconds..5.minutes }
             .every(40.seconds)
             .collect { state ->
-                glowCitizens(jinrouGame.getCurrentParticipants().excludeSpectators(), isInclude = state.remainingTime > 3.minutes)
+                glowCitizens(game.getCurrentParticipants().excludeSpectators(), isInclude = state.remainingTime > 3.minutes)
             }
     }
 }

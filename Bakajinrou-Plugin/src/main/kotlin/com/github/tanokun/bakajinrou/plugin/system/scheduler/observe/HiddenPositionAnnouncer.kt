@@ -5,7 +5,7 @@ import com.github.tanokun.bakajinrou.api.observer.Observer
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.moment
-import com.github.tanokun.bakajinrou.plugin.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.formatter.ParticipantsFormatter
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
@@ -15,7 +15,7 @@ import kotlin.time.Duration.Companion.minutes
 
 class HiddenPositionAnnouncer(
     private val scheduler: GameScheduler,
-    private val jinrouGame: JinrouGame,
+    private val game: JinrouGame,
     private val translator: JinrouTranslator,
     private val mainScope: CoroutineScope,
     private val playerProvider: BukkitPlayerProvider
@@ -60,13 +60,13 @@ class HiddenPositionAnnouncer(
         scheduler.observe(mainScope)
             .moment(3.minutes)
             .collect { state ->
-                reveal(jinrouGame.getCurrentParticipants())
+                reveal(game.getCurrentParticipants())
             }
 
         scheduler.observe(mainScope)
             .moment(5.minutes)
             .collect { state ->
-                announceRevelation(jinrouGame.getCurrentParticipants())
+                announceRevelation(game.getCurrentParticipants())
             }
     }
 }

@@ -128,6 +128,6 @@ class GameSettings(private val plugin: Plugin) {
 sealed interface GameBuildResult {
     object NotFoundSettingMap: GameBuildResult
     object IllegalSelectedPositions: GameBuildResult
-    class SucceedCreation(val jinrouGame: JinrouGame, val gameSession: JinrouGameSession): GameBuildResult
+    class SucceedCreation(val game: JinrouGame, val gameSession: JinrouGameSession): GameBuildResult
 }
 

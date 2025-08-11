@@ -7,7 +7,7 @@ import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.every
-import com.github.tanokun.bakajinrou.plugin.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.bukkit.Material
@@ -16,7 +16,7 @@ import kotlin.time.Duration.Companion.minutes
 
 class QuartzDistribution(
     private val scheduler: GameScheduler,
-    private val jinrouGame: JinrouGame,
+    private val game: JinrouGame,
     private val mainScope: CoroutineScope,
     private val playerProvider: BukkitPlayerProvider
 ): Observer {
@@ -48,7 +48,7 @@ class QuartzDistribution(
         scheduler.observe(mainScope)
             .every(2.minutes)
             .collect { state ->
-                distributeQuartz(jinrouGame.getCurrentParticipants().excludeSpectators())
+                distributeQuartz(game.getCurrentParticipants().excludeSpectators())
             }
     }
 }

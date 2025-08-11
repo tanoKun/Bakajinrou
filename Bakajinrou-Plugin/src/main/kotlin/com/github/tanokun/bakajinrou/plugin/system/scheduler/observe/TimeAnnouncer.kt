@@ -5,7 +5,7 @@ import com.github.tanokun.bakajinrou.api.observer.Observer
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.every
-import com.github.tanokun.bakajinrou.plugin.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +16,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class TimeAnnouncer(
     private val scheduler: GameScheduler,
-    private val jinrouGame: JinrouGame,
+    private val game: JinrouGame,
     private val mainScope: CoroutineScope,
     private val playerProvider: BukkitPlayerProvider,
     private val translator: JinrouTranslator
@@ -52,7 +52,7 @@ class TimeAnnouncer(
     }
 
     private fun showRemainingTimeToAll(passedTime: Duration) {
-        jinrouGame.getCurrentParticipants()
+        game.getCurrentParticipants()
             .map { it.participantId }
             .forEach { showRemainingTimeActionBar(it, passedTime) }
     }

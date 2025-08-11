@@ -17,41 +17,48 @@ import com.github.tanokun.bakajinrou.game.crafting.Crafting
 import com.github.tanokun.bakajinrou.game.logger.DebugLogger
 import com.github.tanokun.bakajinrou.game.logger.GameLogger
 import com.github.tanokun.bakajinrou.game.method.transfer.TransferMethod
-import com.github.tanokun.bakajinrou.game.participant.observer.initialization.InherentMethodsInitializer
+import com.github.tanokun.bakajinrou.game.participant.initialization.InherentMethodsInitializer
+import com.github.tanokun.bakajinrou.game.protect.ProtectVerificatorProvider
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
-import com.github.tanokun.bakajinrou.plugin.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.adapter.protect.BukkitProtectVerificatorProvider
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleListener
 import com.github.tanokun.bakajinrou.plugin.common.setting.RequestedPositions
-import com.github.tanokun.bakajinrou.plugin.interaction.method.ability.observe.CommuneObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.method.ability.observe.ProtectObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.method.ability.observe.TriggerUsingAbility
-import com.github.tanokun.bakajinrou.plugin.interaction.method.ability.observe.fortune.DivineObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.method.attack.listen.OnAttackByBowEventListener
-import com.github.tanokun.bakajinrou.plugin.interaction.method.attack.listen.OnAttackByPotionEventListener
-import com.github.tanokun.bakajinrou.plugin.interaction.method.attack.listen.OnAttackBySwordEventListener
-import com.github.tanokun.bakajinrou.plugin.interaction.method.craft.listen.OnCraftEventListener
-import com.github.tanokun.bakajinrou.plugin.interaction.method.hidden.listener.HiddenItemListener
-import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.ability.grant.observe.AddSyncCommuneAbilityObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.ability.grant.observe.AddSyncDivineAbilityObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.ability.grant.observe.AddSyncProtectAbilityObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.advantage.grant.observe.AddSyncExchangeMethodObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.advantage.grant.observe.AddSyncInvisibilityMethodObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.advantage.grant.observe.AddSyncSpeedMethodObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.attack.grant.observe.AddSyncArrowMethodObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.attack.grant.observe.AddSyncDamagePotionMethodObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.attack.grant.observe.AddSyncSwordMethodObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.protective.grant.observe.AddSyncFakeMethodObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.protective.grant.observe.AddSyncResistanceMethodObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.protective.grant.observe.AddSyncShieldMethodObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.protective.grant.observe.AddSyncTotemMethodObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.remove.observe.RemoveSyncInventoryObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.method.transfer.listen.TransferMethodListener
-import com.github.tanokun.bakajinrou.plugin.interaction.participant.chat.listen.ParticipantChatEventListener
-import com.github.tanokun.bakajinrou.plugin.interaction.participant.initialization.observe.WolfInitializer
+import com.github.tanokun.bakajinrou.plugin.interaction.method.ability.use.ProtectObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.ability.use.TriggerUsingAbility
+import com.github.tanokun.bakajinrou.plugin.interaction.method.ability.use.fortune.FoxDivineObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.ability.use.fortune.UsedDivineObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.ability.use.medium.UsedCommuneObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.attack.AttackByBowListener
+import com.github.tanokun.bakajinrou.plugin.interaction.method.attack.AttackByPotionListener
+import com.github.tanokun.bakajinrou.plugin.interaction.method.attack.AttackBySwordListener
+import com.github.tanokun.bakajinrou.plugin.interaction.method.attack.consume.OnAttackWithResistanceObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.attack.consume.OnAttackWithShieldObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.attack.consume.OnAttackWithTotemObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.craft.OnCraftEventListener
+import com.github.tanokun.bakajinrou.plugin.interaction.method.hidden.HiddenItemListener
+import com.github.tanokun.bakajinrou.plugin.interaction.method.resistance.activate.UseResistancePotion
+import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.SyncRemoveInventoryObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.ability.sync.SyncGrantCommuneAbilityObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.ability.sync.SyncGrantDivineAbilityObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.ability.sync.SyncGrantProtectAbilityObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.advantage.sync.SyncGrantExchangeMethodObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.advantage.sync.SyncGrantInvisibilityMethodObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.advantage.sync.SyncGrantSpeedMethodObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.attack.sync.SyncGrantArrowMethodObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.attack.sync.SyncGrantDamagePotionMethodObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.attack.sync.SyncGrantSwordMethodObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.protective.sync.SyncGrantFakeMethodObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.protective.sync.SyncGrantResistanceMethodObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.protective.sync.SyncGrantShieldMethodObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.protective.sync.SyncGrantTotemMethodObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.method.transfer.TransferMethodListener
+import com.github.tanokun.bakajinrou.plugin.interaction.participant.chat.ParticipantChatEventListener
+import com.github.tanokun.bakajinrou.plugin.interaction.participant.initialization.WolfInitializer
+import com.github.tanokun.bakajinrou.plugin.interaction.participant.state.dead.DeathConfirmedObserver
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.state.dead.body.BukkitBodyHandler
-import com.github.tanokun.bakajinrou.plugin.interaction.participant.state.dead.observe.DeathConfirmedObserver
-import com.github.tanokun.bakajinrou.plugin.interaction.participant.state.update.listen.TabListPacketListener
+import com.github.tanokun.bakajinrou.plugin.interaction.participant.state.update.TabListPacketListener
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.state.update.view.TabListModifier
 import com.github.tanokun.bakajinrou.plugin.logger.JinrouLogger
 import com.github.tanokun.bakajinrou.plugin.system.game.finish.observe.CommonGameFinisher
@@ -82,7 +89,7 @@ class GameBuilderDI(plugin: Plugin) {
         singleOf(ProtocolLibrary::getProtocolManager)
         singleOf(Bukkit::getServer)
         singleOf(Bukkit::getScheduler)
-        singleOf<GameLogger>(::JinrouLogger)
+        singleOf(::JinrouLogger) bind GameLogger::class
         singleOf(::DebugLogger)
         singleOf(::BukkitPlayerProvider)
         single { ChatIntegrity }
@@ -102,8 +109,9 @@ class GameBuilderDI(plugin: Plugin) {
             scopedOf(::DeathConfirmedObserver) bind Observer::class
 
             //ability
-            scopedOf(::CommuneObserver) bind Observer::class
-            scopedOf(::DivineObserver) bind Observer::class
+            scopedOf(::UsedDivineObserver) bind Observer::class
+            scopedOf(::FoxDivineObserver) bind Observer::class
+            scopedOf(::UsedCommuneObserver) bind Observer::class
             scopedOf(::ProtectObserver) bind Observer::class
 
             scopedOf(::TriggerUsingAbility) bind Observer::class
@@ -114,24 +122,29 @@ class GameBuilderDI(plugin: Plugin) {
             scopedOf(::WolfInitializer) bind Observer::class
 
             // 手段 -> Bukkitのアイテム
-            scopedOf(::AddSyncCommuneAbilityObserver) bind Observer::class
-            scopedOf(::AddSyncDivineAbilityObserver) bind Observer::class
-            scopedOf(::AddSyncProtectAbilityObserver) bind Observer::class
+            scopedOf(::SyncGrantCommuneAbilityObserver) bind Observer::class
+            scopedOf(::SyncGrantDivineAbilityObserver) bind Observer::class
+            scopedOf(::SyncGrantProtectAbilityObserver) bind Observer::class
 
-            scopedOf(::AddSyncExchangeMethodObserver) bind Observer::class
-            scopedOf(::AddSyncInvisibilityMethodObserver) bind Observer::class
-            scopedOf(::AddSyncSpeedMethodObserver) bind Observer::class
+            scopedOf(::SyncGrantExchangeMethodObserver) bind Observer::class
+            scopedOf(::SyncGrantInvisibilityMethodObserver) bind Observer::class
+            scopedOf(::SyncGrantSpeedMethodObserver) bind Observer::class
 
-            scopedOf(::AddSyncArrowMethodObserver) bind Observer::class
-            scopedOf(::AddSyncDamagePotionMethodObserver) bind Observer::class
-            scopedOf(::AddSyncSwordMethodObserver) bind Observer::class
+            scopedOf(::SyncGrantArrowMethodObserver) bind Observer::class
+            scopedOf(::SyncGrantDamagePotionMethodObserver) bind Observer::class
+            scopedOf(::SyncGrantSwordMethodObserver) bind Observer::class
 
-            scopedOf(::AddSyncFakeMethodObserver) bind Observer::class
-            scopedOf(::AddSyncResistanceMethodObserver) bind Observer::class
-            scopedOf(::AddSyncShieldMethodObserver) bind Observer::class
-            scopedOf(::AddSyncTotemMethodObserver) bind Observer::class
+            scopedOf(::SyncGrantFakeMethodObserver) bind Observer::class
+            scopedOf(::SyncGrantResistanceMethodObserver) bind Observer::class
+            scopedOf(::SyncGrantShieldMethodObserver) bind Observer::class
+            scopedOf(::SyncGrantTotemMethodObserver) bind Observer::class
 
-            scopedOf(::RemoveSyncInventoryObserver) bind Observer::class
+            scopedOf(::SyncRemoveInventoryObserver) bind Observer::class
+
+            //攻撃系
+            scopedOf(::OnAttackWithTotemObserver) bind Observer::class
+            scopedOf(::OnAttackWithResistanceObserver) bind Observer::class
+            scopedOf(::OnAttackWithShieldObserver) bind Observer::class
 //----------------------------------------------------------------------------------------------------------------------
             // 最上位監視
             scoped { CommonGameFinisher(get(), get(), get(), topScope) } bind Observer::class
@@ -143,14 +156,15 @@ class GameBuilderDI(plugin: Plugin) {
         scope<GameComponentSession> {
             scopedOf(::BindingListeners) onClose { it?.close() }
 
-            scopedOf(::OnAttackBySwordEventListener) bind LifecycleListener::class
-            scopedOf(::OnAttackByBowEventListener) bind LifecycleListener::class
-            scopedOf(::OnAttackByPotionEventListener) bind LifecycleListener::class
+            scopedOf(::AttackBySwordListener) bind LifecycleListener::class
+            scopedOf(::AttackByBowListener) bind LifecycleListener::class
+            scopedOf(::AttackByPotionListener) bind LifecycleListener::class
             scopedOf(::OnCraftEventListener) bind LifecycleListener::class
             scopedOf(::TabListPacketListener) bind LifecycleListener::class
             scopedOf(::ParticipantChatEventListener) bind LifecycleListener::class
             scopedOf(::HiddenItemListener) bind LifecycleListener::class
             scopedOf(::TransferMethodListener) bind LifecycleListener::class
+            scopedOf(::UseResistancePotion) bind LifecycleListener::class
         }
     }
 
@@ -164,6 +178,7 @@ class GameBuilderDI(plugin: Plugin) {
             scopedOf(::ProtectAbilityExecutor)
             scopedOf(::GrantedStrategiesPublisher)
             scopedOf(::BukkitBodyHandler) bind BodyHandler::class
+            scopedOf(::BukkitProtectVerificatorProvider) bind ProtectVerificatorProvider::class
         }
     }
 
