@@ -73,4 +73,4 @@
 実行中のゲームを強制終了します。
 
 ### パーミッション
-- `bakajinrou.command.gamesetting`
+- `bakajinrou.command.gamesetting`計思想と、そのメリットを誰にでも完璧に伝えることができます。
