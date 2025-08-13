@@ -8,8 +8,10 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.Plugin
+import org.koin.core.annotation.Single
 import kotlin.coroutines.resume
 
+@Single
 class BukkitPlayerProvider(private val plugin: Plugin) {
 
     fun getAllowNull(participant: Participant) = getAllowNull(participant.participantId)
@@ -35,4 +37,6 @@ class BukkitPlayerProvider(private val plugin: Plugin) {
             continuation.invokeOnCancellation { listener.unregisterAll() }
         }
     }
+
+    suspend fun waitPlayerOnline(participantId: ParticipantId, transaction: (Player) -> Unit) = transaction(waitPlayerOnline(participantId))
 }
