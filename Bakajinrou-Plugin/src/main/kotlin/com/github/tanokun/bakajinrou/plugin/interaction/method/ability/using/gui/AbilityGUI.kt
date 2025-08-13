@@ -15,11 +15,6 @@ import xyz.xenondevs.invui.window.Window
 
 /**
  * プレイヤーが使用可能な能力を対象参加者に対して選択するインターフェース提供します。
-
- * @param ability GUIで使用するアビリティ（使用者が誰かに対して使用できる能力）
- * @param user アビリティの使用者
- * @param participants 能力の使用対象になり得る候補一覧（観戦者を除外した生存者など）
- * @param method アビリティの使用方法（クリック時にどのように対象に能力を付与するかなど）
  */
 class AbilityGUI(
     private val translator: JinrouTranslator,
