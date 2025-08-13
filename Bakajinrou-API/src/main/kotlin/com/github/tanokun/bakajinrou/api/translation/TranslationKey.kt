@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.api.translate
+package com.github.tanokun.bakajinrou.api.translation
 
 private val VALID_KEY_REGEX = Regex("^[a-z]+(?:\\.[a-z]+)*$")
 

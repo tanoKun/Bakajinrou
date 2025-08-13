@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.api.translate
+package com.github.tanokun.bakajinrou.api.translation
 
 sealed class MethodAssetKeys(key: String): TranslationKey("method.$key") {
     class Attack private constructor(key: String) : MethodAssetKeys("attack.$key") { companion object {

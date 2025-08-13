@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.api.translate
+package com.github.tanokun.bakajinrou.api.translation
 
 open class PrefixKeys private constructor(key: String): TranslationKey("prefix.$key") {
     class Idiot private constructor(key: String) : PrefixKeys("idiot.$key") { companion object {
