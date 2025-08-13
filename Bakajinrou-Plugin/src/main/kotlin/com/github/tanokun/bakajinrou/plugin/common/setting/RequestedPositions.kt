@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.common.setting
 
-import com.github.tanokun.bakajinrou.api.translate.PrefixKeys
+import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 
 enum class RequestedPositions(val formatKey: PrefixKeys) {
     WOLF(PrefixKeys.WOLF),
