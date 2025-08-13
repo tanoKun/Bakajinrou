@@ -12,10 +12,16 @@ plugins {
     alias(libs.plugins.paper)
     alias(libs.plugins.shadow)
     alias(libs.plugins.paperweight)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
     jvmToolchain(22)
+}
+
+ksp {
+    arg("koin.ksp.options.displayGraph", "true")
+/*    arg("KOIN_CONFIG_CHECK","true")*/
 }
 
 repositories {
@@ -35,14 +41,14 @@ dependencies {
 
     compileOnly(libs.invui)
     implementation(libs.adventurekt)
+    implementation(libs.bundles.mccoroutine)
 
     implementation(kotlin("reflect"))
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)
 
-    implementation(libs.koin.core)
-
-    implementation(libs.bundles.mccoroutine)
+    implementation(libs.bundles.koin)
+    ksp(libs.koin.ksp.compiler)
 
     implementation(project(":Bakajinrou-API"))
     implementation(project(":Bakajinrou-Game"))

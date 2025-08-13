@@ -9,6 +9,12 @@ kotlin {
     jvmToolchain(22)
 }
 
+dependencies {
+    implementation(project("Bakajinrou-API"))
+    implementation(project("Bakajinrou-Game"))
+    implementation(project("Bakajinrou-Plugin"))
+}
+
 repositories {
     mavenCentral()
 }
