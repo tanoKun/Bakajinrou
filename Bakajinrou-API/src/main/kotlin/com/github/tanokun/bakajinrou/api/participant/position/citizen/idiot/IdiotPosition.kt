@@ -3,7 +3,7 @@ package com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizensPosition
 import com.github.tanokun.bakajinrou.api.participant.prefix.IdiotPrefix
 import com.github.tanokun.bakajinrou.api.participant.prefix.PrefixSource
-import com.github.tanokun.bakajinrou.api.translate.PrefixKeys
+import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 
 abstract class IdiotPosition(
     realKey:  PrefixKeys.Idiot,

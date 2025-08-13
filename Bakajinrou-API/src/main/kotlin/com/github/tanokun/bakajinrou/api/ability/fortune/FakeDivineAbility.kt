@@ -2,6 +2,7 @@ package com.github.tanokun.bakajinrou.api.ability.fortune
 
 import com.github.tanokun.bakajinrou.api.ability.DivineAbility
 import com.github.tanokun.bakajinrou.api.ability.ResultSource
+import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.method.MethodId
 import com.github.tanokun.bakajinrou.api.method.asMethodId
 import com.github.tanokun.bakajinrou.api.participant.Participant
@@ -25,4 +26,6 @@ data class FakeDivineAbility(
 
         return randomResult
     }
+
+    override fun asCrafted(): GrantedMethod = copy(reason = GrantedReason.CRAFTED)
 }
