@@ -1,11 +1,12 @@
-package com.github.tanokun.bakajinrou.plugin.system.game.finish.observe
+package com.github.tanokun.bakajinrou.plugin.system.game.finished.observing
 
 import com.github.tanokun.bakajinrou.api.WonInfo
 import com.github.tanokun.bakajinrou.api.map.GameMap
-import com.github.tanokun.bakajinrou.api.observer.Observer
+import com.github.tanokun.bakajinrou.api.observing.Observer
+import com.github.tanokun.bakajinrou.game.attacking.BodyHandler
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
-import com.github.tanokun.bakajinrou.plugin.system.game.launch.observe.asBukkit
+import com.github.tanokun.bakajinrou.plugin.system.game.launched.asBukkit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
@@ -23,13 +24,13 @@ import org.bukkit.GameMode
  * @property game 監視対象のゲームセッション
  * @property gameMap ゲームマップ情報
  * @property topScope このクラスの全てのコルーチンが動作する、上位のコルーチンスコープ
- *
  */
 class CommonGameFinisher(
     private val playerProvider: BukkitPlayerProvider,
     private val game: JinrouGameSession,
     private val gameMap: GameMap,
-    private val topScope: CoroutineScope
+    private val topScope: CoroutineScope,
+    private val bodyHandler: BodyHandler
 ): Observer {
     init {
         topScope.launch {
@@ -44,13 +45,17 @@ class CommonGameFinisher(
      *
      * @param wonInfo 勝利チームと、それに含まれる参加者の情報
      */
-    private fun atFinish(wonInfo: WonInfo) = wonInfo.participants.forEach { participant ->
-        topScope.launch {
-            val player = playerProvider.waitPlayerOnline(participant.participantId)
-            player.inventory.clear()
+    private fun atFinish(wonInfo: WonInfo) {
+        bodyHandler.deleteBodies()
 
-            player.gameMode = GameMode.ADVENTURE
-            player.teleport(gameMap.lobbyPoint.asBukkit())
+        wonInfo.participants.forEach { participant ->
+            topScope.launch {
+                val player = playerProvider.waitPlayerOnline(participant.participantId)
+                player.inventory.clear()
+
+                player.gameMode = GameMode.ADVENTURE
+                player.teleport(gameMap.lobbyPoint.asBukkit())
+            }
         }
     }
 }
