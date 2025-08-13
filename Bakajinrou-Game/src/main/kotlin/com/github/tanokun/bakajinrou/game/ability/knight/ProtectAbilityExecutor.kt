@@ -2,13 +2,15 @@ package com.github.tanokun.bakajinrou.game.ability.knight
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.ability.ProtectAbility
+import com.github.tanokun.bakajinrou.api.method.asMethodId
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
-import com.github.tanokun.bakajinrou.game.protect.ProtectVerificatorProvider
+import com.github.tanokun.bakajinrou.game.protection.ProtectVerificatorProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.shareIn
+import java.util.*
 
 class ProtectAbilityExecutor(private val game: JinrouGame, private val provider: ProtectVerificatorProvider) {
     private val _protect = MutableSharedFlow<GrantProtectResult>()
@@ -29,8 +31,9 @@ class ProtectAbilityExecutor(private val game: JinrouGame, private val provider:
 
         game.updateParticipant(knightId) { current -> current.removeMethod(ability) }
         game.updateParticipant(targetId) { current ->
+            val methodId = UUID.randomUUID().asMethodId()
             current.grantMethod(
-                ability.protect(provider.getTotemVerificator(targetId, ability.methodId))
+                ability.protect(provider.getTotemVerificator(targetId, methodId), methodId)
             )
         }
 
