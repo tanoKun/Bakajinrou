@@ -1,9 +1,10 @@
 package com.github.tanokun.bakajinrou.api.ability
 
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
-import com.github.tanokun.bakajinrou.api.protect.ProtectVerificator
-import com.github.tanokun.bakajinrou.api.protect.method.ProtectiveMethod
-import com.github.tanokun.bakajinrou.api.translate.MethodAssetKeys
+import com.github.tanokun.bakajinrou.api.method.MethodId
+import com.github.tanokun.bakajinrou.api.protection.ProtectVerificator
+import com.github.tanokun.bakajinrou.api.protection.method.ProtectiveMethod
+import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 
 /**
  * 能力(Ability)の一種であり、「騎士」のように他者を守る能力を表す抽象クラス
@@ -22,9 +23,11 @@ abstract class ProtectAbility: Ability {
      * この能力を行使した際に、加護として使用される 防御手段 を生成して取得します。
      *
      * @param verificator 防御手段が有効かどうかを検証するクラス
-     * @return 実際に防御を行うための[ProtectiveMethod]のインスタンス
+     * @param methodId 防御手段のMethodId
+     *
+     * @return 実際に防御を行うための[ProtectiveMethod] のインスタンス
      */
-    abstract fun protect(verificator: ProtectVerificator): ProtectiveMethod
+    abstract fun protect(verificator: ProtectVerificator, methodId: MethodId): ProtectiveMethod
 
     /**
      * この手段は譲渡不可能なため、このメソッドを呼び出すことはできません。
