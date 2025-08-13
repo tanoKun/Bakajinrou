@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.participant.state.update
+package com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.tab
 
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.ProtocolManager
@@ -9,13 +9,21 @@ import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleListener
 import com.github.tanokun.bakajinrou.plugin.common.listener.packet.LifecyclePacketListener
-import com.github.tanokun.bakajinrou.plugin.interaction.participant.state.update.view.TabListModifier
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
+import com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.tab.modifier.TabListModifier
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket
+import net.minecraft.world.level.GameType
+import org.bukkit.craftbukkit.CraftWorld
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.plugin.Plugin
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
 
-class TabListPacketListener(
+@Scoped(binds = [LifecycleListener::class])
+@Scope(value = GameComponents::class)
+class TabListHandler(
     plugin: Plugin,
     game: JinrouGame,
     protocolManager: ProtocolManager,
@@ -51,6 +59,23 @@ class TabListPacketListener(
         suspendedPlayers.addAll(players.map(Participant::participantId))
 
         if (players.isNotEmpty()) event.isCancelled = true
+    }
+
+    register(packet = PacketType.Play.Server.ENTITY_DESTROY, listenerPriority = ListenerPriority.LOW) { event, packet, receiver ->
+        val players = (event.player.world as CraftWorld).handle.players()
+        val playerIds = players.map { it.id }
+
+        val ints = packet.intLists.read(0)
+        val diff = ints
+            .filter { playerIds.contains(it) }
+            .filter { playerId ->
+                val player = players.first { it.id == playerId }
+                player.gameMode.gameModeForPlayer == GameType.SPECTATOR && player.gameMode.previousGameModeForPlayer != GameType.SPECTATOR
+            }
+
+        event.packet = packet.deepClone().apply {
+            intLists.write(0, ints - diff)
+        }
     }
 
     onCancellation {
