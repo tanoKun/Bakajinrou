@@ -1,10 +1,12 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.participant.state.dead
+package com.github.tanokun.bakajinrou.plugin.interaction.participant.dead
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
-import com.github.tanokun.bakajinrou.api.observer.Observer
+import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.game.attack.BodyHandler
+import com.github.tanokun.bakajinrou.game.attacking.BodyHandler
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
+import com.github.tanokun.bakajinrou.plugin.interaction.participant.dead.body.DisableHittingBody
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
@@ -15,13 +17,18 @@ import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.craftbukkit.entity.CraftPlayer
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
 import java.util.*
 
+@Scoped(binds = [Observer::class])
+@Scope(value = GameComponents::class)
 class DeathConfirmedObserver(
     private val game: JinrouGame,
     private val bodyHandler: BodyHandler,
     private val playerProvider: BukkitPlayerProvider,
-    mainScope: CoroutineScope,
+    private val mainScope: CoroutineScope,
+    private val disableHittingBody: DisableHittingBody,
 ): Observer {
     init {
         mainScope.launch {
@@ -33,10 +40,11 @@ class DeathConfirmedObserver(
     }
 
     private fun onDeath(dead: Participant) {
-        bodyHandler.showBodies(dead.participantId)
-
         val player = playerProvider.getAllowNull(dead) ?: return
 
+        bodyHandler.createBody(dead.participantId)
+        disableHittingBody.ghost(player as CraftPlayer)
+        player.inventory.clear()
         player.gameMode = GameMode.SPECTATOR
 
         val entries = Bukkit.getOnlinePlayers()
@@ -45,7 +53,7 @@ class DeathConfirmedObserver(
 
         if (entries.isEmpty()) return
 
-        (player as CraftPlayer).handle.connection.send(
+        player.handle.connection.send(
             ClientboundPlayerInfoUpdatePacket(
                 EnumSet.of(
                     ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME,
