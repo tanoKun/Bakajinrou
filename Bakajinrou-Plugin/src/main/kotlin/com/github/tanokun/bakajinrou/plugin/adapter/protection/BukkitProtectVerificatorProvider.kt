@@ -1,11 +1,16 @@
-package com.github.tanokun.bakajinrou.plugin.adapter.protect
+package com.github.tanokun.bakajinrou.plugin.adapter.protection
 
 import com.github.tanokun.bakajinrou.api.method.MethodId
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
-import com.github.tanokun.bakajinrou.api.protect.ProtectVerificator
-import com.github.tanokun.bakajinrou.game.protect.ProtectVerificatorProvider
+import com.github.tanokun.bakajinrou.api.protection.ProtectVerificator
+import com.github.tanokun.bakajinrou.game.protection.ProtectVerificatorProvider
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
 
+@Scoped(binds = [ProtectVerificatorProvider::class])
+@Scope(value = GameComponents::class)
 class BukkitProtectVerificatorProvider(private val playerProvider: BukkitPlayerProvider): ProtectVerificatorProvider {
     override fun getTotemVerificator(participantId: ParticipantId, methodId: MethodId): ProtectVerificator =
         TotemProtectVerificator(methodId, participantId, playerProvider)
