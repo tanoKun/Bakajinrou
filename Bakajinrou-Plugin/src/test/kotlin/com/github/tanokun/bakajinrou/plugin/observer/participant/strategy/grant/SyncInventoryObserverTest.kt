@@ -5,12 +5,12 @@ import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedReason
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
-import com.github.tanokun.bakajinrou.api.translate.MethodAssetKeys
+import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
 import com.github.tanokun.bakajinrou.game.crafting.CraftingInfo
 import com.github.tanokun.bakajinrou.game.crafting.CraftingStyle
-import com.github.tanokun.bakajinrou.plugin.BukkitPlayerProvider
-import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.GrantSyncInventoryObserver
+import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.SyncGrantInventoryObserver
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.every
@@ -50,7 +50,7 @@ class SyncInventoryObserverTest {
     private val testScope = CoroutineScope(testDispatcher)
 
 
-    inner class TestObserverSync(mainScope: CoroutineScope): GrantSyncInventoryObserver(
+    inner class TestObserverSync(mainScope: CoroutineScope): SyncGrantInventoryObserver(
         grantedStrategiesPublisherMock, mainScope, playerProviderMock, craftingMock, mockk(relaxed = true), assetKeyMock
     ) {
             override fun createItem(player: Player, add: MethodDifference.Granted): ItemStack { result = true; return mockk() }
@@ -72,11 +72,11 @@ class SyncInventoryObserverTest {
 
         val method = mockk<GrantedMethod> {
             every { assetKey } returns assetKeyMock
-            every { reason } returns GrantedReason.INITIALIZE
+            every { reason } returns GrantedReason.INITIALIZED
         }
         val add = MethodDifference.Granted(participantMock.participantId, method)
 
-        spyk<GrantSyncInventoryObserver>(TestObserverSync(testScope))
+        spyk<SyncGrantInventoryObserver>(TestObserverSync(testScope))
 
         flow.emit(add)
         testDispatcher.scheduler.advanceTimeBy(1.seconds)
@@ -102,12 +102,12 @@ class SyncInventoryObserverTest {
 
         val method = mockk<GrantedMethod> {
             every { assetKey } returns assetKeyMock
-            every { reason } returns GrantedReason.INITIALIZE
+            every { reason } returns GrantedReason.INITIALIZED
         }
         val add = MethodDifference.Granted(participantMock.participantId, method)
         val remove = MethodDifference.Removed(participantMock.participantId, method)
 
-        spyk<GrantSyncInventoryObserver>(TestObserverSync(testScope))
+        spyk<SyncGrantInventoryObserver>(TestObserverSync(testScope))
 
         flow.emit(add)
         testDispatcher.scheduler.advanceTimeBy(1.seconds)
@@ -144,18 +144,18 @@ class SyncInventoryObserverTest {
 
         val methodMock = mockk<GrantedMethod> {
             every { assetKey } returns assetKeyMock
-            every { reason } returns GrantedReason.CRAFTING
+            every { reason } returns GrantedReason.CRAFTED
         }
         val add = MethodDifference.Granted(participantMock.participantId, methodMock)
 
-        spyk<GrantSyncInventoryObserver>(TestObserverSync(testScope))
+        spyk<SyncGrantInventoryObserver>(TestObserverSync(testScope))
 
         diffFlow.emit(add)
         testDispatcher.scheduler.advanceTimeBy(1.seconds)
 
         result shouldBe false
 
-        craftingFlow.emit(CraftingInfo(participantMock, CraftingStyle.BULK, methodMock))
+        craftingFlow.emit(CraftingInfo(participantMock.participantId, CraftingStyle.BULK, methodMock))
         testDispatcher.scheduler.advanceTimeBy(1.seconds)
 
         result shouldBe true

@@ -33,7 +33,7 @@ class ParticipantStateObserverTest {
 
         val participantMock = Participant(uniqueId, mockk(), mockk(), mockk())
 
-        val jinrouGameMock = mockk<JinrouGame> {
+        val gameMock = mockk<JinrouGame> {
             every { getAllParticipants() } returns listOf(participantMock).all()
         }
 
@@ -46,7 +46,7 @@ class ParticipantStateObserverTest {
         every { Bukkit.getOnlinePlayers() } returns listOf()
 
         ParticipantStateObserver(
-            participants = jinrouGameMock.getAllParticipants(),
+            participants = gameMock.getAllParticipants(),
             controller = controllerMock,
             uiContext = testUIDispatcher,
             asyncContext = testDefaultDispatcher
