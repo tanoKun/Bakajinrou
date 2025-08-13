@@ -2,7 +2,7 @@ package com.github.tanokun.bakajinrou.api.ability
 
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.translate.MethodAssetKeys
+import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 
 /**
  * 能力 の一種である **占い** を表す抽象クラス
@@ -28,7 +28,18 @@ abstract class DivineAbility: Ability {
      */
     abstract fun divine(target: Participant): ResultSource
 
-    override fun asTransferred(): GrantedMethod = throw IllegalStateException("この手段は譲渡できません。")
+    /**
+     * この手段は譲渡不可能なため、このメソッドを呼び出すことはできません。
+     * 誤って呼び出された場合は常に[UnsupportedOperationException]をスローします。
+     *
+     * @throws UnsupportedOperationException 常にスローされます。
+     */
+    @Deprecated(
+        message = "ProtectAbility is not transferable.",
+        level = DeprecationLevel.ERROR
+    )
+    override fun asTransferred(): GrantedMethod = throw UnsupportedOperationException()
+
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

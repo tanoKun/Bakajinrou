@@ -4,7 +4,7 @@ import com.github.tanokun.bakajinrou.api.ability.medium.CommuneResultSource
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.method.MethodId
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.translate.MethodAssetKeys
+import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 
 /**
  * 能力 の一種である **霊媒** を表す抽象クラス
@@ -30,7 +30,18 @@ abstract class CommuneAbility: Ability {
      */
     abstract fun commune(target: Participant): CommuneResultSource
 
-    override fun asTransferred(): GrantedMethod = throw IllegalStateException("この手段は譲渡できません。")
+    /**
+     * この手段は譲渡不可能なため、このメソッドを呼び出すことはできません。
+     * 誤って呼び出された場合は常に[UnsupportedOperationException]をスローします。
+     *
+     * @throws UnsupportedOperationException 常にスローされます。
+     */
+    @Deprecated(
+        message = "ProtectAbility is not transferable.",
+        level = DeprecationLevel.ERROR
+    )
+    override fun asTransferred(): GrantedMethod = throw UnsupportedOperationException()
+
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
