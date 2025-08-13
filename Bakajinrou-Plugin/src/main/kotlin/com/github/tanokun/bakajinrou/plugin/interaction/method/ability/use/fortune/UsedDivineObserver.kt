@@ -1,20 +1,25 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.method.ability.use.fortune
 
-import com.github.tanokun.bakajinrou.api.observer.Observer
+import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.ability.fortune.DivineAbilityExecutor
 import com.github.tanokun.bakajinrou.game.ability.fortune.DivineResult
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 import net.kyori.adventure.text.Component
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
 
 /**
  * 占いを監視します。占い結果の表示を主な責務としています。
  */
+@Scoped(binds = [Observer::class])
+@Scope(value = GameComponents::class)
 class UsedDivineObserver(
     private val playerProvider: BukkitPlayerProvider,
     private val translator: JinrouTranslator,

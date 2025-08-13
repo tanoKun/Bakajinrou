@@ -5,7 +5,7 @@ import com.github.tanokun.bakajinrou.api.ability.Ability
 import com.github.tanokun.bakajinrou.api.ability.CommuneAbility
 import com.github.tanokun.bakajinrou.api.ability.DivineAbility
 import com.github.tanokun.bakajinrou.api.ability.ProtectAbility
-import com.github.tanokun.bakajinrou.api.observer.Observer
+import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
@@ -14,6 +14,7 @@ import com.github.tanokun.bakajinrou.game.ability.knight.ProtectAbilityExecutor
 import com.github.tanokun.bakajinrou.game.ability.medium.CommuneAbilityExecutor
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item.ItemPersistent.getMethodId
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListener
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.interaction.method.ability.use.gui.AbilityGUI
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
@@ -25,7 +26,11 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.plugin.Plugin
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
 
+@Scoped(binds = [Observer::class])
+@Scope(value = GameComponents::class)
 class TriggerUsingAbility(
     private val plugin: Plugin,
     private val grantedStrategiesPublisher: GrantedStrategiesPublisher,
