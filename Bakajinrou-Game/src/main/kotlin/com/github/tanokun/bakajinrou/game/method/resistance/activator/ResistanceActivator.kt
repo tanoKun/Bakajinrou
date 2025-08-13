@@ -2,8 +2,8 @@ package com.github.tanokun.bakajinrou.game.method.resistance.activator
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
-import com.github.tanokun.bakajinrou.api.protect.method.ResistanceMethod
-import com.github.tanokun.bakajinrou.game.protect.ProtectVerificatorProvider
+import com.github.tanokun.bakajinrou.api.protection.method.ResistanceMethod
+import com.github.tanokun.bakajinrou.game.protection.ProtectVerificatorProvider
 import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 
@@ -14,7 +14,8 @@ import kotlin.time.Duration.Companion.seconds
  * @property provider 防御手段の有効性を検証するインスタンスを提供するためのProvider
  */
 class ResistanceActivator(
-    private val game: JinrouGame, private val provider: ProtectVerificatorProvider
+    private val game: JinrouGame,
+    private val provider: ProtectVerificatorProvider
 ) {
 
     /**
@@ -34,7 +35,7 @@ class ResistanceActivator(
 
         delay(20.seconds)
 
-        if (game.getParticipant(participantId)?.hasGrantedMethod(method.methodId) != false) return
+        if (game.getParticipant(participantId)?.hasGrantedMethod(valid.methodId) == false) return
         game.updateParticipant(participantId) { current ->
             current.removeMethod(valid)
         }
