@@ -26,7 +26,15 @@ abstract class LifecyclePacketListener internal constructor(
     internal fun register(
         packet: PacketType, listenerPriority: ListenerPriority = ListenerPriority.NORMAL, callback: (PacketEvent, PacketContainer, Player) -> Unit
     ) {
-        val adapter = PacketAdapterObject(listenerPriority, packet, callback)
+        val adapter = PacketAdapterObject(listenerPriority, packet, callback = callback)
+        adapters.add(adapter)
+    }
+
+
+    internal fun register(
+        vararg packet: PacketType, listenerPriority: ListenerPriority = ListenerPriority.NORMAL, callback: (PacketEvent, PacketContainer, Player) -> Unit
+    ) {
+        val adapter = PacketAdapterObject(listenerPriority, *packet, callback = callback)
         adapters.add(adapter)
     }
 
@@ -35,16 +43,18 @@ abstract class LifecyclePacketListener internal constructor(
     }
 
     private inner class PacketAdapterObject(
-        listenerPriority: ListenerPriority, private val packetType: PacketType, private val callback: (PacketEvent, PacketContainer, Player) -> Unit
-    ) : PacketAdapter(plugin, listenerPriority, packetType) {
+        listenerPriority: ListenerPriority,
+        vararg val packetTypes: PacketType,
+        private val callback: (PacketEvent, PacketContainer, Player) -> Unit
+    ) : PacketAdapter(plugin, listenerPriority, *packetTypes) {
         override fun onPacketSending(event: PacketEvent) {
-            if (event.packetType != packetType) return
+            if (!packetTypes.contains(event.packetType)) return
 
             callback(event, event.packet, event.player)
         }
 
         override fun onPacketReceiving(event: PacketEvent) {
-            if (event.packetType != packetType) return
+            if (!packetTypes.contains(event.packetType)) return
 
             callback(event, event.packet, event.player)
         }
