@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.player.handle.command
+package com.github.tanokun.bakajinrou.plugin.interaction.player.handling.command
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
@@ -8,6 +8,7 @@ import com.github.tanokun.bakajinrou.plugin.common.setting.GameSettings
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.executors.CommandExecutor
+import org.bukkit.Bukkit
 
 /**
  * ゲームの開始・リセットを制御する `/start`, `/reset` コマンドを定義します。
@@ -41,6 +42,8 @@ class HandleGameCommand(gameSettings: GameSettings, translator: JinrouTranslator
                     sender.error("ゲームが行われています。")
                     return@CommandExecutor
                 }
+
+                Bukkit.getOnlinePlayers().forEach { it.playerListName(it.playerListName()) }
 
                 val (game, session) = when (val result = gameSettings.buildGameSession(translator)) {
                     GameBuildResult.IllegalSelectedPositions -> {
