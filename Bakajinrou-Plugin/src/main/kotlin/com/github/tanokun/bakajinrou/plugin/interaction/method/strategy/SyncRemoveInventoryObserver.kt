@@ -1,15 +1,18 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.method.strategy
 
-import com.github.tanokun.bakajinrou.api.observer.Observer
+import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
 import com.github.tanokun.bakajinrou.game.logger.DebugLogger
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item.ItemPersistent.getRawUuid
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
 
 /**
  * 特定の手段が付与されたときに、プレイヤーのインベントリと同期します。
@@ -22,6 +25,8 @@ import kotlinx.coroutines.launch
  * - 同期はサスペンドで行われ、オンライン状態になるまで待機します。
  * - 不正なクラフトアイテムの場合、タイムアウトする場合があります。
  */
+@Scoped(binds = [Observer::class])
+@Scope(value = GameComponents::class)
 class SyncRemoveInventoryObserver(
     private val grantedStrategiesPublisher: GrantedStrategiesPublisher,
     private val mainScope: CoroutineScope,
@@ -47,11 +52,8 @@ class SyncRemoveInventoryObserver(
             val player = playerProvider.waitPlayerOnline(remove.participantId)
             val methodId = remove.removedMethod.methodId
 
-            val remove = player.inventory
-                .firstOrNull { it?.getRawUuid() == methodId.uniqueId }
-
-            remove?.let { player.inventory.remove(it) }
-
+            val item = player.inventory.contents.firstOrNull { it?.getRawUuid() == methodId.uniqueId } ?: return@launch
+            player.inventory.removeItemAnySlot(item)
         }
     }
 }
