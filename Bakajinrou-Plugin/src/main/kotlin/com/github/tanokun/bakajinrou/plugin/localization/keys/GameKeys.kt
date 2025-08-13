@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.localization.keys
 
-import com.github.tanokun.bakajinrou.api.translate.TranslationKey
+import com.github.tanokun.bakajinrou.api.translation.TranslationKey
 
 sealed class GameKeys(key: String): TranslationKey("game.$key") {
     class Start private constructor(key: String): GameKeys("start.$key") { companion object {

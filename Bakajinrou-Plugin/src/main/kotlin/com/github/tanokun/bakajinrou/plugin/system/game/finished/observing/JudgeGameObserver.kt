@@ -1,16 +1,16 @@
-package com.github.tanokun.bakajinrou.plugin.system.game.finish.observe
+package com.github.tanokun.bakajinrou.plugin.system.game.finished.observing
 
 import com.github.tanokun.bakajinrou.api.WonInfo
-import com.github.tanokun.bakajinrou.api.observer.Observer
+import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.whenOvertime
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
-import com.github.tanokun.bakajinrou.plugin.system.game.finish.notifier.SystemFinishNotifier
-import com.github.tanokun.bakajinrou.plugin.system.game.finish.notifier.each.CitizenSideFinishNotifier
-import com.github.tanokun.bakajinrou.plugin.system.game.finish.notifier.each.FoxSideFinishNotifier
-import com.github.tanokun.bakajinrou.plugin.system.game.finish.notifier.each.WolfSideFinishNotifier
+import com.github.tanokun.bakajinrou.plugin.system.game.finished.notifier.SystemFinishNotifier
+import com.github.tanokun.bakajinrou.plugin.system.game.finished.notifier.each.CitizenSideFinishNotifier
+import com.github.tanokun.bakajinrou.plugin.system.game.finished.notifier.each.FoxSideFinishNotifier
+import com.github.tanokun.bakajinrou.plugin.system.game.finished.notifier.each.WolfSideFinishNotifier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
