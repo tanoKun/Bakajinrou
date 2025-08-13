@@ -1,10 +1,10 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.method.strategy
 
-import com.github.tanokun.bakajinrou.api.observer.Observer
+import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedReason
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
-import com.github.tanokun.bakajinrou.api.translate.MethodAssetKeys
+import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
 import com.github.tanokun.bakajinrou.game.crafting.CraftingInfo
 import com.github.tanokun.bakajinrou.game.crafting.CraftingStyle
@@ -60,9 +60,10 @@ abstract class SyncGrantInventoryObserver(
 
         val asyncPlayer = async { playerProvider.waitPlayerOnline(add.participantId) }
 
-        if (add.grantedMethod.reason == GrantedReason.CRAFTING) {
+        if (add.grantedMethod.reason == GrantedReason.CRAFTED) {
             val asyncCraftingInfo = async {
                 crafting.observeCrafting(this@main)
+                    .filter { it.crafterId == add.participantId }
                     .filter { it.method == add.grantedMethod }
                     .timeout(10.seconds)
                     .first()

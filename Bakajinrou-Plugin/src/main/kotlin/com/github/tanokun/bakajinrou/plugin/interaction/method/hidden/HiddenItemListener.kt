@@ -6,11 +6,17 @@ import com.comphenix.protocol.events.ListenerPriority
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item.ItemViewer.isVisible
+import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleListener
 import com.github.tanokun.bakajinrou.plugin.common.listener.packet.LifecyclePacketListener
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import org.bukkit.craftbukkit.CraftWorld
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
 
+@Scoped(binds = [LifecycleListener::class])
+@Scope(value = GameComponents::class)
 class HiddenItemListener(
     plugin: Plugin, game: JinrouGame, protocolManager: ProtocolManager
 ) : LifecyclePacketListener(plugin, protocolManager, {

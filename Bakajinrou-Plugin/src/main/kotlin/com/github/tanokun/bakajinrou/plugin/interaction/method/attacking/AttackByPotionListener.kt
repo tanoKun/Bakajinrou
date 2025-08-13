@@ -1,16 +1,20 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.method.attack
+package com.github.tanokun.bakajinrou.plugin.interaction.method.attacking
 
-import com.github.tanokun.bakajinrou.api.attack.method.DamagePotionMethod
+import com.github.tanokun.bakajinrou.api.attacking.method.DamagePotionMethod
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
-import com.github.tanokun.bakajinrou.game.attack.Attacking
+import com.github.tanokun.bakajinrou.game.attacking.Attacking
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item.ItemPersistent.getMethodId
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListener
+import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleListener
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.PotionSplashEvent
 import org.bukkit.plugin.Plugin
 import org.bukkit.potion.PotionType
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
 
 /**
  * 攻撃手段「ダメージポーション」が、攻撃に使用されることを検出します。
@@ -19,6 +23,8 @@ import org.bukkit.potion.PotionType
  * @property attacking 攻撃イベントの公開者
  * @property mainScope 監視用のコルーチンを起動するためのスコープ
  */
+@Scoped(binds = [LifecycleListener::class])
+@Scope(value = GameComponents::class)
 class AttackByPotionListener(
     plugin: Plugin, attacking: Attacking, mainScope: CoroutineScope
 ): LifecycleEventListener(plugin, {

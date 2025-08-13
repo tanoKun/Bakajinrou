@@ -1,6 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.participant.initialization
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.position.isWolf
@@ -8,8 +9,13 @@ import com.github.tanokun.bakajinrou.game.participant.initialization.Participant
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.formatter.ParticipantsFormatter
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
 
+@Scoped(binds = [Observer::class])
+@Scope(value = GameComponents::class)
 class WolfInitializer(
     private val game: JinrouGame,
     private val translator: JinrouTranslator,

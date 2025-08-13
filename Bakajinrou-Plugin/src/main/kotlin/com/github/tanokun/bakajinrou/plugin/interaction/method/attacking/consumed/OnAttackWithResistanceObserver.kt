@@ -1,18 +1,21 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.method.attack.consume
+package com.github.tanokun.bakajinrou.plugin.interaction.method.attacking.consumed
 
-import com.github.tanokun.bakajinrou.api.observer.Observer
-import com.github.tanokun.bakajinrou.api.protect.method.FakeTotemMethod
-import com.github.tanokun.bakajinrou.api.protect.method.ProtectiveMethod
-import com.github.tanokun.bakajinrou.api.protect.method.TotemMethod
-import com.github.tanokun.bakajinrou.game.attack.AttackResolution
-import com.github.tanokun.bakajinrou.game.attack.Attacking
+import com.github.tanokun.bakajinrou.api.observing.Observer
+import com.github.tanokun.bakajinrou.api.protection.method.FakeTotemMethod
+import com.github.tanokun.bakajinrou.api.protection.method.ProtectiveMethod
+import com.github.tanokun.bakajinrou.api.protection.method.TotemMethod
+import com.github.tanokun.bakajinrou.game.attacking.AttackResolution
+import com.github.tanokun.bakajinrou.game.attacking.Attacking
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
 
 /**
  * 防御手段「トーテム」が、攻撃に対して使用された際の効果を担当します。
@@ -21,6 +24,8 @@ import org.bukkit.SoundCategory
  * @property mainScope 監視用のコルーチンを起動するためのスコープ
  * @property playerProvider BukkitのPlayerオブジェクトを取得するための Provider
  */
+@Scoped(binds = [Observer::class])
+@Scope(value = GameComponents::class)
 class OnAttackWithResistanceObserver(
     attacking: Attacking,
     private val mainScope: CoroutineScope,

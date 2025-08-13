@@ -1,11 +1,13 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.method.attack
+package com.github.tanokun.bakajinrou.plugin.interaction.method.attacking
 
-import com.github.tanokun.bakajinrou.api.attack.method.ArrowMethod
+import com.github.tanokun.bakajinrou.api.attacking.method.ArrowMethod
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
-import com.github.tanokun.bakajinrou.game.attack.Attacking
+import com.github.tanokun.bakajinrou.game.attacking.Attacking
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item.ItemPersistent.getMethodId
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item.ItemViewer.hasPossibilityOfMethod
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListener
+import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleListener
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.bukkit.entity.AbstractArrow
@@ -14,6 +16,8 @@ import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityShootBowEvent
 import org.bukkit.plugin.Plugin
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
 
 /**
  * 攻撃手段「弓」が、攻撃に使用されることを検出します。
@@ -22,6 +26,8 @@ import org.bukkit.plugin.Plugin
  * @property attacking 攻撃イベントの公開者
  * @property mainScope 監視用のコルーチンを起動するためのスコープ
  */
+@Scoped(binds = [LifecycleListener::class])
+@Scope(value = GameComponents::class)
 class AttackByBowListener(
     plugin: Plugin, attacking: Attacking, mainScope: CoroutineScope
 ): LifecycleEventListener(plugin, {
