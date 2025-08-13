@@ -1,9 +1,9 @@
 package com.github.tanokun.bakajinrou.game.logger
 
-import com.github.tanokun.bakajinrou.api.attack.method.AttackMethod
+import com.github.tanokun.bakajinrou.api.attacking.method.AttackMethod
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
-import com.github.tanokun.bakajinrou.game.attack.AttackResolution
+import com.github.tanokun.bakajinrou.game.attacking.AttackResolution
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import java.util.logging.Logger
 

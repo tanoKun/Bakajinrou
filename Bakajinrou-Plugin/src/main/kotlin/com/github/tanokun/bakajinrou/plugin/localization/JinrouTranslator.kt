@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.localization
 
-import com.github.tanokun.bakajinrou.api.translate.TranslationKey
+import com.github.tanokun.bakajinrou.api.translation.TranslationKey
 import com.github.tanokun.bakajinrou.plugin.common.formatter.ColorPallet
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component

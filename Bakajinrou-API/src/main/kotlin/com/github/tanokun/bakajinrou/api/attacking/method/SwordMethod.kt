@@ -4,7 +4,7 @@ import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.method.MethodId
 import com.github.tanokun.bakajinrou.api.method.asMethodId
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedReason
-import com.github.tanokun.bakajinrou.api.translate.MethodAssetKeys
+import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 import java.util.*
 
 data class SwordMethod(

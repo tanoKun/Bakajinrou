@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.api.participant.prefix
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.translate.PrefixKeys
+import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 
 sealed interface PrefixSource {
 

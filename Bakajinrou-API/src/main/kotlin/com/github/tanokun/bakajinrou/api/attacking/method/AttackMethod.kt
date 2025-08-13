@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.api.attacking.method
 
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
-import com.github.tanokun.bakajinrou.api.translate.MethodAssetKeys
+import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 
 /**
  * 他の参加者を攻撃するための「攻撃手段」を表す抽象クラス

@@ -2,7 +2,7 @@ package com.github.tanokun.bakajinrou.api.prefix
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.prefix.IdiotPrefix
-import com.github.tanokun.bakajinrou.api.translate.PrefixKeys
+import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every

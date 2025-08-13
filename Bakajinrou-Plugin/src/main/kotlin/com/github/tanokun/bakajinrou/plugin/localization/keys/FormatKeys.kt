@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.localization.keys
 
-import com.github.tanokun.bakajinrou.api.translate.TranslationKey
+import com.github.tanokun.bakajinrou.api.translation.TranslationKey
 
 sealed class FormatKeys(key: String): TranslationKey("format.$key") {
     open class Participant private constructor(key: String): FormatKeys("participant.$key") {

@@ -2,8 +2,8 @@ package com.github.tanokun.bakajinrou.api.attacking
 
 import com.github.tanokun.bakajinrou.api.attacking.method.AttackMethod
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.protect.ProtectResult
-import com.github.tanokun.bakajinrou.api.protect.method.ProtectiveMethod
+import com.github.tanokun.bakajinrou.api.protection.ProtectResult
+import com.github.tanokun.bakajinrou.api.protection.method.ProtectiveMethod
 
 
 /**

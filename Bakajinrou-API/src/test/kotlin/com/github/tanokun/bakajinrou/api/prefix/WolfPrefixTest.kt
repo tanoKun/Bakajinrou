@@ -5,7 +5,7 @@ import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizenPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.api.participant.prefix.WolfPrefix
-import com.github.tanokun.bakajinrou.api.translate.PrefixKeys
+import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every

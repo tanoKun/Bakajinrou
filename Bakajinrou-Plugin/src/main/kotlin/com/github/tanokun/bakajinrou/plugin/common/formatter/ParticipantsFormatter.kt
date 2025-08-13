@@ -14,7 +14,7 @@ import com.github.tanokun.bakajinrou.api.participant.position.citizen.mystic.Med
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
-import com.github.tanokun.bakajinrou.api.translate.TranslationKey
+import com.github.tanokun.bakajinrou.api.translation.TranslationKey
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.localization.keys.FormatKeys

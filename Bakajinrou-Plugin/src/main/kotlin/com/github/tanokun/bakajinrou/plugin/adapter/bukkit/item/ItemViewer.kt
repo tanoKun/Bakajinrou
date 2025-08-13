@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item
 
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
-import com.github.tanokun.bakajinrou.api.translate.MethodAssetKeys
+import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item.ItemPersistent.setMetadata
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.localization.keys.displayName

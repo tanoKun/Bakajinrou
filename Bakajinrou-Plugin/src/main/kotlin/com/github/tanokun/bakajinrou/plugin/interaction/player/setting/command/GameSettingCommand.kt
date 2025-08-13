@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.player.setting.command
 
 import com.github.tanokun.bakajinrou.api.map.MapName
-import com.github.tanokun.bakajinrou.api.translate.PrefixKeys
+import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 import com.github.tanokun.bakajinrou.game.map.GameMapRegistry
 import com.github.tanokun.bakajinrou.plugin.common.command.Command
 import com.github.tanokun.bakajinrou.plugin.common.formatter.ColorPallet

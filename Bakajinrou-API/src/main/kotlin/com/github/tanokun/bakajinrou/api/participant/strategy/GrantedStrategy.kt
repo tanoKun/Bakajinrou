@@ -2,7 +2,7 @@ package com.github.tanokun.bakajinrou.api.participant.strategy
 
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.method.MethodId
-import com.github.tanokun.bakajinrou.api.protect.method.ProtectiveMethod
+import com.github.tanokun.bakajinrou.api.protection.method.ProtectiveMethod
 
 data class GrantedStrategy(
     internal val strategies: Map<MethodId, GrantedMethod>,

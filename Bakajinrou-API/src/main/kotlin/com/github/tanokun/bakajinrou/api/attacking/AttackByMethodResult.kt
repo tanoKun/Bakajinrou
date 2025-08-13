@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.api.attacking
 
-import com.github.tanokun.bakajinrou.api.protect.method.ProtectiveMethod
+import com.github.tanokun.bakajinrou.api.protection.method.ProtectiveMethod
 
 sealed interface AttackByMethodResult {
     val consumedProtectiveMethods: List<ProtectiveMethod>

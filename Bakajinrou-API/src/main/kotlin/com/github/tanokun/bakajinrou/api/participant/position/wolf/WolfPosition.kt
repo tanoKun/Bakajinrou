@@ -17,6 +17,7 @@ import com.github.tanokun.bakajinrou.api.participant.prefix.WolfPrefix
  * @throws IllegalStateException [knownByMadmans]に狂人以外の役職が含まれていた場合
  */
 class WolfPosition(knownByMadmans: ParticipantScope.NonSpectators): Position {
+    val knownByMadmans = knownByMadmans.map { it.participantId }
 
     init {
         if (knownByMadmans.excludes(::isMadman).isNotEmpty())

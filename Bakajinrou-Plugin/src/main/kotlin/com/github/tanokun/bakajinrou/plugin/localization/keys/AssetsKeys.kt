@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.localization.keys
 
-import com.github.tanokun.bakajinrou.api.translate.MethodAssetKeys
-import com.github.tanokun.bakajinrou.api.translate.TranslationKey
+import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
+import com.github.tanokun.bakajinrou.api.translation.TranslationKey
 
 fun MethodAssetKeys.displayName() = this + TranslationKey("display.name")
 fun MethodAssetKeys.lore() = this + TranslationKey("lore")
