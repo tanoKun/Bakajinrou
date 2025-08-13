@@ -1,6 +1,6 @@
-package com.github.tanokun.bakajinrou.api.attack
+package com.github.tanokun.bakajinrou.api.attacking
 
-import com.github.tanokun.bakajinrou.api.attack.method.AttackMethod
+import com.github.tanokun.bakajinrou.api.attacking.method.AttackMethod
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.protect.ProtectResult
 import com.github.tanokun.bakajinrou.api.protect.method.ProtectiveMethod

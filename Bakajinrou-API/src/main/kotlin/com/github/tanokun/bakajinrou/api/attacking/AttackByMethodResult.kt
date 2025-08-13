@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.api.attack
+package com.github.tanokun.bakajinrou.api.attacking
 
 import com.github.tanokun.bakajinrou.api.protect.method.ProtectiveMethod
 
