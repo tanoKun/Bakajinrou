@@ -3,7 +3,7 @@ package com.github.tanokun.bakajinrou.plugin.common.setting
 import com.github.shynixn.mccoroutine.bukkit.scope
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.map.GameMap
-import com.github.tanokun.bakajinrou.api.observer.Observer
+import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.all
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
@@ -16,7 +16,7 @@ import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.ScheduleState
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.BindingListeners
-import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponentSession
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBuilder
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBuilder.AbilityUsersAssigner.Companion.assignAbilityUsers
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBuilder.CitizenAssigner.Companion.assignCitizens
@@ -91,7 +91,7 @@ class GameSettings(private val plugin: Plugin) {
         val selectedMap = selectedMap ?: return GameBuildResult.NotFoundSettingMap
         if (selectedPositions.values.sum() > candidates.size) return GameBuildResult.IllegalSelectedPositions
 
-        val scope = getKoin().createScope<GameComponentSession>("name-${UUID.randomUUID()}").apply {
+        val scope = getKoin().createScope<GameComponents>("name-${UUID.randomUUID()}").apply {
             declare(this)
             declare(translator)
             declare(selectedMap)
