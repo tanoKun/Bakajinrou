@@ -10,7 +10,7 @@ import io.mockk.every
 import io.mockk.mockk
 
 class CorrectCommuneAbilityTest : ShouldSpec({
-    val ability = CorrectCommuneAbility(reason = GrantedReason.INITIALIZE)
+    val ability = CorrectCommuneAbility(reason = GrantedReason.INITIALIZED)
 
     context("霊媒") {
         should("対象が死亡している場合、役職にあった正しい結果を返すべき") {

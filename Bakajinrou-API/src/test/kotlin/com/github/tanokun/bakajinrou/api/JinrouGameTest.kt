@@ -28,24 +28,24 @@ class JinrouGameTest {
         val participantB = Participant(UUID.randomUUID().asParticipantId(), mockk(), mockk())
         val participantC = Participant(UUID.randomUUID().asParticipantId(), mockk(), mockk())
 
-        val jinrouGame = JinrouGame(UpdateMutexProvider(), listOf(participantA1, participantB).all())
+        val game = JinrouGame(UpdateMutexProvider(), listOf(participantA1, participantB).all())
         val emitted = mutableListOf<ParticipantDifference>()
 
         testScope.launch {
-            jinrouGame.observeParticipants(this).collect {
+            game.observeParticipants(this).collect {
                 emitted.add(it)
             }
         }
 
-        jinrouGame.updateParticipant(participantA1.participantId) { current -> current }
-        jinrouGame.updateParticipant(participantB.participantId) { current -> current }
+        game.updateParticipant(participantA1.participantId) { current -> current }
+        game.updateParticipant(participantB.participantId) { current -> current }
 
         emitted shouldBe listOf()
 
         emitted.clear()
 
-        jinrouGame.updateParticipant(participantA1.participantId) { current -> participantA2 }
-        jinrouGame.addParticipant(participantC)
+        game.updateParticipant(participantA1.participantId) { current -> participantA2 }
+        game.addParticipant(participantC)
 
         emitted shouldBe listOf(ParticipantDifference(participantA1, participantA2), ParticipantDifference(null, participantC))
     }

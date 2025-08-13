@@ -13,7 +13,7 @@ class FakeDivineAbilityTest : ShouldSpec({
     context("偽占い") {
         should("役職に関わらず、指定されたランダムな結果を返すべき") {
             val mockRandom = mockk<Random>()
-            val ability = FakeDivineAbility(reason = GrantedReason.INITIALIZE, random = mockRandom)
+            val ability = FakeDivineAbility(reason = GrantedReason.INITIALIZED, random = mockRandom)
             val participant = mockk<Participant>()
 
             val expectedResult = ResultSource.WOLF

@@ -10,7 +10,7 @@ import io.mockk.every
 import io.mockk.mockk
 
 class CorrectDivineAbilityTest : ShouldSpec({
-    val ability = CorrectDivineAbility(reason = GrantedReason.INITIALIZE)
+    val ability = CorrectDivineAbility(reason = GrantedReason.INITIALIZED)
 
     context("占い") {
         should("役職にあった正しい結果を返すべき") {

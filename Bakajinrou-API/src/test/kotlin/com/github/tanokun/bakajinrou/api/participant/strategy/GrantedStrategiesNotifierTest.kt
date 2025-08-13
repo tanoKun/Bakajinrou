@@ -21,12 +21,12 @@ class GrantedStrategiesNotifierTest : ShouldSpec({
     val testDispatcher = UnconfinedTestDispatcher()
     val testScope = CoroutineScope(testDispatcher)
 
-    val jinrouGame = mockk<JinrouGame>()
+    val game = mockk<JinrouGame>()
     val participantsFlow = MutableSharedFlow<ParticipantDifference>(replay = 1)
 
-    every { jinrouGame.observeParticipants(testScope) } returns participantsFlow
+    every { game.observeParticipants(testScope) } returns participantsFlow
 
-    val notifier = GrantedStrategiesPublisher(jinrouGame, testScope)
+    val notifier = GrantedStrategiesPublisher(game, testScope)
 
     val methodA = mockk<GrantedMethod> {
         every { methodId } returns mockk()

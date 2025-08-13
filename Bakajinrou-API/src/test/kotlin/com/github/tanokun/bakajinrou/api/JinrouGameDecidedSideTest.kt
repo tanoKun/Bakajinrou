@@ -18,10 +18,10 @@ class JinrouGameDecidedSideTest {
     @Test
     @DisplayName("市民勝利 (人狼、妖狐全滅)")
     fun citizensWinTest() {
-        val jinrouGame = createJinrouGame(
+        val game = createJinrouGame(
             isDeadCitizen1 = false, isDeadCitizen2 = false, isDeadWolf = true, isDeadMadman = true, isDeadFox = true
         )
-        val judge = jinrouGame.judge()
+        val judge = game.judge()
 
         assertTrue("勝利サイドは市民なはず") { judge is WonInfo.Citizens }
     }
@@ -29,10 +29,10 @@ class JinrouGameDecidedSideTest {
     @Test
     @DisplayName("人狼勝利 (市民、妖狐全滅)")
     fun wolfsWinTest() {
-        val jinrouGame = createJinrouGame(
+        val game = createJinrouGame(
             isDeadCitizen1 = true, isDeadCitizen2 = true, isDeadWolf = false, isDeadMadman = false, isDeadFox = true
         )
-        val judge = jinrouGame.judge()
+        val judge = game.judge()
 
         assertTrue("勝利サイドは人狼なはず") { judge is WonInfo.Wolfs }
     }
@@ -40,10 +40,10 @@ class JinrouGameDecidedSideTest {
     @Test
     @DisplayName("妖狐勝利 (市民全滅、人狼生存)")
     fun foxWinWithWolfsTest() {
-        val jinrouGame = createJinrouGame(
+        val game = createJinrouGame(
             isDeadCitizen1 = true, isDeadCitizen2 = true, isDeadWolf = false, isDeadMadman = false, isDeadFox = false
         )
-        val judge = jinrouGame.judge()
+        val judge = game.judge()
 
         assertTrue("勝利サイドは妖狐なはず") { judge is WonInfo.Fox }
     }
@@ -51,10 +51,10 @@ class JinrouGameDecidedSideTest {
     @Test
     @DisplayName("妖狐勝利 (人狼全滅、市民生存)")
     fun foxWinWithCitizensTest() {
-        val jinrouGame = createJinrouGame(
+        val game = createJinrouGame(
             isDeadCitizen1 = false, isDeadCitizen2 = false, isDeadWolf = true, isDeadMadman = true, isDeadFox = false
         )
-        val judge = jinrouGame.judge()
+        val judge = game.judge()
 
         assertTrue("勝利サイドは妖狐なはず") { judge is WonInfo.Fox }
     }
@@ -62,22 +62,22 @@ class JinrouGameDecidedSideTest {
     @Test
     @DisplayName("勝つに適切ではない条件での比較")
     fun noOneWinTest() {
-        val jinrouGame = createJinrouGame(
+        val game = createJinrouGame(
             isDeadCitizen1 = false, isDeadCitizen2 = false, isDeadWolf = false, isDeadMadman = false, isDeadFox = false
         )
-        val judge = jinrouGame.judge()
+        val judge = game.judge()
         assertTrue("勝利者がいないので、Nullのはず") { judge == null }
 
-        val jinrouGame2 = createJinrouGame(
+        val game2 = createJinrouGame(
             isDeadCitizen1 = false, isDeadCitizen2 = false, isDeadWolf = false, isDeadMadman = true, isDeadFox = false
         )
-        val judge2 = jinrouGame2.judge()
+        val judge2 = game2.judge()
         assertTrue("勝利者がいないので、Nullのはず") { judge2 == null }
 
-        val jinrouGame3 = createJinrouGame(
+        val game3 = createJinrouGame(
             isDeadCitizen1 = true, isDeadCitizen2 = false, isDeadWolf = false, isDeadMadman = true, isDeadFox = true
         )
-        val judge3 = jinrouGame3.judge()
+        val judge3 = game3.judge()
         assertTrue("勝利者がいないので、Nullのはず") { judge3 == null }
     }
 

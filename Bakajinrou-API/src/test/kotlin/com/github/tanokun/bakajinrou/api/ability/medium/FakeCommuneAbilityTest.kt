@@ -12,7 +12,7 @@ import kotlin.random.Random
 
 class FakeCommuneAbilityTest : ShouldSpec({
     val random = mockk<Random>()
-    val ability = FakeCommuneAbility(reason = GrantedReason.INITIALIZE, random = random)
+    val ability = FakeCommuneAbility(reason = GrantedReason.INITIALIZED, random = random)
     val participant = mockk<Participant>()
 
     context("偽霊媒") {
