@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.method.ability.use.gui
+package com.github.tanokun.bakajinrou.plugin.interaction.method.ability.using.gui
 
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope

@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.method.ability.use
+package com.github.tanokun.bakajinrou.plugin.interaction.method.ability.using
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.ability.Ability
@@ -15,7 +15,7 @@ import com.github.tanokun.bakajinrou.game.ability.medium.CommuneAbilityExecutor
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item.ItemPersistent.getMethodId
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
-import com.github.tanokun.bakajinrou.plugin.interaction.method.ability.use.gui.AbilityGUI
+import com.github.tanokun.bakajinrou.plugin.interaction.method.ability.using.gui.AbilityGUI
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
 import kotlinx.coroutines.CoroutineScope

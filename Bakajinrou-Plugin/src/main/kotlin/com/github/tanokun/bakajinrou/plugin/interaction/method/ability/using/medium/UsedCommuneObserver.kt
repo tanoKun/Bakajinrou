@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.method.ability.use.medium
+package com.github.tanokun.bakajinrou.plugin.interaction.method.ability.using.medium
 
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.ability.medium.CommuneAbilityExecutor
