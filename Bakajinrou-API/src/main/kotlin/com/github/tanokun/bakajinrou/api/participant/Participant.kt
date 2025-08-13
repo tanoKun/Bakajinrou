@@ -7,7 +7,7 @@ import com.github.tanokun.bakajinrou.api.participant.position.Position
 import com.github.tanokun.bakajinrou.api.participant.position.SpectatorPosition
 import com.github.tanokun.bakajinrou.api.participant.prefix.ComingOut
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategy
-import com.github.tanokun.bakajinrou.api.protect.method.ProtectiveMethod
+import com.github.tanokun.bakajinrou.api.protection.method.ProtectiveMethod
 
 data class Participant(
     val participantId: ParticipantId,
@@ -79,6 +79,11 @@ data class Participant(
      * @return 中断状態か
      */
     fun isSuspended(): Boolean = state == ParticipantStates.SUSPENDED
+
+    /**
+     * @return 生存状態か
+     */
+    fun isAlive(): Boolean = state == ParticipantStates.ALIVE
 
     /**
      * @return スペクテイターであることを検出できるかどうか
