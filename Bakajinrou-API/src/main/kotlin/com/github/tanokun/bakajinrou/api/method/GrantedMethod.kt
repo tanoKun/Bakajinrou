@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.api.method
 
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedReason
-import com.github.tanokun.bakajinrou.api.translate.MethodAssetKeys
+import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 
 /**
  * 参加者が行動を行うために所有する「手段」を表すインターフェース
