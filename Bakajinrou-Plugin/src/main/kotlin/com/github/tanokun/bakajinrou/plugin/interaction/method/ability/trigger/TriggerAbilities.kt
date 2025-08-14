@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.method.ability.using
+package com.github.tanokun.bakajinrou.plugin.interaction.method.ability.trigger
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.ability.Ability
@@ -31,7 +31,7 @@ import org.koin.core.annotation.Scoped
 
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
-class TriggerUsingAbility(
+class TriggerAbilities(
     private val plugin: Plugin,
     private val grantedStrategiesPublisher: GrantedStrategiesPublisher,
     private val mainScope: CoroutineScope,
