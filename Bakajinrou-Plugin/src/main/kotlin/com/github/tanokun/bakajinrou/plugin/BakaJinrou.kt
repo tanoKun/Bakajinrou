@@ -1,16 +1,13 @@
 package com.github.tanokun.bakajinrou.plugin
 
 import com.github.shynixn.mccoroutine.bukkit.scope
-import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
-import com.github.tanokun.bakajinrou.plugin.common.cache.PlayerSkinCache
 import com.github.tanokun.bakajinrou.plugin.common.setting.GameSettings
-import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameBuilderDI
-import com.github.tanokun.bakajinrou.plugin.interaction.player.handle.command.HandleGameCommand
-import com.github.tanokun.bakajinrou.plugin.interaction.player.initializer.NonLifecycleEventListener
+import com.github.tanokun.bakajinrou.plugin.interaction.player.handling.command.HandleGameCommand
+import com.github.tanokun.bakajinrou.plugin.interaction.player.preparation.NonLifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.interaction.player.setting.command.GameSettingCommand
 import com.github.tanokun.bakajinrou.plugin.interaction.player.setting.command.MapSettingCommand
-import dev.jorel.commandapi.CommandAPICommand
-import dev.jorel.commandapi.executors.PlayerCommandExecutor
+import com.github.tanokun.bakajinrou.plugin.module.GameBuilderModule
+import com.github.tanokun.bakajinrou.plugin.module.GameComponentsModule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -21,16 +18,18 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.ShapedRecipe
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.context.startKoin
+import org.koin.ksp.generated.module
 import xyz.xenondevs.invui.InvUI
 
 open class BakaJinrou(): JavaPlugin() {
     private val gameSettings: GameSettings by lazy { GameSettings(this) }
 
     override fun onLoad() {
-        val gameBuilderDI = GameBuilderDI(this)
+        val gameBuilderModule = GameBuilderModule(this)
 
         startKoin {
-            modules(gameBuilderDI.gameBuildScopeModule)
+            modules(GameComponentsModule.module)
+            modules(gameBuilderModule.gameBuildScopeModule)
             printLogger(org.koin.core.logger.Level.DEBUG)
         }
     }
@@ -55,18 +54,6 @@ open class BakaJinrou(): JavaPlugin() {
             Bukkit.getPluginManager().registerEvents(NonLifecycleEventListener(gameSettings, translatorDeferred.await()), this@BakaJinrou)
         }
 
-        CommandAPICommand("test1")
-            .executesPlayer(PlayerCommandExecutor { sender, args ->
-                Bukkit.getOnlinePlayers().forEach {
-                    PlayerNameCache.put(it.uniqueId, it.name)
-                    PlayerSkinCache.put(it.uniqueId, it.playerProfile)
-
-                    gameSettings.addCandidate(it.uniqueId)
-                }
-            })
-            .register()
-
-
         addQuartzRecipe()
 
     }
@@ -84,8 +71,4 @@ open class BakaJinrou(): JavaPlugin() {
         }
         Bukkit.addRecipe(recipe)
     }
-}
-
-fun debug() {
-    println(Thread.currentThread().stackTrace[1])
 }

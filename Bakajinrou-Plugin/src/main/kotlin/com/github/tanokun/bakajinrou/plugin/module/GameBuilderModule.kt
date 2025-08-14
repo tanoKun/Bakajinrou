@@ -26,10 +26,10 @@ import com.github.tanokun.bakajinrou.plugin.common.setting.RequestedPositions
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.BindingListeners
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBuilder
+import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.PreventFailureFinishing
+import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.WonPositionAssigner
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.tab.modifier.TabListModifier
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.team.modifier.ViewTeamModifier
-import com.github.tanokun.bakajinrou.plugin.system.game.finished.observing.CommonGameFinisher
-import com.github.tanokun.bakajinrou.plugin.system.game.finished.observing.JudgeGameObserver
 import com.github.tanokun.bakajinrou.plugin.system.scheduler.JinrouGameScheduler
 import kotlinx.coroutines.CoroutineScope
 import org.bukkit.Bukkit
@@ -60,8 +60,8 @@ class GameBuilderModule(plugin: Plugin) {
     val observersModule = module {
         scope<GameComponents> {
             scopedOf(::InherentMethodsInitializer) bind Observer::class
-            scoped { CommonGameFinisher(get(), get(), get(), topScope, get()) } bind Observer::class
-            scoped { JudgeGameObserver(get(), get(), get(), get(), topScope) } bind Observer::class
+            scoped { PreventFailureFinishing(get(), get(), get(), topScope, get()) } bind Observer::class
+            scoped { WonPositionAssigner(get(), get(), get(), get(), topScope) } bind Observer::class
         }
     }
 

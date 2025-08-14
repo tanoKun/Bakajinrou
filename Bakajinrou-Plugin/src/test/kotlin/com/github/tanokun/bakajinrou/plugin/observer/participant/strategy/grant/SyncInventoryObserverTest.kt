@@ -10,7 +10,7 @@ import com.github.tanokun.bakajinrou.game.crafting.Crafting
 import com.github.tanokun.bakajinrou.game.crafting.CraftingInfo
 import com.github.tanokun.bakajinrou.game.crafting.CraftingStyle
 import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
-import com.github.tanokun.bakajinrou.plugin.interaction.method.strategy.SyncGrantInventoryObserver
+import com.github.tanokun.bakajinrou.plugin.interaction.participant.method.GrantedInventorySynchronizer
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.every
@@ -50,7 +50,7 @@ class SyncInventoryObserverTest {
     private val testScope = CoroutineScope(testDispatcher)
 
 
-    inner class TestObserverSync(mainScope: CoroutineScope): SyncGrantInventoryObserver(
+    inner class TestObserverSync(mainScope: CoroutineScope): GrantedInventorySynchronizer(
         grantedStrategiesPublisherMock, mainScope, playerProviderMock, craftingMock, mockk(relaxed = true), assetKeyMock
     ) {
             override fun createItem(player: Player, add: MethodDifference.Granted): ItemStack { result = true; return mockk() }
@@ -76,7 +76,7 @@ class SyncInventoryObserverTest {
         }
         val add = MethodDifference.Granted(participantMock.participantId, method)
 
-        spyk<SyncGrantInventoryObserver>(TestObserverSync(testScope))
+        spyk<GrantedInventorySynchronizer>(TestObserverSync(testScope))
 
         flow.emit(add)
         testDispatcher.scheduler.advanceTimeBy(1.seconds)
@@ -107,7 +107,7 @@ class SyncInventoryObserverTest {
         val add = MethodDifference.Granted(participantMock.participantId, method)
         val remove = MethodDifference.Removed(participantMock.participantId, method)
 
-        spyk<SyncGrantInventoryObserver>(TestObserverSync(testScope))
+        spyk<GrantedInventorySynchronizer>(TestObserverSync(testScope))
 
         flow.emit(add)
         testDispatcher.scheduler.advanceTimeBy(1.seconds)
@@ -148,7 +148,7 @@ class SyncInventoryObserverTest {
         }
         val add = MethodDifference.Granted(participantMock.participantId, methodMock)
 
-        spyk<SyncGrantInventoryObserver>(TestObserverSync(testScope))
+        spyk<GrantedInventorySynchronizer>(TestObserverSync(testScope))
 
         diffFlow.emit(add)
         testDispatcher.scheduler.advanceTimeBy(1.seconds)
