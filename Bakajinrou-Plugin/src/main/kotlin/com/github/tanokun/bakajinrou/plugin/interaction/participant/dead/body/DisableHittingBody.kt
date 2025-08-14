@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.participant.dead.body
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import io.netty.buffer.Unpooled
 import net.minecraft.network.FriendlyByteBuf

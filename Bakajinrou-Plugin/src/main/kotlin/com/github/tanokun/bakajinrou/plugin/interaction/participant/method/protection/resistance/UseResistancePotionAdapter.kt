@@ -4,7 +4,7 @@ import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.api.protection.method.ResistanceMethod
 import com.github.tanokun.bakajinrou.game.method.resistance.activator.ResistanceActivator
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item.ItemPersistent.getMethodId
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.getMethodId
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleListener
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents

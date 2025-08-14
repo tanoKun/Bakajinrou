@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.system.scheduler.distribution
+package com.github.tanokun.bakajinrou.plugin.interaction.game.scheduler.distribution
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.observing.Observer
@@ -8,7 +8,7 @@ import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.ScheduleState
 import com.github.tanokun.bakajinrou.game.scheduler.every
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filter

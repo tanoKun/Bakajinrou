@@ -4,7 +4,7 @@ import com.comphenix.protocol.wrappers.EnumWrappers
 import com.comphenix.protocol.wrappers.Pair
 import com.comphenix.protocol.wrappers.WrappedEnumEntityUseAction
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item.ItemViewer.isVisible
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemViewer.isVisible
 import net.minecraft.network.protocol.game.ClientboundAnimatePacket
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack

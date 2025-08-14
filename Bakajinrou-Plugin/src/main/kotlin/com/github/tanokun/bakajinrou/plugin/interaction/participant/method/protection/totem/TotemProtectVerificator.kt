@@ -3,8 +3,8 @@ package com.github.tanokun.bakajinrou.plugin.interaction.participant.method.prot
 import com.github.tanokun.bakajinrou.api.method.MethodId
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.protection.ProtectVerificator
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item.ItemPersistent.getMethodId
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.getMethodId
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 
 class TotemProtectVerificator(
     private val methodId: MethodId,

@@ -4,8 +4,8 @@ import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
 import com.github.tanokun.bakajinrou.game.logger.DebugLogger
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item.ItemPersistent.getRawUuid
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.getRawUuid
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview

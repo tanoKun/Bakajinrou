@@ -5,7 +5,7 @@ import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.whenOvertime
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.notifier.SystemFinishNotifier
 import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.notifier.each.CitizenSideFinishNotifier
 import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.notifier.each.FoxSideFinishNotifier

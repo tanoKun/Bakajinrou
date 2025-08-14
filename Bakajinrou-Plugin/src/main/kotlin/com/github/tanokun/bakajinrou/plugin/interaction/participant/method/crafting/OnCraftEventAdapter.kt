@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.method.crafting
+package com.github.tanokun.bakajinrou.plugin.interaction.participant.method.crafting
 
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
@@ -19,7 +19,7 @@ import org.koin.core.annotation.Scoped
 
 @Scoped(binds = [LifecycleListener::class])
 @Scope(value = GameComponents::class)
-class OnCraftEventListener(
+class OnCraftEventAdapter(
     plugin: Plugin, crafting: Crafting, mainScope: CoroutineScope
 ): LifecycleEventListener(plugin, {
     fun getMaxCraftAmount(inventory: CraftingInventory): Int {

@@ -9,7 +9,7 @@ import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
 import com.github.tanokun.bakajinrou.game.crafting.CraftingInfo
 import com.github.tanokun.bakajinrou.game.crafting.CraftingStyle
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.method.GrantedInventorySynchronizer
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery

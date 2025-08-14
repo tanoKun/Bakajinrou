@@ -12,7 +12,7 @@ import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
 import com.github.tanokun.bakajinrou.game.ability.fortune.DivineAbilityExecutor
 import com.github.tanokun.bakajinrou.game.ability.knight.ProtectAbilityExecutor
 import com.github.tanokun.bakajinrou.game.ability.medium.CommuneAbilityExecutor
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item.ItemPersistent.getMethodId
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.getMethodId
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.method.ability.gui.AbilityGUI

@@ -5,7 +5,7 @@ import com.github.tanokun.bakajinrou.api.map.GameMap
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.attacking.BodyHandler
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.interaction.game.initialization.asBukkit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.take

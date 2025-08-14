@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.system.scheduler
+package com.github.tanokun.bakajinrou.plugin.interaction.game.scheduler
 
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import org.bukkit.plugin.Plugin

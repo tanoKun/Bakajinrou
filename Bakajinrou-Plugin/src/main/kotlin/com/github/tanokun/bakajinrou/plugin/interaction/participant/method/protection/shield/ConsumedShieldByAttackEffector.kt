@@ -5,7 +5,7 @@ import com.github.tanokun.bakajinrou.api.protection.method.ProtectiveMethod
 import com.github.tanokun.bakajinrou.api.protection.method.ShieldMethod
 import com.github.tanokun.bakajinrou.game.attacking.AttackResolution
 import com.github.tanokun.bakajinrou.game.attacking.Attacking
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filter

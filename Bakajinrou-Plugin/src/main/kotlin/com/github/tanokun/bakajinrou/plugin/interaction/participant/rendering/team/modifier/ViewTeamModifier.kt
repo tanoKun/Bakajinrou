@@ -8,7 +8,7 @@ import com.github.tanokun.bakajinrou.api.participant.position.isWolf
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import net.minecraft.world.scores.Team
 
 

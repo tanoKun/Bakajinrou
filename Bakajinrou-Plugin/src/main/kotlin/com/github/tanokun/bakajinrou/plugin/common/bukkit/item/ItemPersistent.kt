@@ -1,9 +1,9 @@
-package com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item
+package com.github.tanokun.bakajinrou.plugin.common.bukkit.item
 
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.method.MethodId
 import com.github.tanokun.bakajinrou.api.method.asMethodId
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item.ItemViewer.isTransportable
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemViewer.isTransportable
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType

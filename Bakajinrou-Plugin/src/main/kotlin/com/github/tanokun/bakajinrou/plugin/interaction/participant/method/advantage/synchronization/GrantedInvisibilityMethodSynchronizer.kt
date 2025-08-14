@@ -6,8 +6,8 @@ import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
 import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
 import com.github.tanokun.bakajinrou.game.logger.DebugLogger
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.item.ItemViewer.createBasicItem
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemViewer.createBasicItem
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.formatter.toTick
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.method.GrantedInventorySynchronizer

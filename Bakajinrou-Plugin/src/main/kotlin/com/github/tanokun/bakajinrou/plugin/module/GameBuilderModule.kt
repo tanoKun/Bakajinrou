@@ -28,9 +28,9 @@ import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponent
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBuilder
 import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.PreventFailureFinishing
 import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.WonPositionAssigner
+import com.github.tanokun.bakajinrou.plugin.interaction.game.scheduler.JinrouGameScheduler
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.tab.modifier.TabListModifier
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.team.modifier.ViewTeamModifier
-import com.github.tanokun.bakajinrou.plugin.system.scheduler.JinrouGameScheduler
 import kotlinx.coroutines.CoroutineScope
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin

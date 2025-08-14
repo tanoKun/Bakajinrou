@@ -9,7 +9,7 @@ import com.github.tanokun.bakajinrou.game.crafting.Crafting
 import com.github.tanokun.bakajinrou.game.crafting.CraftingInfo
 import com.github.tanokun.bakajinrou.game.crafting.CraftingStyle
 import com.github.tanokun.bakajinrou.game.logger.DebugLogger
-import com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance

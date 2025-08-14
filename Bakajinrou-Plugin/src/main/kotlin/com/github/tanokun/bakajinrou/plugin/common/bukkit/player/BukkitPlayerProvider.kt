@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.adapter.bukkit.player
+package com.github.tanokun.bakajinrou.plugin.common.bukkit.player
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
