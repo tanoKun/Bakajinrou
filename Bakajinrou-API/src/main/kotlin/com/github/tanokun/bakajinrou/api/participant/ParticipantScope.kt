@@ -19,6 +19,8 @@ sealed class ParticipantScope(participant: Set<Participant>): Set<Participant> b
         fun includes(filter: ParticipantFilter) = NonSpectators(this.filter(filter).toSet())
 
         fun excludes(filter: ParticipantFilter) = NonSpectators(this.filterNot(filter).toSet())
+
+        fun excludes(participantId: ParticipantId) = NonSpectators(this.filterNot { it.participantId == participantId }.toSet())
     }
 }
 
