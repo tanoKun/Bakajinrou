@@ -52,6 +52,12 @@ sealed class GameKeys(key: String): TranslationKey("game.$key") {
         } }
     }
 
+    open class Advantage private constructor(key: String): GameKeys("advantage.$key") {
+        class Using private constructor(key: String): Advantage("using.$key") { companion object {
+            val EXCHANGE_MESSAGE = Using("exchange.message")
+        } }
+    }
+
     class Announcement private constructor(key: String): GameKeys("announcement.$key") { companion object {
         val REMAINING_TIME = Announcement("remaining.time")
         val GLOWING = Announcement("glowing")

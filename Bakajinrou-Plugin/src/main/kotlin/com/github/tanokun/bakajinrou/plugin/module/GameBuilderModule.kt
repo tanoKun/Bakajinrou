@@ -4,6 +4,7 @@ import com.comphenix.protocol.ProtocolLibrary
 import com.github.shynixn.mccoroutine.bukkit.scope
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.UpdateMutexProvider
+import com.github.tanokun.bakajinrou.api.advantage.using.ExchangeSelector
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
@@ -14,6 +15,7 @@ import com.github.tanokun.bakajinrou.game.attacking.Attacking
 import com.github.tanokun.bakajinrou.game.chat.ChatIntegrity
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
 import com.github.tanokun.bakajinrou.game.logger.DebugLogger
+import com.github.tanokun.bakajinrou.game.method.advantage.using.LocationExchanger
 import com.github.tanokun.bakajinrou.game.method.resistance.activator.ResistanceActivator
 import com.github.tanokun.bakajinrou.game.method.transferring.TransferMethod
 import com.github.tanokun.bakajinrou.game.participant.initialization.InherentMethodsInitializer
@@ -81,6 +83,8 @@ class GameBuilderModule(plugin: Plugin) {
             scopedOf(::ResistanceActivator)
             scopedOf(::Attacking)
             scopedOf(::ChangeSuspended)
+            scopedOf(::ExchangeSelector)
+            scopedOf(::LocationExchanger)
             scoped { ViewTeamModifier(get(), get(), get<JinrouGame>().getCurrentParticipants().excludeSpectators()) }
         }
     }

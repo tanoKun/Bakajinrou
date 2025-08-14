@@ -101,6 +101,8 @@
     "game.ability.using.commune.message": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」は霊媒の結果「<arg-1>」でした。</bold></gray>",
     "game.ability.using.protect.message": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」を加護しました。</bold></gray>",
 
+    "game.advantage.using.exchange.message": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」と入れ替わりました。</bold></gray>",
+
     "game.announcement.remaining.time": "<yellow><bold>残り時間: <arg-0>分 <arg-1>秒</bold></yellow>",
     "game.announcement.glowing": "<gray><bold>5分から、定期発行が始まります。</bold></gray>",
     "game.announcement.getaway": "<gray><bold>時間切れでの終了は、市民陣営の勝利です。</bold></gray>",
