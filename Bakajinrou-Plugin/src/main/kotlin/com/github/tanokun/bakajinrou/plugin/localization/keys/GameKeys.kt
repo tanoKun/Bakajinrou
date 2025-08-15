@@ -3,10 +3,16 @@ package com.github.tanokun.bakajinrou.plugin.localization.keys
 import com.github.tanokun.bakajinrou.api.translation.TranslationKey
 
 sealed class GameKeys(key: String): TranslationKey("game.$key") {
-    class Start private constructor(key: String): GameKeys("start.$key") { companion object {
-        val TITLE = Start("title")
-        val SUB_TITLE = Start("sub.title")
-    } }
+    open class Start private constructor(key: String): GameKeys("start.$key") {
+        companion object {
+            val TITLE = Start("title")
+            val SUB_TITLE = Start("sub.title")
+        }
+
+        class Notification private constructor(key: String): Start("notification.$key") { companion object {
+            val POSITION = Notification("position")
+        } }
+    }
 
     open class Finish private constructor(key: String): GameKeys("finish.$key") {
         companion object {
@@ -46,6 +52,7 @@ sealed class GameKeys(key: String): TranslationKey("game.$key") {
     open class Ability private constructor(key: String): GameKeys("ability.$key") {
         class Using private constructor(key: String): Ability("using.$key") { companion object {
             val DIVINE_MESSAGE = Using("divine.message")
+            val DIVINED_FOX_MESSAGE = Using("divined.fox.message")
             val COMMUNE_MESSAGE = Using("commune.message")
             val COMMUNE_FAILURE_MESSAGE = Using("commune.failure.message")
             val PROTECT_MESSAGE = Using("protect.message")
