@@ -3,6 +3,7 @@ package com.github.tanokun.bakajinrou.api.advantage.using
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
+import com.github.tanokun.bakajinrou.api.participant.or
 import kotlin.random.Random
 
 /**
@@ -22,7 +23,7 @@ class ExchangeSelector(private val random: Random) {
      */
     fun select(sideId: ParticipantId, candidates: ParticipantScope.NonSpectators): ParticipantId =
         candidates
-            .excludes(Participant::isSuspended)
+            .excludes(Participant::isSuspended or Participant::isDead)
             .excludes(sideId)
             .random(random)
             .participantId
