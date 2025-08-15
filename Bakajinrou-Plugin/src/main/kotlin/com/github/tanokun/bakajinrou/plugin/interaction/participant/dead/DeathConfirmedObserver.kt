@@ -3,9 +3,9 @@ package com.github.tanokun.bakajinrou.plugin.interaction.participant.dead
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.game.attacking.BodyHandler
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
+import com.github.tanokun.bakajinrou.plugin.interaction.participant.dead.body.BukkitBodyHandler
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.dead.body.DisableHittingBody
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filter
@@ -25,7 +25,7 @@ import java.util.*
 @Scope(value = GameComponents::class)
 class DeathConfirmedObserver(
     private val game: JinrouGame,
-    private val bodyHandler: BodyHandler,
+    private val bodyHandler: BukkitBodyHandler,
     private val playerProvider: BukkitPlayerProvider,
     private val mainScope: CoroutineScope,
     private val disableHittingBody: DisableHittingBody,
@@ -42,9 +42,9 @@ class DeathConfirmedObserver(
     private fun onDeath(dead: Participant) {
         val player = playerProvider.getAllowNull(dead) ?: return
 
-        bodyHandler.createBody(dead.participantId)
-        disableHittingBody.ghost(player as CraftPlayer)
         player.inventory.clear()
+        disableHittingBody.ghost(player as CraftPlayer)
+        bodyHandler.createBody(dead.participantId)
         player.gameMode = GameMode.SPECTATOR
 
         val entries = Bukkit.getOnlinePlayers()
@@ -54,12 +54,11 @@ class DeathConfirmedObserver(
         if (entries.isEmpty()) return
 
         player.handle.connection.send(
-            ClientboundPlayerInfoUpdatePacket(
-                EnumSet.of(
-                    ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME,
-                    ClientboundPlayerInfoUpdatePacket.Action.UPDATE_GAME_MODE
-                ), entries
-            )
+            ClientboundPlayerInfoUpdatePacket(EnumSet.of(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME), entries)
+        )
+
+        player.handle.connection.send(
+            ClientboundPlayerInfoUpdatePacket(EnumSet.of(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_GAME_MODE), entries)
         )
     }
 
