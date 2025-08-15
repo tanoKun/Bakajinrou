@@ -28,6 +28,7 @@ import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponent
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBuilder
 import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.PreventFailureFinishing
 import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.WonPositionAssigner
+import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.notification.AllPositionsNotifier
 import com.github.tanokun.bakajinrou.plugin.interaction.game.scheduler.JinrouGameScheduler
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.tab.modifier.TabListModifier
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.team.modifier.ViewTeamModifier
@@ -62,6 +63,7 @@ class GameBuilderModule(plugin: Plugin) {
             scopedOf(::InherentMethodsInitializer) bind Observer::class
             scoped { PreventFailureFinishing(get(), get(), get(), topScope, get()) } bind Observer::class
             scoped { WonPositionAssigner(get(), get(), get(), get(), topScope) } bind Observer::class
+            scoped { AllPositionsNotifier(get(), get(), get(), topScope) } bind Observer::class
         }
     }
 
