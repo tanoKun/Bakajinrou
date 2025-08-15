@@ -4,7 +4,6 @@ import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.ParticipantFilter
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
-import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.mapNotNull
@@ -27,7 +26,7 @@ abstract class ParticipantInitializer(game: JinrouGame, gameController: JinrouGa
                 .mapNotNull { game.getParticipant(it) }
                 .filter(filter)
                 .collect {
-                    launch { initialize(it.participantId, game.getCurrentParticipants()) }
+                    launch { initialize(it.participantId) }
                 }
         }
     }
@@ -36,7 +35,6 @@ abstract class ParticipantInitializer(game: JinrouGame, gameController: JinrouGa
      * 対象の参加者に対して初期化処理を行います。
      *
      * @param selfId フィルターで指定した職業の参加者Id
-     * @param participants 自分を含めた、全ての参加者
      */
-    abstract suspend fun initialize(selfId: ParticipantId, participants: ParticipantScope)
+    abstract suspend fun initialize(selfId: ParticipantId)
 }
