@@ -1,3 +1,31 @@
+# 基本的なフロー
+```mermaid
+sequenceDiagram
+    box UI層
+        participant A as Adapters
+        participant O as Observers
+    end
+    box APP層
+        participant US as Usecase、Service
+    end
+    box Domain層
+        participant V as Verification
+        participant JG as JinrouGame
+    end
+
+    O ->> JG: 状態変更を購読
+
+    A ->>+ US: 変換後、処理を委託
+    US ->>+ V: 妥当性チェック
+    V -->>- US: 妥当性
+    US ->>+ JG: 状態変更
+    JG ->>- JG: 状態変更の通知
+```
+**Adapters**とは、そのイベントの元となるリスナー(OnAttack、OnChatなど)です。
+また、このクラスは**状態変更や妥当性のチェックは基本的に行いません**。それらを行うのは全てAPP層です。
+**UI的副作用**を行うときは、**全て変更や通知を購読する**ことで得られる情報から行います。
+基本的にUI的副作用は、APP、Domain層から直接呼び出されることはありません。
+
 # 攻撃フロー
 
 まず、全体のフロー図です。
@@ -5,36 +33,32 @@
 ```mermaid
 sequenceDiagram
     box UI層
-        participant UI
+        participant CPE as ConsumedProtectionEffectors
+        participant DO as DeathObservers
+        participant AA as AttackAdapters
     end
     box APP層
-        participant GC as GameController
-        participant AC as AttackController
+        participant A as Attacking
     end
     box Domain層
-        participant AM as AttackMethod
-        participant PM as ProtectiveMethod
-        participant P as Participant
-        participant G as JinrouGame
+        participant AV as AttackVerificator
+        participant JG as JinrouGame
     end
 
-    UI ->> AC: 攻撃することを知らせる
-    AC ->> AM: 攻撃、検証の委託
-    AM ->> PM: 防御の検証
-    PM -->> AM: 防御の検証の結果
-    alt 防御成功
-        AM -->> AC: 防御成功 (Protected)
-    else 防御失敗
-        AM ->> P: 死亡状態
-        AM -->> AC: 攻撃成功 (Success)
-        AC ->> AC: notifyDeath
+    opt 購読
+        CPE ->> AA: 攻撃の成功を条件に購読する
+        DO ->> JG: 死亡を条件に購読する
     end
-    
-    AC ->> G: 終了検証
-    alt 終了
-        AC ->> GC: 終了 (finish)
-    end
+
+    AA ->>+ A: 攻撃を検知 
+    A ->> AV: 攻撃の検証
+    A ->>+ JG: 参加者の更新(手段剥奪、死亡状態)
+    JG ->>- JG: 状態変更の通知
+    A ->>- A: 攻撃の失敗、成功を通知
 ```
 
-ここで重要なのは、**UI** と **Controller** は、攻撃の検証をしないという点です。
-攻撃の成功・失敗は全て **Method** に委託します。
+**攻撃の検知**はUIで行いますが、UIは変換以外の処理を行いません。
+**妥当性、状態の変更**といったことはすべてAPP層に委託されます。
+
+
+
