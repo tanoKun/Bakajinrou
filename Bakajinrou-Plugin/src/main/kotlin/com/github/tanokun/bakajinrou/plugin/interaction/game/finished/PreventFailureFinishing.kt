@@ -3,10 +3,10 @@ package com.github.tanokun.bakajinrou.plugin.interaction.game.finished
 import com.github.tanokun.bakajinrou.api.WonInfo
 import com.github.tanokun.bakajinrou.api.map.GameMap
 import com.github.tanokun.bakajinrou.api.observing.Observer
-import com.github.tanokun.bakajinrou.game.attacking.BodyHandler
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.interaction.game.initialization.asBukkit
+import com.github.tanokun.bakajinrou.plugin.interaction.participant.dead.body.BukkitBodyHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
@@ -21,20 +21,20 @@ import org.bukkit.GameMode
  * 監視対象が "ゲーム終了" であるため、その時点で監視は自動終了します。
  *
  * @property playerProvider BukkitのPlayerオブジェクトを取得するための Provider
- * @property game 監視対象のゲームセッション
+ * @property gameSession 監視対象のゲームセッション
  * @property gameMap ゲームマップ情報
  * @property topScope このクラスの全てのコルーチンが動作する、上位のコルーチンスコープ
  */
 class PreventFailureFinishing(
     private val playerProvider: BukkitPlayerProvider,
-    private val game: JinrouGameSession,
+    private val gameSession: JinrouGameSession,
     private val gameMap: GameMap,
     private val topScope: CoroutineScope,
-    private val bodyHandler: BodyHandler
+    private val bodyHandler: BukkitBodyHandler
 ): Observer {
     init {
         topScope.launch {
-            game.observeWin(topScope)
+            gameSession.observeWin(topScope)
                 .take(1)
                 .collect(::atFinish)
         }

@@ -6,10 +6,10 @@ import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.whenOvertime
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
-import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.notifier.SystemFinishNotifier
-import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.notifier.each.CitizenSideFinishNotifier
-import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.notifier.each.FoxSideFinishNotifier
-import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.notifier.each.WolfSideFinishNotifier
+import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.finisher.SystemFinishNotifier
+import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.finisher.each.CitizenSideFinishNotifier
+import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.finisher.each.FoxSideFinishNotifier
+import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.finisher.each.WolfSideFinishNotifier
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
