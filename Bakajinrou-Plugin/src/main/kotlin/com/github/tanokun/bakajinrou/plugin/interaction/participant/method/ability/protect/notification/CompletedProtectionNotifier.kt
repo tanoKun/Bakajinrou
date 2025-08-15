@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.participant.method.ability.protect
+package com.github.tanokun.bakajinrou.plugin.interaction.participant.method.ability.protect.notification
 
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.ability.knight.GrantProtectResult
@@ -36,11 +36,11 @@ class CompletedProtectionNotifier(
     }
 
     private fun protected(result: GrantProtectResult.Granted) {
-        val fortune = playerProvider.getAllowNull(result.knightId) ?: return
+        val knight = playerProvider.getAllowNull(result.knightId) ?: return
         val targetName = PlayerNameCache.get(result.targetId) ?: "unknown"
 
-        val message = translator.translate(GameKeys.Ability.Using.PROTECT_MESSAGE, fortune.locale(), Component.text(targetName))
+        val message = translator.translate(GameKeys.Ability.Using.PROTECT_MESSAGE, knight.locale(), Component.text(targetName))
 
-        fortune.sendMessage(message)
+        knight.sendMessage(message)
     }
 }

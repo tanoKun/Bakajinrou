@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.participant.method.ability.commune
+package com.github.tanokun.bakajinrou.plugin.interaction.participant.method.ability.commune.notification
 
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.ability.medium.CommuneAbilityExecutor
@@ -51,6 +51,5 @@ class CommuneResultNotifier(
 
             medium.sendMessage(message)
         }
-
     }
 }
