@@ -16,7 +16,14 @@ class DisableHittingBody(
     private val playerProvider: BukkitPlayerProvider
 ) {
 
+    private val _ghostingPlayers = arrayListOf<Int>()
+
+    val ghostingPlayers: List<Int>
+        get() = _ghostingPlayers
+
     fun ghost(player: CraftPlayer) {
+        _ghostingPlayers.add(player.handle.id)
+
         val buf = createTeleportEntityPacketBuffer(player.handle.id, player.location.set(0.0, -100.0, 0.0))
         val packet = ClientboundTeleportEntityPacket.STREAM_CODEC.decode(buf)
         game.getCurrentParticipants()
