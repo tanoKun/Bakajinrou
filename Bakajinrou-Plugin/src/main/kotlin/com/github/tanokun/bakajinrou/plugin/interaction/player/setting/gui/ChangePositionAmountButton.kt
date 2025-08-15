@@ -5,6 +5,7 @@ import com.github.tanokun.bakajinrou.plugin.common.setting.RequestedPositions
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import kotlinx.coroutines.*
 import net.kyori.adventure.sound.Sound
+import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
@@ -84,7 +85,7 @@ class ChangePositionAmountButton(
 
         if (clickType == ClickType.LEFT) {
             settings.increase(position)
-            sendChangeMessage(clicker)
+            sendChangeMessage()
             clicker.playSound(Sound.sound(NamespacedKey("minecraft", "entity.experience_orb.pickup"), Sound.Source.PLAYER, 1.0f, 1.0f))
             notifyWindows()
             return
@@ -101,17 +102,19 @@ class ChangePositionAmountButton(
             }
 
             settings.decrease(position)
-            sendChangeMessage(clicker)
+            sendChangeMessage()
             clicker.playSound(Sound.sound(NamespacedKey("minecraft", "entity.experience_orb.pickup"), Sound.Source.PLAYER, 1.0f, 1.0f))
             notifyWindows()
         }
     }
 
-    private fun sendChangeMessage(clicker: Player) {
-        clicker.sendMessage(component {
-            text("「") color gray deco bold
-            raw { translator.translate(position.formatKey, clicker.locale()) } deco bold
-            text("」の予約数を${settings.getAmountBy(position)}人にしました。") color gray deco bold
-        })
+    private fun sendChangeMessage() {
+        Bukkit.getOnlinePlayers().forEach { player ->
+            player.sendMessage(component {
+                text("「") color gray deco bold
+                raw { translator.translate(position.formatKey, player.locale()) } deco bold
+                text("」の予約数を${settings.getAmountBy(position)}人にしました。") color gray deco bold
+            })
+        }
     }
 }
