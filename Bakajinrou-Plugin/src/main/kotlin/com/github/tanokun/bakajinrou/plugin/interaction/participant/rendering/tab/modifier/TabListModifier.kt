@@ -1,6 +1,5 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.tab.modifier
 
-import com.comphenix.protocol.wrappers.EnumWrappers
 import com.comphenix.protocol.wrappers.PlayerInfoData
 import com.comphenix.protocol.wrappers.WrappedChatComponent
 import com.github.tanokun.bakajinrou.api.JinrouGame
@@ -28,22 +27,13 @@ class TabListModifier(
     fun modifyByUpdateGameMode(viewerUniqueId: ParticipantId, contents: List<PlayerInfoData>): List<PlayerInfoData> {
         val viewer = game.getParticipant(viewerUniqueId) ?: return contents
 
-        return contents.map { entry ->
-            val target = game.getParticipant(entry.profileId.asParticipantId()) ?: return@map entry
-            if (target.isPosition<SpectatorPosition>()) return@map entry
+        return contents.mapNotNull { entry ->
+            val target = game.getParticipant(entry.profileId.asParticipantId()) ?: return@mapNotNull entry
 
-            val gameType =
-                if (isVisibleSpectator(viewer, entry.profileId.asParticipantId())) entry.gameMode else EnumWrappers.NativeGameMode.ADVENTURE
+            if (target.isPosition<SpectatorPosition>()) return@mapNotNull entry
+            if (isVisibleSpectator(viewer, entry.profileId.asParticipantId())) return@mapNotNull entry
 
-            return@map PlayerInfoData(
-                entry.profileId,
-                entry.latency,
-                entry.isListed,
-                gameType,
-                entry.profile,
-                entry.displayName,
-                entry.remoteChatSessionData,
-            )
+            return@mapNotNull null
         }
     }
 
@@ -51,12 +41,11 @@ class TabListModifier(
         val viewer = game.getParticipant(viewerPlayer.uniqueId.asParticipantId()) ?: return contents
         val viewerLocale = viewerPlayer.locale()
 
-        return contents.map { entry ->
-            val target = game.getParticipant(entry.profileId.asParticipantId()) ?: return@map entry
-            if (target.isPosition<SpectatorPosition>()) return@map entry
-            val gameType =
-                if (isVisibleSpectator(viewer, entry.profileId.asParticipantId())) entry.gameMode else EnumWrappers.NativeGameMode.ADVENTURE
+        return contents.mapNotNull { entry ->
+            val target = game.getParticipant(entry.profileId.asParticipantId()) ?: return@mapNotNull entry
+            if (target.isPosition<SpectatorPosition>()) return@mapNotNull entry
 
+            if (target.isDead()) return@mapNotNull null
 
             val displayName = component {
                 val prefix = prefixCreator.createPrefix(viewer = viewer, target = target, locale = viewerLocale)
@@ -69,11 +58,11 @@ class TabListModifier(
                 text(entry.profile.name)
             }
 
-            return@map PlayerInfoData(
+            return@mapNotNull PlayerInfoData(
                 entry.profileId,
                 entry.latency,
                 entry.isListed,
-                gameType,
+                entry.gameMode,
                 entry.profile,
                 WrappedChatComponent.fromHandle(PaperAdventure.asVanilla(displayName)),
                 entry.remoteChatSessionData,
