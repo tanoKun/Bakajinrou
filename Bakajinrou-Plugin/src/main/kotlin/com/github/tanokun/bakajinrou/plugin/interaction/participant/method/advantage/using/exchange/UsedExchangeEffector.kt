@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.participant.method.advantage.using
+package com.github.tanokun.bakajinrou.plugin.interaction.participant.method.advantage.using.exchange
 
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.method.advantage.using.ExchangeInfo
@@ -14,7 +14,7 @@ import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
 
 /**
- * 位置交換イベント([ExchangeInfo])を監視し、
+ * 位置交換([com.github.tanokun.bakajinrou.game.method.advantage.using.ExchangeInfo])を監視し、
  * 実際にプレイヤーをテレポートさせ、メッセージを送信します。
  *
  * このクラスは、位置交換ユースケースの「結果」に対するリアクションを担当します。
