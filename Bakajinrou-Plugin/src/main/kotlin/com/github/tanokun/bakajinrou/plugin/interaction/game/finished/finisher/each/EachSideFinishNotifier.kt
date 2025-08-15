@@ -1,6 +1,6 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.game.finished.notifier.each
+package com.github.tanokun.bakajinrou.plugin.interaction.game.finished.finisher.each
 
-import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.notifier.GameFinishNotifier
+import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.finisher.GameFinishNotifier
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
 import net.kyori.adventure.text.Component
