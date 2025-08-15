@@ -1,5 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.participant.dead.body
 
+import com.mojang.authlib.GameProfile
 import net.minecraft.ChatFormatting
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.protocol.game.*
@@ -20,8 +21,16 @@ import java.util.*
 class BodyPacket(server: Server, body: Player) {
     private val randomUuid = UUID.randomUUID()
 
+    private val profile = let {
+        val origin = (body as CraftPlayer).profile
+
+         GameProfile(origin.id, "body_${body.handle.id}").apply {
+             origin.properties.forEach { key, property -> this.properties.put(key, property) }
+        }
+    }
+
     private val dummy = ServerPlayer(
-        (server as CraftServer).server, (body.world as CraftWorld).handle, (body as CraftPlayer).profile, body.handle.clientInformation()
+        (server as CraftServer).server, (body.world as CraftWorld).handle, profile, (body as CraftPlayer).handle.clientInformation()
     ).apply {
         this.uuid = randomUuid
         this.setPos(body.location.x, body.location.y, body.location.z)
