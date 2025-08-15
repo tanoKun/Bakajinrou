@@ -3,12 +3,15 @@ package com.github.tanokun.bakajinrou.plugin.interaction.game.scheduler.announce
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
+import com.github.tanokun.bakajinrou.api.participant.position.isFox
+import com.github.tanokun.bakajinrou.api.participant.position.isWolf
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.remaining
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.formatter.ParticipantsFormatter
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
+import com.github.tanokun.bakajinrou.plugin.localization.keys.FormatKeys
 import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -43,8 +46,8 @@ class HiddenPositionAnnouncer(
         participants.forEach {
             val player = playerProvider.getAllowNull(it) ?: return@forEach
 
-            player.sendMessage(formatter.formatWolf(player.locale()))
-            player.sendMessage(formatter.formatFox(player.locale()))
+            player.sendMessage(formatter.format(player.locale(), FormatKeys.Category.WOLF, ::isWolf to FormatKeys.Participant.WOLF))
+            player.sendMessage(formatter.format(player.locale(), FormatKeys.Category.FOX, ::isFox to FormatKeys.Participant.FOX))
         }
     }
 

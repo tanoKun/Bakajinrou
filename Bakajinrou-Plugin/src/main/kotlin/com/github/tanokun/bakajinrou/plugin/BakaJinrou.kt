@@ -1,13 +1,16 @@
 package com.github.tanokun.bakajinrou.plugin
 
 import com.github.shynixn.mccoroutine.bukkit.scope
+import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
+import com.github.tanokun.bakajinrou.plugin.common.cache.PlayerSkinCache
 import com.github.tanokun.bakajinrou.plugin.common.setting.GameSettings
 import com.github.tanokun.bakajinrou.plugin.interaction.player.handling.command.HandleGameCommand
 import com.github.tanokun.bakajinrou.plugin.interaction.player.preparation.NonLifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.interaction.player.setting.command.GameSettingCommand
 import com.github.tanokun.bakajinrou.plugin.interaction.player.setting.command.MapSettingCommand
 import com.github.tanokun.bakajinrou.plugin.module.GameBuilderModule
-import com.github.tanokun.bakajinrou.plugin.module.GameComponentsModule
+import dev.jorel.commandapi.CommandAPICommand
+import dev.jorel.commandapi.executors.CommandExecutor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -53,6 +56,17 @@ open class BakaJinrou(): JavaPlugin() {
 
             Bukkit.getPluginManager().registerEvents(NonLifecycleEventListener(gameSettings, translatorDeferred.await()), this@BakaJinrou)
         }
+
+        CommandAPICommand("test1")
+            .executes(CommandExecutor { sender, args ->
+                Bukkit.getOnlinePlayers().forEach {
+                    PlayerNameCache.put(it.uniqueId, it.name)
+                    PlayerSkinCache.put(it.uniqueId, it.playerProfile)
+
+                    gameSettings.addCandidate(it.uniqueId)
+                }
+            })
+            .register()
 
         addQuartzRecipe()
 

@@ -10,6 +10,7 @@ import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerPro
 import com.github.tanokun.bakajinrou.plugin.common.formatter.ParticipantsFormatter
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
+import com.github.tanokun.bakajinrou.plugin.localization.keys.FormatKeys
 import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
 
@@ -26,6 +27,6 @@ class WolfInitializer(
 
         val formatter = ParticipantsFormatter(game.getCurrentParticipants().excludeSpectators(), translator)
 
-        player.sendMessage(formatter.formatWolf(player.locale()))
+        player.sendMessage(formatter.format(player.locale(), FormatKeys.Category.WOLF, ::isWolf to FormatKeys.Participant.WOLF))
     }
 }
