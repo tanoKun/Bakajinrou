@@ -59,9 +59,9 @@
     "format.participant.madman": "<madman><arg-0></madman>",
     "format.participant.fox": "<fox><arg-0></fox>",
     "format.participant.spectator": "<spectator><arg-0></spectator>",
-    "format.participant.idiot.fortune": "<fortune><arg-0></fortune>",
-    "format.participant.idiot.medium": "<medium><arg-0></medium>",
-    "format.participant.idiot.knight": "<knight><arg-0></knight>",
+    "format.participant.idiot.fortune": "<fortune><arg-0><idiot><bold>(バカ)</bold></idiot></fortune>",
+    "format.participant.idiot.medium": "<medium><arg-0><idiot><bold>(バカ)</bold></idiot></medium>",
+    "format.participant.idiot.knight": "<knight><arg-0><idiot><bold>(バカ)</bold></idiot></knight>",
     "format.participant.mystic.fortune": "<fortune><arg-0></fortune>",
     "format.participant.mystic.medium": "<medium><arg-0></medium>",
     "format.participant.mystic.knight": "<knight><arg-0></knight>",
@@ -78,6 +78,7 @@
 
     "game.start.title": "<wolf><bold>～ バカ人狼 ～</bold></wolf>",
     "game.start.sub.title": "<wolf>スタート</wolf>",
+    "game.start.notification.position": "<gray><bold>貴方の役職は「<arg-0>」です。</bold></gray>",
 
     "game.finish.victory.message": "<green>あなたは勝利しました。</green>",
     "game.finish.lose.message": "<red>あなたは敗北しました。</red>",
@@ -97,6 +98,7 @@
     "game.gui.using.protect.description": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」を加護する</bold></gray>",
 
     "game.ability.using.divine.message": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」は占いの結果「<arg-1>」でした。</bold></gray>",
+    "game.ability.using.divined.fox.message": "<red><bold>占われてしまいました!</bold></red>",
     "game.ability.using.commune.failure.message": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」は死亡していないため、霊媒が失敗しました。</bold></gray>",
     "game.ability.using.commune.message": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」は霊媒の結果「<arg-1>」でした。</bold></gray>",
     "game.ability.using.protect.message": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」を加護しました。</bold></gray>",
@@ -106,7 +108,12 @@
     "game.announcement.remaining.time": "<yellow><bold>残り時間: <arg-0>分 <arg-1>秒</bold></yellow>",
     "game.announcement.glowing": "<gray><bold>5分から、定期発行が始まります。</bold></gray>",
     "game.announcement.getaway": "<gray><bold>時間切れでの終了は、市民陣営の勝利です。</bold></gray>",
-    "game.announcement.revelation": "<gray><bold>3分で、「人狼」、「妖狐」の参加者が明かされます。</bold></gray>"
+    "game.announcement.revelation": "<gray><bold>3分で、「人狼」、「妖狐」の参加者が明かされます。</bold></gray>",
 
+    "logging.kill": "<bold><gray>死亡:</gray><bold> <arg-0> <gray>➡</gray> <arg-1>",
+    "logging.use.divine": "<fortune><bold><gray>占い:</gray> <arg-0> ➡ <arg-1> (<arg-2>)</bold></fortune>",
+    "logging.use.commune": "<medium><bold><gray>霊媒:</gray> <arg-0> ➡ <arg-1> (<arg-2>)</bold></medium>",
+    "logging.use.protect": "<knight><bold><gray>騎士:</gray> <arg-0> ➡ <arg-1></bold></knight>",
+    "logging.use.exchange.method": "<gray><bold>入れ替わり: <arg-0> ↔ <arg-1></bold></gray> "
   }
 }
