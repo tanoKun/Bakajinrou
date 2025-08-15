@@ -8,6 +8,7 @@ import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponent
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.dead.body.BukkitBodyHandler
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.dead.body.DisableHittingBody
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -34,6 +35,7 @@ class DeathConfirmedObserver(
         mainScope.launch {
             game.observeParticipants(mainScope)
                 .filter { it.after.isDead() }
+                .distinctUntilChanged()
                 .map { it.after }
                 .collect(::onDeath)
         }
