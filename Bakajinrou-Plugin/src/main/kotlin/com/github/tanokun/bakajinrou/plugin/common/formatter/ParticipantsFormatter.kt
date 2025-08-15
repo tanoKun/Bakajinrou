@@ -144,8 +144,8 @@ class ParticipantsFormatter(
 
         return component {
             raw { componentAsJob }
+
             positionLineComponent(idiotsAsFortune, formatter)?.let { line ->
-                text(", ") color gray
                 raw { line }
             }
         }
