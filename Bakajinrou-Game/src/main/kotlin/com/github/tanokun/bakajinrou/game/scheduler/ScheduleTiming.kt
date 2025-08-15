@@ -15,6 +15,10 @@ fun Flow<ScheduleState>.moment(time: Duration): Flow<InProgress> =
     this.filterIsInstance<InProgress>()
         .filter { inProgress -> inProgress.passedTime == time }
 
+fun Flow<ScheduleState>.remaining(time: Duration): Flow<InProgress> =
+    this.filterIsInstance<InProgress>()
+        .filter { inProgress -> inProgress.remainingTime == time }
+
 fun Flow<ScheduleState>.whenLaunched(): Flow<ScheduleState.Active.Launched> =
     this.filterIsInstance()
 
