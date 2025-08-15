@@ -4,7 +4,7 @@ import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
-import com.github.tanokun.bakajinrou.game.scheduler.moment
+import com.github.tanokun.bakajinrou.game.scheduler.remaining
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.formatter.ParticipantsFormatter
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
@@ -63,13 +63,13 @@ class HiddenPositionAnnouncer(
 
     private suspend fun collectRemainingTime() {
         scheduler.observe(mainScope)
-            .moment(3.minutes)
+            .remaining(3.minutes)
             .collect { state ->
                 reveal(game.getCurrentParticipants())
             }
 
         scheduler.observe(mainScope)
-            .moment(5.minutes)
+            .remaining(5.minutes)
             .collect { state ->
                 announceRevelation(game.getCurrentParticipants())
             }

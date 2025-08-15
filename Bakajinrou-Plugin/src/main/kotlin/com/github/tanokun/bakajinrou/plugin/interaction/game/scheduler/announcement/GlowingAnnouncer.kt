@@ -9,7 +9,7 @@ import com.github.tanokun.bakajinrou.api.participant.position.isWolf
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.ScheduleState
 import com.github.tanokun.bakajinrou.game.scheduler.every
-import com.github.tanokun.bakajinrou.game.scheduler.moment
+import com.github.tanokun.bakajinrou.game.scheduler.remaining
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.formatter.toTick
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
@@ -75,7 +75,7 @@ class GlowingAnnouncer(
 
     private suspend fun collectRemainingTime() {
         scheduler.observe(mainScope)
-            .moment(7.minutes)
+            .remaining(7.minutes)
             .collect { state ->
                 announceGlowing(game.getCurrentParticipants())
             }
