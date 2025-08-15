@@ -13,7 +13,9 @@ sequenceDiagram
         participant JG as JinrouGame
     end
 
-    O ->> JG: 状態変更を購読
+    opt 購読
+        O ->> JG: 状態変更を購読 
+    end
 
     A ->>+ US: 変換後、処理を委託
     US ->>+ V: 妥当性チェック
