@@ -93,11 +93,14 @@ class GameSettingCommand(
                         text(" ${target.name}")
                     })
                     sender.world.playSound(Sound.sound(NamespacedKey("minecraft", "entity.experience_orb.pickup"), Sound.Source.PLAYER, 1.0f, 1.0f))
-                    Bukkit.broadcast(component {
-                        text("「") color colorPallet.getColor("spectator").asHexString()
-                        raw { target.displayName() }
-                        text("」が観戦者になりました。") color colorPallet.getColor("spectator").asHexString()
-                    })
+
+                    Bukkit.getOnlinePlayers().forEach {
+                        it.sendMessage(component {
+                            text("「") color colorPallet.getColor("spectator").asHexString()
+                            raw { target.displayName() }
+                            text("」が観戦者になりました。") color colorPallet.getColor("spectator").asHexString()
+                        })
+                    }
                 })
             )
             .withSubcommand(CommandAPICommand("remove")
@@ -112,15 +115,18 @@ class GameSettingCommand(
                         return@PlayerCommandExecutor
                     }
 
-                    gameSettings.removeSpectator(target.uniqueId)
+                    gameSettings.addCandidate(target.uniqueId)
 
                     target.playerListName((component { text(target.name) }))
                     sender.world.playSound(Sound.sound(NamespacedKey("minecraft", "entity.experience_orb.pickup"), Sound.Source.PLAYER, 1.0f, 1.0f))
-                    Bukkit.broadcast(component {
-                        text("「") color colorPallet.getColor("spectator").asHexString()
-                        raw { target.displayName() }
-                        text("」が参加者になりました。") color colorPallet.getColor("spectator").asHexString()
-                    })
+
+                    Bukkit.getOnlinePlayers().forEach {
+                        it.sendMessage(component {
+                            text("「") color colorPallet.getColor("spectator").asHexString()
+                            raw { target.displayName() }
+                            text("」が参加者になりました。") color colorPallet.getColor("spectator").asHexString()
+                        })
+                    }
                 })
             )
             .register()
@@ -136,9 +142,11 @@ class GameSettingCommand(
                     }
 
                     sender.world.playSound(Sound.sound(NamespacedKey("minecraft", "entity.experience_orb.pickup"), Sound.Source.PLAYER, 1.0f, 1.0f))
-                    Bukkit.broadcast(component {
-                        text("マップが「${mapName.name}」になりました。") color green
-                    })
+                    Bukkit.getOnlinePlayers().forEach {
+                        it.sendMessage(component {
+                            text("マップが「${mapName.name}」になりました。") color green
+                        })
+                    }
 
                     gameSettings.selectedMap = gameMap
                 })
