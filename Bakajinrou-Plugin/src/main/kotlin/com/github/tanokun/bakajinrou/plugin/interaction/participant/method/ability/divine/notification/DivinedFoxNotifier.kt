@@ -61,6 +61,6 @@ class DivinedFoxNotifier(
         fox.addPotionEffect(PotionEffect(PotionEffectType.GLOWING, glowingTime.toTick(), 1, true, false))
         fox.showTitle(Title.title(Component.text(""), message))
         fox.sendMessage(message)
-        fox.playSound(Sound.sound(NamespacedKey("minecraft", "block.enchantment_table.use"), Sound.Source.PLAYER, 10f, 1f))
+        fox.playSound(Sound.sound(NamespacedKey("minecraft", "entity.allay.item_taken"), Sound.Source.PLAYER, 10f, 0.5f))
     }
 }

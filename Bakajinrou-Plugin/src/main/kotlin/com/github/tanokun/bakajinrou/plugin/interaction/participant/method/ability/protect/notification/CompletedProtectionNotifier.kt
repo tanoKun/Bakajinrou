@@ -11,7 +11,9 @@ import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
+import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
+import org.bukkit.NamespacedKey
 import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
 
@@ -40,6 +42,10 @@ class CompletedProtectionNotifier(
         val targetName = PlayerNameCache.get(result.targetId) ?: "unknown"
 
         val message = translator.translate(GameKeys.Ability.Using.PROTECT_MESSAGE, knight.locale(), Component.text(targetName))
+
+        knight.playSound(
+            Sound.sound(NamespacedKey("minecraft", "entity.experience_orb.pickup"), Sound.Source.PLAYER, 1.0f, 1.0f)
+        )
 
         knight.sendMessage(message)
     }

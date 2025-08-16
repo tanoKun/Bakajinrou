@@ -11,7 +11,9 @@ import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
+import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
+import org.bukkit.NamespacedKey
 import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
 
@@ -41,6 +43,10 @@ class DivineResultNotifier(
 
         val resultComponent = translator.translate(result.source.resultKey, fortune.locale())
         val message = translator.translate(GameKeys.Ability.Using.DIVINE_MESSAGE, fortune.locale(), Component.text(targetName), resultComponent)
+
+        fortune.playSound(
+            Sound.sound(NamespacedKey("minecraft", "block.enchantment_table.use"), Sound.Source.PLAYER, 1.0f, 1.0f)
+        )
 
         fortune.sendMessage(message)
     }

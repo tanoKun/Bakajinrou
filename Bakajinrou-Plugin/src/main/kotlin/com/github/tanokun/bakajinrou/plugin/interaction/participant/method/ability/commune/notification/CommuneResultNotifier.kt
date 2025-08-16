@@ -11,7 +11,9 @@ import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
+import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
+import org.bukkit.NamespacedKey
 import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
 
@@ -38,6 +40,10 @@ class CommuneResultNotifier(
     private fun communed(result: CommuneResult.Success) {
         val medium = playerProvider.getAllowNull(result.mediumId) ?: return
         val targetName = PlayerNameCache.get(result.targetId) ?: "unknown"
+
+        medium.playSound(
+            Sound.sound(NamespacedKey("minecraft", "block.enchantment_table.use"), Sound.Source.PLAYER, 1.0f, 1.0f)
+        )
 
         if (result is CommuneResult.FoundResult) {
             val resultComponent = translator.translate(result.source.resultKey, medium.locale())

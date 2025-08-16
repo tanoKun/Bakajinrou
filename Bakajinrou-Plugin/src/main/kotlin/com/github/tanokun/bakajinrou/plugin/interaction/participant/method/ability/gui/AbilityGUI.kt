@@ -19,7 +19,7 @@ import xyz.xenondevs.invui.window.Window
 class AbilityGUI(
     private val translator: JinrouTranslator,
     participants: ParticipantScope.NonSpectators,
-    description: GameKeys.Gui.Using,
+    description: GameKeys.Ability.Gui.Using,
     onClick: (clicker: ParticipantId, target: ParticipantId) -> Unit,
 ) {
     private val contents = participants
@@ -37,7 +37,7 @@ class AbilityGUI(
     fun open(player: Player) {
         Window.single()
             .setGui(gui)
-            .setTitle(AdventureComponentWrapper(translator.translate(GameKeys.Gui.TITLE, player.locale())))
+            .setTitle(AdventureComponentWrapper(translator.translate(GameKeys.Ability.Gui.TITLE, player.locale())))
             .setViewer(player)
             .build()
             .open()

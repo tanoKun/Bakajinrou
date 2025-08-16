@@ -63,15 +63,15 @@ class TriggerAdapter(
 
     private fun trigger(ability: Ability) {
         val listener = when (ability) {
-            is DivineAbility -> ClickListener(ability, GameKeys.Gui.Using.DIVINE_DESCRIPTION) { user: ParticipantId, target: ParticipantId ->
+            is DivineAbility -> ClickListener(ability, GameKeys.Ability.Gui.Using.DIVINE_DESCRIPTION) { user: ParticipantId, target: ParticipantId ->
                 mainScope.launch { divineExecutor.divine(ability, user, target) }
             }
 
-            is CommuneAbility -> ClickListener(ability, GameKeys.Gui.Using.COMMUNE_DESCRIPTION) { user: ParticipantId, target: ParticipantId ->
+            is CommuneAbility -> ClickListener(ability, GameKeys.Ability.Gui.Using.COMMUNE_DESCRIPTION) { user: ParticipantId, target: ParticipantId ->
                 mainScope.launch { communeExecutor.commune(ability, user, target) }
             }
 
-            is ProtectAbility -> ClickListener(ability, GameKeys.Gui.Using.PROTECT_DESCRIPTION) { user: ParticipantId, target: ParticipantId ->
+            is ProtectAbility -> ClickListener(ability, GameKeys.Ability.Gui.Using.PROTECT_DESCRIPTION) { user: ParticipantId, target: ParticipantId ->
                 mainScope.launch { protectExecutor.protect(ability, user, target) }
             }
         }
@@ -85,7 +85,7 @@ class TriggerAdapter(
     }
 
     private inner class ClickListener<T: Ability>(
-        ability: T, description: GameKeys.Gui.Using, executor: (user: ParticipantId, target: ParticipantId) -> Unit
+        ability: T, description: GameKeys.Ability.Gui.Using, executor: (user: ParticipantId, target: ParticipantId) -> Unit
     ): LifecycleEventListener(plugin, {
         register<PlayerInteractEvent> { event ->
             if (event.action != Action.RIGHT_CLICK_AIR && event.action != Action.RIGHT_CLICK_BLOCK) return@register

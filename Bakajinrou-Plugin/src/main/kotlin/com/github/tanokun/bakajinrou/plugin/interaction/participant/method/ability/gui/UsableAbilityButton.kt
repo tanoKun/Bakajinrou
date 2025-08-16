@@ -6,9 +6,7 @@ import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.common.cache.PlayerSkinCache
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
-import net.kyori.adventure.sound.Sound
 import net.kyori.adventure.text.Component
-import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -21,7 +19,7 @@ import xyz.xenondevs.invui.item.impl.AbstractItem
 class UsableAbilityButton(
     private val translator: JinrouTranslator,
     private val target: ParticipantId,
-    private val description: GameKeys.Gui.Using,
+    private val description: GameKeys.Ability.Gui.Using,
     private val onClick: (clicker: ParticipantId, target: ParticipantId) -> Unit
 ) : AbstractItem() {
     override fun getItemProvider(player: Player): ItemProvider {
@@ -37,8 +35,6 @@ class UsableAbilityButton(
     }
 
     override fun handleClick(clickType: ClickType, clicker: Player, event: InventoryClickEvent) {
-        clicker.playSound(Sound.sound(NamespacedKey("minecraft", "entity.experience_orb.pickup"), Sound.Source.PLAYER, 1.0f, 1.0f))
-
         onClick(clicker.uniqueId.asParticipantId(), target)
 
         clicker.closeInventory()
