@@ -7,6 +7,7 @@ import com.github.tanokun.bakajinrou.game.scheduler.whenLaunched
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.getMethodId
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
+import com.github.tanokun.bakajinrou.plugin.interaction.participant.comingout.adapting.COMING_OUT_ADAPTER_KEY
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
@@ -37,6 +38,7 @@ class ClearInventoryInitializer(
                 player.inventory.contents
                     .filterNotNull()
                     .filterNot { participant.hasGrantedMethod(it.getMethodId() ?: return@filterNot false) }
+                    .filterNot { it.persistentDataContainer.has(COMING_OUT_ADAPTER_KEY) }
                     .forEach { player.inventory.removeItemAnySlot(it) }
             }
         }
