@@ -1,10 +1,10 @@
 [versions]
-paper = "1.21-R0.1-SNAPSHOT"
+paper = "1.21.4-R0.1-SNAPSHOT"
 commandapi = "10.1.1"
 invui = "1.46"
 mockk = "1.14.5"
 mockbukkit = "4.39.0"
-protocollib = "5.3.0"
+protocollib = "5.4.0"
 junit = "5.12.2"
 adventurekt = "2.1.1"
 kotlinx-coroutines = "1.10.2"
@@ -20,7 +20,7 @@ commandapi = { module = "dev.jorel:commandapi-bukkit-core", version.ref = "comma
 commandapi-toolkit = { module = "dev.jorel:commandapi-bukkit-test-toolkit", version.ref = "commandapi" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 mockkbukkit = { module = "org.mockbukkit.mockbukkit:mockbukkit-v1.21", version.ref = "mockbukkit" }
-protocollib = { module = "com.comphenix.protocol:ProtocolLib", version.ref = "protocollib" }
+protocollib = { module = "net.dmulloy2:ProtocolLib", version.ref = "protocollib" }
 invui = { module = "xyz.xenondevs.invui:invui", version.ref = "invui" }
 junit-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit" }
 adventurekt = { module = "plutoproject.adventurekt:core", version.ref = "adventurekt" }
@@ -50,5 +50,5 @@ kotest = ["kotest-assertions-core", "kotest-runner-junit5", "kotest-framework-en
 [plugins]
 shadow = { id = "com.gradleup.shadow", version = "9.0.0-rc1" }
 paper = { id = "net.minecrell.plugin-yml.paper", version = "0.6.0" }
-paperweight = { id = "io.papermc.paperweight.userdev", version = "1.7.7" }
+paperweight = { id = "io.papermc.paperweight.userdev", version = "2.0.0-beta.18" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

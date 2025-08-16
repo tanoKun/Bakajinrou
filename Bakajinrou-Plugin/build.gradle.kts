@@ -31,6 +31,7 @@ repositories {
     maven("https://repo.dmulloy2.net/repository/public/")
     maven("https://maven.nostal.ink/repository/maven-public/")
     maven("https://repo.triumphteam.dev/snapshots")
+    maven("https://repo.codemc.io/repository/maven-public/")
 }
 
 dependencies {
@@ -79,10 +80,7 @@ tasks {
     val copyJarToPlugins by registering(Copy::class) {
         dependsOn(shadowJar)
         from(shadowJar.get().archiveFile)
-        into("C:/Users/owner/Desktop/1.21 paper/plugins")
-        rename {
-            "plugin.jar"
-        }
+        into("C:/Users/owner/Desktop/1.21.4 paper 2/plugins")
     }
 
     shadowJar {
