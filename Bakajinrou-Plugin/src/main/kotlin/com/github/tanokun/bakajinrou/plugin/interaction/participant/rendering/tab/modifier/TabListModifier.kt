@@ -1,89 +1,145 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.tab.modifier
 
-import com.comphenix.protocol.wrappers.PlayerInfoData
-import com.comphenix.protocol.wrappers.WrappedChatComponent
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
-import com.github.tanokun.bakajinrou.api.participant.position.SpectatorPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
+import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import io.papermc.paper.adventure.PaperAdventure
 import net.kyori.adventure.text.Component
+import net.minecraft.Optionull
+import net.minecraft.network.chat.RemoteChatSession
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.player.PlayerModelPart
+import net.minecraft.world.level.GameType
 import org.bukkit.craftbukkit.entity.CraftPlayer
-import org.bukkit.entity.Player
 import plutoproject.adventurekt.component
 import plutoproject.adventurekt.text.raw
 import plutoproject.adventurekt.text.text
+import java.util.*
 
+/**
+ */
 class TabListModifier(
     private val game: JinrouGame,
+    private val playerProvider: BukkitPlayerProvider,
     translator: JinrouTranslator
 ) {
     val prefixCreator = PrefixCreator(translator)
 
-    fun modifyByUpdateGameMode(viewerUniqueId: ParticipantId, contents: List<PlayerInfoData>): List<PlayerInfoData> {
-        val viewer = game.getParticipant(viewerUniqueId) ?: return contents
+    fun updateDisplayNameToAll(targetId: ParticipantId) {
+        val target = game.getParticipant(targetId) ?: return
 
-        return contents.mapNotNull { entry ->
-            val target = game.getParticipant(entry.profileId.asParticipantId()) ?: return@mapNotNull entry
-
-            if (target.isPosition<SpectatorPosition>()) return@mapNotNull entry
-            if (isVisibleSpectator(viewer, entry.profileId.asParticipantId())) return@mapNotNull entry
-
-            return@mapNotNull null
-        }
+        game.getCurrentParticipants()
+            .mapNotNull { playerProvider.getAllowNull(it) as? CraftPlayer }
+            .forEach { viewerPlayer -> updateDisplayNameOf(listOf(target), viewerPlayer) }
     }
 
-    fun modifyByUpdateDisplayName(viewerPlayer: Player, contents: List<PlayerInfoData>): List<PlayerInfoData>  {
-        val viewer = game.getParticipant(viewerPlayer.uniqueId.asParticipantId()) ?: return contents
-        val viewerLocale = viewerPlayer.locale()
+    fun updateDisplayNameToSelf(targetId: ParticipantId) {
+        val target = game.getParticipant(targetId) ?: return
+        val targetPlayer = playerProvider.getAllowNull(target) as? CraftPlayer ?: return
 
-        return contents.mapNotNull { entry ->
-            val target = game.getParticipant(entry.profileId.asParticipantId()) ?: return@mapNotNull entry
-            if (target.isPosition<SpectatorPosition>()) return@mapNotNull entry
+        updateDisplayNameOf(listOf(target), targetPlayer)
+    }
 
-            if (target.isDead()) return@mapNotNull null
+    fun updateDisplayNameOfAll(viewerId: ParticipantId) {
+        val viewerPlayer = playerProvider.getAllowNull(viewerId) as? CraftPlayer ?: return
 
-            val displayName = component {
-                val prefix = prefixCreator.createPrefix(viewer = viewer, target = target, locale = viewerLocale)
+        updateDisplayNameOf(game.getCurrentParticipants(), viewerPlayer)
+    }
 
-                if (prefix != Component.text("")) {
-                    raw { prefix }
-                    text(" ")
-                }
+    fun updateGameModeOfAll(viewerId: ParticipantId) {
+        val viewerPlayer = playerProvider.getAllowNull(viewerId) as? CraftPlayer ?: return
 
-                text(entry.profile.name)
+        val targetIds = game.getCurrentParticipants()
+            .filter(Participant::isDead)
+            .map(Participant::participantId)
+
+        updateGameModeOf(targetIds, viewerPlayer)
+    }
+
+    private fun updateDisplayNameOf(targets: Collection<Participant>, viewerPlayer: CraftPlayer) {
+        val viewer = game.getParticipant(viewerPlayer.uniqueId.asParticipantId()) ?: return
+
+        val entries = targets.map { target ->
+            val targetPlayer = playerProvider.getAllowNull(target) as? CraftPlayer ?: return
+            val displayName = createDisplayName(viewer, target, PlayerNameCache.get(target) ?: "", viewerPlayer.locale())
+            val gameMode = viewerPlayer.handle.gameMode.gameModeForPlayer
+
+            createEntry(targetPlayer.handle, displayName, gameMode)
+        }
+
+        val packet = ClientboundPlayerInfoUpdatePacket(
+            EnumSet.of(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME),
+            entries
+        )
+
+        viewerPlayer.handle.connection.sendPacket(packet)
+    }
+
+    private fun updateGameModeOf(targetIds: List<ParticipantId>, viewerPlayer: CraftPlayer) {
+        val viewer = game.getParticipant(viewerPlayer.uniqueId.asParticipantId()) ?: return
+
+        val entries = targetIds.map { targetId ->
+            val originGameMode = viewerPlayer.handle.gameMode.gameModeForPlayer
+
+            val viewGameMode =
+                if (originGameMode == GameType.SPECTATOR && !isVisibleSpectator(viewer, targetId))
+                    GameType.ADVENTURE
+                else originGameMode
+
+            createEntry(viewerPlayer.handle, Component.text(""), viewGameMode)
+        }
+
+        val packet = ClientboundPlayerInfoUpdatePacket(
+            EnumSet.of(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_GAME_MODE),
+            entries
+        )
+
+        viewerPlayer.handle.connection.sendPacket(packet)
+    }
+
+    private fun createDisplayName(viewer: Participant, target: Participant, name: String, locale: Locale): Component =
+        component {
+            val prefix = prefixCreator.createPrefix(viewer = viewer, target = target, locale = locale)
+
+            if (prefix != Component.text("")) {
+                raw { prefix }
+                text(" ")
             }
 
-            return@mapNotNull PlayerInfoData(
-                entry.profileId,
-                entry.latency,
-                entry.isListed,
-                entry.gameMode,
-                entry.profile,
-                WrappedChatComponent.fromHandle(PaperAdventure.asVanilla(displayName)),
-                entry.remoteChatSessionData,
-            )
+            text(name)
         }
+
+    private fun createEntry(handle: ServerPlayer, displayName: Component, gameMode: GameType): ClientboundPlayerInfoUpdatePacket.Entry {
+        return ClientboundPlayerInfoUpdatePacket.Entry(
+            handle.uuid,
+            handle.gameProfile,
+            true,
+            handle.connection.latency(),
+            gameMode,
+            PaperAdventure.asVanilla(displayName),
+            handle.isModelPartShown(PlayerModelPart.HAT),
+            handle.tabListOrder,
+            Optionull.map(handle.chatSession, RemoteChatSession::asData)
+        )
     }
 
-    fun initializeDisplayName(targetId: ParticipantId, targetPlayer: Player) {
+    fun initializeDisplayNameOfAll(targetId: ParticipantId) {
         val target = game.getParticipant(targetId) ?: return
 
         if (target.isPosition<WolfPosition>()) {
-            targetPlayer.playerListName(targetPlayer.playerListName())
+            updateDisplayNameToAll(targetId)
             return
         }
 
-        targetPlayer as CraftPlayer
-        val handle = targetPlayer.handle
-        val packet = ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME, handle)
-
-        handle.connection.sendPacket(packet)
+        updateDisplayNameToSelf(targetId)
     }
 
-    fun isVisibleSpectator(viewer: Participant, uniqueId: ParticipantId) = viewer.isVisibleSpectators() || uniqueId == viewer.participantId
+    private fun isVisibleSpectator(viewer: Participant, targetId: ParticipantId) =
+        viewer.isVisibleSpectators() || targetId == viewer.participantId
 }
