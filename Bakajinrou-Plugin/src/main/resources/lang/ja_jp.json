@@ -92,16 +92,15 @@
     "game.finish.fox.title": "<fox><bold>妖狐の勝利</bold></fox>",
     "game.finish.fox.message": "<fox>妖狐</fox> の勝利です。",
 
-    "game.gui.title": "<aqua><bold>能力使用</bold></aqua>",
-    "game.gui.using.divine.description": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」を占う</bold></gray>",
-    "game.gui.using.commune.description": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」を霊媒する</bold></gray>",
-    "game.gui.using.protect.description": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」を加護する</bold></gray>",
-
     "game.ability.using.divine.message": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」は占いの結果「<arg-1>」でした。</bold></gray>",
     "game.ability.using.divined.fox.message": "<red><bold>占われてしまいました!</bold></red>",
     "game.ability.using.commune.failure.message": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」は死亡していないため、霊媒が失敗しました。</bold></gray>",
     "game.ability.using.commune.message": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」は霊媒の結果「<arg-1>」でした。</bold></gray>",
     "game.ability.using.protect.message": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」を加護しました。</bold></gray>",
+    "game.ability.gui.title": "<aqua><bold>能力使用</bold></aqua>",
+    "game.ability.gui.using.divine.description": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」を占う</bold></gray>",
+    "game.ability.gui.using.commune.description": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」を霊媒する</bold></gray>",
+    "game.ability.gui.using.protect.description": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」を加護する</bold></gray>",
 
     "game.advantage.using.exchange.message": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」と入れ替わりました。</bold></gray>",
 
@@ -114,6 +113,12 @@
     "logging.use.divine": "<fortune><bold><gray>占い:</gray> <arg-0> ➡ <arg-1> (<arg-2>)</bold></fortune>",
     "logging.use.commune": "<medium><bold><gray>霊媒:</gray> <arg-0> ➡ <arg-1> (<arg-2>)</bold></medium>",
     "logging.use.protect": "<knight><bold><gray>騎士:</gray> <arg-0> ➡ <arg-1></bold></knight>",
-    "logging.use.exchange.method": "<gray><bold>入れ替わり: <arg-0> ↔ <arg-1></bold></gray> "
+    "logging.use.exchange.method": "<gray><bold>入れ替わり: <arg-0> ↔ <arg-1></bold></gray>",
+
+    "game.coming.out.display.name": "<gold>カミングアウト</gold>",
+    "game.coming.out.using.message": "<gray><bold>「<white><bold><arg-0></bold></white>」が「<arg-1>」としてカミングアウトしました。</bold></gray>",
+    "game.coming.out.gui.title": "<gold>カミングアウト</gold>",
+    "game.coming.out.gui.description": "<gray><bold>「<arg-0>」としてカミングアウトする</bold></gray>",
+    "game.coming.out.gui.cancel": "<gray>カミングアウトを取り消す</gray>"
   }
 }
