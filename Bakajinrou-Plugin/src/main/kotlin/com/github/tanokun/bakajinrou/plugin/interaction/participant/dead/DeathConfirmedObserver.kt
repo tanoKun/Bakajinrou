@@ -12,15 +12,10 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import net.minecraft.Optionull
-import net.minecraft.network.chat.RemoteChatSession
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
-import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
-import java.util.*
 
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
@@ -48,32 +43,5 @@ class DeathConfirmedObserver(
         disableHittingBody.ghost(player as CraftPlayer)
         bodyHandler.createBody(dead.participantId)
         player.gameMode = GameMode.SPECTATOR
-
-        val entries = Bukkit.getOnlinePlayers()
-            .filterNot { it.uniqueId == dead.participantId.uniqueId }
-            .map { player -> createPacketEntry(player as CraftPlayer) }
-
-        if (entries.isEmpty()) return
-
-        player.handle.connection.send(
-            ClientboundPlayerInfoUpdatePacket(EnumSet.of(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME), entries)
-        )
-
-        player.handle.connection.send(
-            ClientboundPlayerInfoUpdatePacket(EnumSet.of(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_GAME_MODE), entries)
-        )
-    }
-
-    private fun createPacketEntry(player: CraftPlayer): ClientboundPlayerInfoUpdatePacket.Entry {
-        val handle = player.handle
-        return ClientboundPlayerInfoUpdatePacket.Entry(
-            handle.uuid,
-            handle.gameProfile,
-            true,
-            handle.connection.latency(),
-            handle.gameMode.gameModeForPlayer,
-            handle.tabListDisplayName,
-            Optionull.map(handle.chatSession, RemoteChatSession::asData)
-        )
     }
 }
