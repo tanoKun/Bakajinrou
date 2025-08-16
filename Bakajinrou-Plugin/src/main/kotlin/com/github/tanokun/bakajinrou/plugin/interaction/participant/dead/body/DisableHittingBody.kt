@@ -3,10 +3,10 @@ package com.github.tanokun.bakajinrou.plugin.interaction.participant.dead.body
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
-import io.netty.buffer.Unpooled
-import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket
-import org.bukkit.Location
+import net.minecraft.world.entity.PositionMoveRotation
+import net.minecraft.world.entity.Relative
+import net.minecraft.world.phys.Vec3
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.koin.core.annotation.Scope
 
@@ -24,8 +24,13 @@ class DisableHittingBody(
     fun ghost(player: CraftPlayer) {
         _ghostingPlayers.add(player.handle.id)
 
-        val buf = createTeleportEntityPacketBuffer(player.handle.id, player.location.set(0.0, -100.0, 0.0))
-        val packet = ClientboundTeleportEntityPacket.STREAM_CODEC.decode(buf)
+        val packet = ClientboundTeleportEntityPacket.teleport(
+            player.handle.id,
+            PositionMoveRotation(Vec3(0.0, -100.0, 0.0), Vec3.ZERO, 0.0F, 0.0F),
+            Relative.union(Relative.DELTA, Relative.ROTATION),
+            false
+        )
+
         game.getCurrentParticipants()
             .filterNot { it.participantId.uniqueId == player.uniqueId }
             .mapNotNull { playerProvider.getAllowNull(it) }
@@ -33,24 +38,5 @@ class DisableHittingBody(
                 it as CraftPlayer
                 it.handle.connection.sendPacket(packet)
             }
-    }
-
-
-    private fun createTeleportEntityPacketBuffer(entityId: Int, location: Location): FriendlyByteBuf {
-        val byteBuf = Unpooled.buffer()
-
-        val friendlyByteBuf = FriendlyByteBuf(byteBuf)
-
-        friendlyByteBuf.writeVarInt(entityId)
-        friendlyByteBuf.writeDouble(location.x)
-        friendlyByteBuf.writeDouble(location.y)
-        friendlyByteBuf.writeDouble(location.z)
-        val yRot = (location.yaw * 256.0f / 360.0f).toInt().toByte()
-        friendlyByteBuf.writeByte(yRot.toInt())
-        val xRot = (location.pitch * 256.0f / 360.0f).toInt().toByte()
-        friendlyByteBuf.writeByte(xRot.toInt())
-        friendlyByteBuf.writeBoolean(false)
-
-        return friendlyByteBuf
     }
 }
