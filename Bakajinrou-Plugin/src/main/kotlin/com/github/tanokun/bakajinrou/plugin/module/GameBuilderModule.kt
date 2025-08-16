@@ -18,6 +18,7 @@ import com.github.tanokun.bakajinrou.game.logger.DebugLogger
 import com.github.tanokun.bakajinrou.game.method.advantage.using.LocationExchanger
 import com.github.tanokun.bakajinrou.game.method.resistance.activator.ResistanceActivator
 import com.github.tanokun.bakajinrou.game.method.transferring.TransferMethod
+import com.github.tanokun.bakajinrou.game.participant.comingout.ComingOutHandler
 import com.github.tanokun.bakajinrou.game.participant.initialization.InherentMethodsInitializer
 import com.github.tanokun.bakajinrou.game.participant.state.suspended.ChangeSuspended
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
@@ -87,6 +88,7 @@ class GameBuilderModule(plugin: Plugin) {
             scopedOf(::ChangeSuspended)
             scopedOf(::ExchangeSelector)
             scopedOf(::LocationExchanger)
+            scopedOf(::ComingOutHandler)
             scoped { ViewTeamModifier(get(), get(), get<JinrouGame>().getCurrentParticipants().excludeSpectators()) }
         }
     }

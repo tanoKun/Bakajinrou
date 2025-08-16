@@ -36,19 +36,6 @@ sealed class GameKeys(key: String): TranslationKey("game.$key") {
         } }
     }
 
-    open class Gui private constructor(key: String): GameKeys("gui.$key") {
-        companion object {
-            val TITLE = Gui("title")
-        }
-
-        class Using private constructor(key: String): Gui("using.$key") { companion object {
-            val DIVINE_DESCRIPTION = Using("divine.description")
-            val COMMUNE_DESCRIPTION = Using("commune.description")
-            val PROTECT_DESCRIPTION = Using("protect.description")
-        } }
-    }
-
-
     open class Ability private constructor(key: String): GameKeys("ability.$key") {
         class Using private constructor(key: String): Ability("using.$key") { companion object {
             val DIVINE_MESSAGE = Using("divine.message")
@@ -56,6 +43,31 @@ sealed class GameKeys(key: String): TranslationKey("game.$key") {
             val COMMUNE_MESSAGE = Using("commune.message")
             val COMMUNE_FAILURE_MESSAGE = Using("commune.failure.message")
             val PROTECT_MESSAGE = Using("protect.message")
+        } }
+
+        open class Gui private constructor(key: String): Ability("gui.$key") {
+            companion object {
+                val TITLE = Gui("title")
+            }
+
+            class Using private constructor(key: String): Gui("using.$key") { companion object {
+                val DIVINE_DESCRIPTION = Using("divine.description")
+                val COMMUNE_DESCRIPTION = Using("commune.description")
+                val PROTECT_DESCRIPTION = Using("protect.description")
+            } }
+        }
+    }
+
+    open class ComingOut private constructor(key: String): GameKeys("coming.out.$key") {
+        companion object {
+            val DISPLAY_NAME = ComingOut("display.name")
+            val USING_MESSAGE = ComingOut("using.message")
+        }
+
+        open class Gui private constructor(key: String): ComingOut("gui.$key") { companion object {
+            val TITLE = Gui("title")
+            val DESCRIPTION = Gui("description")
+            val CANCEL = Gui("cancel")
         } }
     }
 
