@@ -62,13 +62,9 @@ class Attacking(private val game: JinrouGame) {
         }
 
         attackResolutions.forEach {
-            game.updateParticipant(it.victimId) { victim ->
-                val victimAfterConsumption = it.result.consumedProtectiveMethods.fold(victim) { acc, method ->
-                    acc.removeMethod(method)
-                }
-
+            game.updateParticipant(it.victimId) { victim -> victim.removeAll(it.result.consumedProtectiveMethods)
+                val victimAfterConsumption = victim.removeAll(it.result.consumedProtectiveMethods)
                 if (it is AttackResolution.Killed) victimAfterConsumption.dead() else victimAfterConsumption
-
             }
 
             game.updateParticipant(it.attackerId) { attacker ->
@@ -90,7 +86,9 @@ class Attacking(private val game: JinrouGame) {
 
         delay(3000)
         game.updateParticipant(shooter) { current ->
-            current.grantMethod(ArrowMethod(reason = GrantedReason.SYSTEM))
+            current
+                .removeAll { it is ArrowMethod }
+                .grantMethod(ArrowMethod(reason = GrantedReason.SYSTEM))
         }
     }
 
