@@ -3,13 +3,13 @@ package com.github.tanokun.bakajinrou.plugin.interaction.participant.comingout.n
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.distinctUntilChangedByParticipantOf
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import net.kyori.adventure.sound.Sound
@@ -29,7 +29,7 @@ class ComingOutNotifier(
     init {
         mainScope.launch {
             game.observeParticipants(mainScope)
-                .distinctUntilChangedBy { it.after.comingOut }
+                .distinctUntilChangedByParticipantOf(Participant::comingOut)
                 .map { it.after }
                 .collect(::onComingOut)
         }

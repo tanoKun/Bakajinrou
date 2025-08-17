@@ -23,7 +23,7 @@ class ComingOutAdapter(
     register<PlayerInteractEvent> { event ->
         if (event.action != Action.RIGHT_CLICK_AIR && event.action != Action.RIGHT_CLICK_BLOCK) return@register
         if (event.hand != EquipmentSlot.HAND) return@register
-        if (event.item?.persistentDataContainer?.has(COMING_OUT_ADAPTER_KEY) == false) return@register
+        if (event.item?.persistentDataContainer?.has(COMING_OUT_ADAPTER_KEY) != true) return@register
 
         event.isCancelled = true
 

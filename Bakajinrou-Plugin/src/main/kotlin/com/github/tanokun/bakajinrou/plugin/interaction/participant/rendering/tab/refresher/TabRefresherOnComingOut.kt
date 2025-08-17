@@ -3,10 +3,10 @@ package com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.t
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.distinctUntilChangedByParticipantOf
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.tab.modifier.TabListModifier
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.core.annotation.Scope
@@ -22,7 +22,7 @@ class TabRefresherOnComingOut(
     init {
         mainScope.launch {
             game.observeParticipants(mainScope)
-                .distinctUntilChangedBy { it.after.comingOut }
+                .distinctUntilChangedByParticipantOf(Participant::comingOut)
                 .map { it.after }
                 .collect(::onComingOut)
         }
