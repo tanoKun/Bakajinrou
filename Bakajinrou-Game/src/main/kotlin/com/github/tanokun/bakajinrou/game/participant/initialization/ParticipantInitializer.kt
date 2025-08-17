@@ -19,10 +19,10 @@ import kotlinx.coroutines.launch
  * - フィルターに一致しない参加者には処理されません。
  * - 同一役職を複数収集をすると、多重初期化の可能性があります。
  */
-abstract class ParticipantInitializer(game: JinrouGame, gameController: JinrouGameSession, filter: ParticipantFilter): Observer {
+abstract class ParticipantInitializer(game: JinrouGame, gameSession: JinrouGameSession, filter: ParticipantFilter): Observer {
     init {
-        gameController.mainDispatcherScope.launch {
-            gameController.observeParticipantAtLaunched()
+        gameSession.mainDispatcherScope.launch {
+            gameSession.observeParticipantAtLaunched()
                 .mapNotNull { game.getParticipant(it) }
                 .filter(filter)
                 .collect {

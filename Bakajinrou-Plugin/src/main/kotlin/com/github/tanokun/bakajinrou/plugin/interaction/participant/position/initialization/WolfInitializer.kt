@@ -19,9 +19,9 @@ import org.koin.core.annotation.Scoped
 class WolfInitializer(
     private val game: JinrouGame,
     private val translator: JinrouTranslator,
-    gameController: JinrouGameSession,
+    gameSession: JinrouGameSession,
     private val playerProvider: BukkitPlayerProvider,
-) : ParticipantInitializer(game, gameController, ::isWolf) {
+) : ParticipantInitializer(game, gameSession, ::isWolf) {
     override suspend fun initialize(selfId: ParticipantId) {
         val player = playerProvider.waitPlayerOnline(selfId)
 

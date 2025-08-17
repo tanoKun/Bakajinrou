@@ -18,9 +18,9 @@ import org.koin.core.annotation.Scoped
 class AssignedPositionNotifier(
     private val game: JinrouGame,
     private val translator: JinrouTranslator,
-    gameController: JinrouGameSession,
+    gameSession: JinrouGameSession,
     private val playerProvider: BukkitPlayerProvider,
-) : ParticipantInitializer(game, gameController, { true }) {
+) : ParticipantInitializer(game, gameSession, { true }) {
     override suspend fun initialize(selfId: ParticipantId) {
         val self = game.getParticipant(selfId) ?: return
         val player = playerProvider.waitPlayerOnline(selfId)
