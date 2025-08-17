@@ -39,7 +39,8 @@ class ParticipantBuilder(
                 val pull = candidates.shuffled(random).take(amount)
 
                 val madmans = pull.map {
-                    Participant(it, MadmanPosition, GrantedStrategy(mapOf()))
+                    val hasFakeProtectAbility = random.nextInt(2) == 0
+                    Participant(it, MadmanPosition(hasFakeProtectAbility), GrantedStrategy(mapOf()))
                 }
 
                 return MadmanAssigner(template, random, madmans.toSet(), candidates - pull)
