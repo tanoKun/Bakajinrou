@@ -14,7 +14,6 @@ import org.koin.core.annotation.Scoped
 @Scope(value = GameComponents::class)
 class RemoveEmptyPotionHandler(plugin: Plugin): LifecycleEventListener(plugin, {
     register<PlayerItemConsumeEvent> { event ->
-        if (event.replacement?.type != Material.GLASS_BOTTLE) return@register
-        event.replacement = ItemStack.of(Material.AIR)
+        if (event.item.type == Material.POTION) event.replacement = ItemStack.of(Material.AIR)
     }
 })

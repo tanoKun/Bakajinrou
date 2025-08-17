@@ -1,8 +1,8 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.tab.modifier
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
-import com.github.tanokun.bakajinrou.plugin.localization.keys.FormatKeys
 import net.kyori.adventure.text.Component
 import plutoproject.adventurekt.component
 import plutoproject.adventurekt.text.*
@@ -34,7 +34,7 @@ class PrefixCreator(private val translator: JinrouTranslator) {
 
         val absentPrefix =
             if (target.isSuspended()) let {
-                val translate = translator.translate(FormatKeys.Participant.State.Companion.SUSPENDED, locale)
+                val translate = translator.translate(PrefixKeys.SUSPENDED, locale)
 
                 component { raw { translate } deco bold }
             } else null
