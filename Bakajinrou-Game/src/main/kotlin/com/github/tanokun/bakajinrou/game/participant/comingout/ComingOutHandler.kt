@@ -9,7 +9,7 @@ class ComingOutHandler(private val game: JinrouGame) {
         if (!game.existParticipant(participantId)) return
 
         game.updateParticipant(participantId) { current ->
-            current.copy(comingOut = comingOut)
+            current.comingOut(comingOut)
         }
     }
 }
