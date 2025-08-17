@@ -12,7 +12,7 @@ import java.util.*
 /**
  * アイテムのメタデータ操作や翻訳表示を行うためのユーティリティ。
  *
- * 手段IDや表示設定を PersistentDataContainer に保持し、
+ * 手段Idや表示設定を PersistentDataContainer に保持し、
  * アイテムの識別や表示制御を可能にします。
  */
 object ItemPersistent {

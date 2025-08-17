@@ -8,7 +8,7 @@ class UpdateMutexProvider {
     private val mutexes = ConcurrentHashMap<ParticipantId, Mutex>()
 
     /**
-     * 指定されたIDに対応するMutexを取得します。
+     * 指定されたIdに対応するMutexを取得します。
      * Mutexがまだ存在しない場合は、新しく生成し、cacheします。
      *
      * @return 参加者ごとの Mutex

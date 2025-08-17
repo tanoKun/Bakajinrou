@@ -108,18 +108,18 @@ class JinrouGame(
         .shareIn(scope, SharingStarted.Eagerly, replay = 1)
 
     /**
-     * 指定されたIDの参加者に対して、アトミックな更新処理をスレッドセーフに実行します。
+     * 指定されたIdの参加者に対して、アトミックな更新処理をスレッドセーフに実行します。
      *
-     * このメソッドは、対象となる参加者ID専用のロックを取得し、`transform`ラムダを実行します。
+     * このメソッドは、対象となる参加者Id専用のロックを取得し、`transform`ラムダを実行します。
      * これにより、同じ参加者に対する複数の更新処理が同時に実行されるのを防ぎます。
      * また、内部で`StateFlow`の状態を更新する際も、アトミック性が保証されるように設計されています。
-     * 異なる参加者IDに対する更新処理は、並行して実行可能です。
+     * 異なる参加者Idに対する更新処理は、並行して実行可能です。
 
      * `transform`ラムダの内部で、**同じ、あるいは別の`updateParticipant`メソッドを再帰的に、または間接的に呼び出すことは絶対に避けてください。**
      * @param participantId 更新対象の参加者のId
      * @param transform 現在の参加者状態を受け取り、変更後の新しい状態を返す関数
      *
-     * @throws IllegalArgumentException 指定されたIDの参加者が存在しない場合
+     * @throws IllegalArgumentException 指定されたIdの参加者が存在しない場合
      * @throws IllegalArgumentException 異なる参加者を編集した場合
      */
     suspend fun updateParticipant(participantId: ParticipantId, transform: (current: Participant) -> Participant) {

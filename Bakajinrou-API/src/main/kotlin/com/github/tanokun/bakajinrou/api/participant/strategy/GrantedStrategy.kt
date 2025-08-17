@@ -23,7 +23,7 @@ data class GrantedStrategy(
     /**
      * 手段を参加者から剥奪します。
      *
-     * @param method 削除したいアイテム
+     * @param method 削除したい手段
      *
      * @throws IllegalArgumentException 存在しない手段を剥奪する場合
      */
@@ -32,6 +32,33 @@ data class GrantedStrategy(
 
         return this.copy(strategies = strategies - method.methodId)
     }
+
+    /**
+     * 手段を参加者から剥奪します。
+     *
+     * @param filter 削除する手段のフィルター
+     *
+     * @throws IllegalArgumentException 存在しない手段を剥奪する場合
+     */
+    fun removeAll(filter: (GrantedMethod) -> Boolean): GrantedStrategy {
+        val passed = strategies.values
+            .filter(filter)
+            .map { it.methodId }
+
+        return this.copy(strategies = strategies - passed)
+    }
+
+    /**
+     * 手段を参加者から剥奪します。
+     *
+     * @param methods 削除したい手段の一覧
+     *
+     * @throws IllegalArgumentException 存在しない手段を剥奪する場合
+     */
+    fun removeAll(methods: Collection<GrantedMethod>): GrantedStrategy =
+        methods.fold(this) { acc, method ->
+            this.remove(method)
+        }
 
     /**
      * @param methodId 取得したい手段のId

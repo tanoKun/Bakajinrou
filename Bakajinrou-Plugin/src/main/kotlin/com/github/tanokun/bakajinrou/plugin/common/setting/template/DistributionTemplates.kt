@@ -20,7 +20,7 @@ class DistributionTemplates(private val templates: HashMap<Int, DistributionTemp
             val roles = getPositions()
 
             roles.forEach { (position, count) ->
-                require(count >= 0) { "${position.name} の人数は 0 以上である必要があります（現在: $count）" }
+                require(count >= 0) { "${position.name} の人数は 0 以上である必要があります(現在: $count)" }
             }
         }
 

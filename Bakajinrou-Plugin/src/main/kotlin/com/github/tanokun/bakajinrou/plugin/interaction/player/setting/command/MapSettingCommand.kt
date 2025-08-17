@@ -33,7 +33,7 @@ import kotlin.time.Duration.Companion.seconds
  * ## コマンドの構文
  * ### `/mapsetting create <mapName> <spawn> <lobby>`
  * 新しいマップを作成します。
- * - `mapName`: 作成するマップの名前（文字列）
+ * - `mapName`: 作成するマップの名前(文字列)
  * - `spawn`: スポーン地点のロケーション
  * - `lobby`: ロビー地点のロケーション
  *

@@ -20,7 +20,7 @@ import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
  * トップレベルのヘルパー関数群を定義します。
  *
  * `participant.isPosition<T>()`というチェックを、より可読性の高い、
- * ドメイン固有の言語（例：`isWolf(participant)`）で表現することを目的としています。
+ * ドメイン固有の言語(例：`isWolf(participant)`)で表現することを目的としています。
  */
 
 /**
@@ -46,7 +46,7 @@ fun isMystic(participant: Participant): Boolean = participant.isPosition<MysticP
 fun isFox(participant: Participant): Boolean = participant.isPosition<FoxPosition>()
 
 /**
- * 指定された参加者が、いずれかの「バカ（Idiot）」系の役職であるかを確認します。
+ * 指定された参加者が、いずれかの「バカ(Idiot)」系の役職であるかを確認します。
  * 
  * @param participant 判定対象の参加者
  */
@@ -105,7 +105,7 @@ fun isMadman(participant: Participant): Boolean = participant.isPosition<MadmanP
 fun isSpectator(participant: Participant): Boolean = participant.isPosition<SpectatorPosition>()
 
 
-// --- バカ（Idiot）系の複合役職 ---
+// --- バカ(Idiot)系の複合役職 ---
 
 /**
  * 指定された参加者が「バカ占い」であるかを確認します。
