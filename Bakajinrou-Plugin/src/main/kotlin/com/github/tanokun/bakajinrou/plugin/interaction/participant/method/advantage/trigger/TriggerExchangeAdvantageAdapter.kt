@@ -13,7 +13,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.Player
 import org.bukkit.event.block.Action
+import org.bukkit.event.entity.ProjectileLaunchEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.plugin.Plugin
@@ -74,6 +77,13 @@ class TriggerExchangeAdvantageAdapter(
             event.isCancelled = true
 
             mainScope.launch { locationExchanger.exchange(exchange, event.player.uniqueId.asParticipantId()) }
+        }
+
+        register<ProjectileLaunchEvent> { event ->
+            if (event.entityType != EntityType.ENDER_PEARL) return@register
+            if (event.entity.shooter !is Player) return@register
+
+            event.isCancelled = true
         }
     })
 }
