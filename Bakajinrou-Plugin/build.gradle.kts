@@ -47,7 +47,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)
 
-    implementation(libs.bundles.mordant)
+    implementation(libs.mordant)
 
     implementation(libs.bundles.koin)
     ksp(libs.koin.ksp.compiler)
