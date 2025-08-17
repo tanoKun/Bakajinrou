@@ -31,6 +31,7 @@
 
 ### 使用者
 - [コマンド](doc/commands.md)
+- [変更点](doc/difference.md)
 
 # バグ、エラー報告
 これらを [Issue](https://github.com/tanoKun/Bakajinrou/issues) に報告する場合、以下を守ってください。
