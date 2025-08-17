@@ -52,6 +52,7 @@
     "prefix.madman": "<madman><bold>狂人<bold></madman>",
     "prefix.fox": "<fox><bold>妖狐<bold></fox>",
     "prefix.spectator": "<spectator><bold>観戦者<bold></spectator>",
+    "prefix.suspended": "<suspended>退席中</suspended>",
 
     "format.participant.citizen": "<citizen><arg-0></citizen>",
     "format.participant.idiot": "<idiot><arg-0></idiot>",
@@ -65,7 +66,6 @@
     "format.participant.mystic.fortune": "<fortune><arg-0></fortune>",
     "format.participant.mystic.medium": "<medium><arg-0></medium>",
     "format.participant.mystic.knight": "<knight><arg-0></knight>",
-    "format.participant.state.suspended": "<suspended><arg-0></suspended>",
 
     "format.category.wolf": "<wolf><bold>《 人狼 》</bold></wolf>",
     "format.category.madman": "<madman><bold>《 狂人 》</bold></madman>",

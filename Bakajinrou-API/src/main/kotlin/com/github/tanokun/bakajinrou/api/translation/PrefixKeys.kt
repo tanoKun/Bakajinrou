@@ -25,6 +25,7 @@ open class PrefixKeys private constructor(key: String): TranslationKey("prefix.$
         val MADMAN = PrefixKeys("madman")
         val FOX = PrefixKeys("fox")
         val SPECTATOR = PrefixKeys("spectator")
+        val SUSPENDED = PrefixKeys("suspended")
 
         val IDIOT = PrefixKeys("idiot")
         val CITIZEN = PrefixKeys("citizen")
