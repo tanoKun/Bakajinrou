@@ -2,6 +2,7 @@ package com.github.tanokun.bakajinrou.api.participant.strategy
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.api.participant.distinctUntilChangedByParticipantOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 
@@ -16,7 +17,9 @@ import kotlinx.coroutines.flow.*
 class GrantedStrategiesPublisher(private val game: JinrouGame, scope: CoroutineScope) {
 
     private val _differenceFlow: SharedFlow<MethodDifference> = flow {
-        game.observeParticipants(scope).collect { difference ->
+        game.observeParticipants(scope)
+            .distinctUntilChangedByParticipantOf(Participant::strategy)
+            .collect { difference ->
             val previous = difference.before?.strategy
             val current = difference.after.strategy
 
