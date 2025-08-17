@@ -1,6 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.participant.method.logging
 
 import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
+import com.github.ajalt.mordant.rendering.TextColors.white
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
@@ -31,7 +32,7 @@ class RemoveMethodLogging(
 
     @OptIn(FlowPreview::class)
     private fun logging(granted: MethodDifference.Removed) = mainScope.launch {
-        val header = rgb("#E0E0E0")("Debug - Removed Method")
+        val header = white("Debug - Removed Method")
         terminal.println(header)
 
         val details = listOf(
