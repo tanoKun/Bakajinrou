@@ -6,7 +6,7 @@ import kotlin.time.Duration.Companion.seconds
 
 /**
  * スケジュールの時間をステートとして管理します。
- * Pending -> Active -> Cancelled を基本とします。
+ * `Pending -> Active -> Cancelled` を基本とします。
  */
 sealed interface ScheduleState {
     val startTime: Duration
