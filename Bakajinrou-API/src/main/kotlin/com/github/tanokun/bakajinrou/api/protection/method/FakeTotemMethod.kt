@@ -11,6 +11,10 @@ import com.github.tanokun.bakajinrou.api.protection.ProtectVerificator
 import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 import java.util.*
 
+/**
+ * 偽物のトーテムを表します。
+ * 全ての攻撃を防御出来ません。
+ */
 data class FakeTotemMethod(
     override val methodId: MethodId = UUID.randomUUID().asMethodId(),
     override val reason: GrantedReason,

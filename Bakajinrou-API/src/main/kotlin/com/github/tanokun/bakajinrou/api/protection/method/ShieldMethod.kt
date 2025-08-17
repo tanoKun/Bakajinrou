@@ -12,6 +12,10 @@ import com.github.tanokun.bakajinrou.api.protection.ProtectVerificator
 import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 import java.util.*
 
+/**
+ * 盾を表します。
+ * 「Arrow」のみ防御することが可能です。
+ */
 data class ShieldMethod(
     override val methodId: MethodId = UUID.randomUUID().asMethodId(),
     override val reason: GrantedReason,
