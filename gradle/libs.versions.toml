@@ -14,6 +14,7 @@ koin = "4.1.0"
 koin-annotations = "2.1.0"
 ksp = "2.2.0-2.0.2"
 kotest = "5.9.0"
+mordant = "3.0.2"
 
 [libraries]
 commandapi = { module = "dev.jorel:commandapi-bukkit-core", version.ref = "commandapi" }
@@ -37,6 +38,8 @@ mccoroutine-bukkit-core = { module = "com.github.shynixn.mccoroutine:mccoroutine
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin-annotations" }
 koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-annotations" }
+mordant = { module = "com.github.ajalt.mordant:mordant", version.ref = "mordant" }
+mordant-markdown = { group = "com.github.ajalt.mordant", name = "mordant-markdown", version.ref = "mordant" }
 
 [bundles]
 koin = ["koin-annotations", "koin-core", "koin-ksp-compiler"]
@@ -45,6 +48,7 @@ mocks = ["mockk", "mockkbukkit"]
 junit = ["junit-api", "junit-params"]
 mccoroutine = ["mccoroutine-bukkit-api", "mccoroutine-bukkit-core"]
 kotest = ["kotest-assertions-core", "kotest-runner-junit5", "kotest-framework-engine", "kotest-property"]
+mordant = ["mordant", "mordant-markdown"]
 
 
 [plugins]

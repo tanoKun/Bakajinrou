@@ -9,7 +9,7 @@ import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedReason
 import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
-import com.github.tanokun.bakajinrou.game.logger.DebugLogger
+
 import io.kotest.core.spec.style.StringSpec
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
@@ -18,7 +18,6 @@ import java.util.*
 class AttackingTest : StringSpec({
 
     val game = mockk<JinrouGame>(relaxed = true)
-    val debug = mockk<DebugLogger>(relaxed = true)
     val attacking = Attacking(game)
 
     val attackerId = ParticipantId(UUID.randomUUID())
@@ -29,7 +28,7 @@ class AttackingTest : StringSpec({
     val victim = mockk<Participant>(relaxed = true)
 
     beforeTest {
-        clearMocks(game, debug, attacker, victim)
+        clearMocks(game, attacker, victim)
     }
 
     "攻撃ID を持つ 手段 が <T> と型が違う場合は処理しない" {
