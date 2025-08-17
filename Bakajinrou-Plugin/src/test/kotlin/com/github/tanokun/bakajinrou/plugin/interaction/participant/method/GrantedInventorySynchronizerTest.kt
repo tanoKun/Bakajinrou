@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.observer.participant.strategy.grant
+package com.github.tanokun.bakajinrou.plugin.interaction.participant.method
 
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.participant.Participant
@@ -10,7 +10,6 @@ import com.github.tanokun.bakajinrou.game.crafting.Crafting
 import com.github.tanokun.bakajinrou.game.crafting.CraftingInfo
 import com.github.tanokun.bakajinrou.game.crafting.CraftingStyle
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
-import com.github.tanokun.bakajinrou.plugin.interaction.participant.method.GrantedInventorySynchronizer
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.every
@@ -30,7 +29,7 @@ import org.junit.jupiter.api.DisplayName
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
 
-class SyncInventoryObserverTest {
+class GrantedInventorySynchronizerTest {
     private val grantedStrategiesPublisherMock: GrantedStrategiesPublisher = mockk()
     private val playerProviderMock: BukkitPlayerProvider = mockk()
     private val assetKeyMock = mockk<MethodAssetKeys> {
@@ -53,7 +52,7 @@ class SyncInventoryObserverTest {
     inner class TestObserverSync(mainScope: CoroutineScope): GrantedInventorySynchronizer(
         grantedStrategiesPublisherMock, mainScope, playerProviderMock, craftingMock, mockk(relaxed = true), assetKeyMock
     ) {
-            override fun createItem(player: Player, add: MethodDifference.Granted): ItemStack { result = true; return mockk() }
+        override fun createItem(player: Player, add: MethodDifference.Granted): ItemStack { result = true; return mockk() }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -66,9 +65,9 @@ class SyncInventoryObserverTest {
             every { observeDifference() } returns flow.shareIn(testScope, SharingStarted.Eagerly, replay = 1)
         }
 
-         playerProviderMock.apply {
-             coEvery { waitPlayerOnline(participantMock.participantId) } returns playerMock
-         }
+        playerProviderMock.apply {
+            coEvery { waitPlayerOnline(participantMock.participantId) } returns playerMock
+        }
 
         val method = mockk<GrantedMethod> {
             every { assetKey } returns assetKeyMock
