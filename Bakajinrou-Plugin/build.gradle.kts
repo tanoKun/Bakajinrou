@@ -21,7 +21,6 @@ kotlin {
 
 ksp {
     arg("koin.ksp.options.displayGraph", "true")
-/*    arg("KOIN_CONFIG_CHECK","true")*/
 }
 
 repositories {
@@ -64,6 +63,10 @@ dependencies {
 
 configurations.testImplementation {
     exclude("io.papermc.paper", "paper-server")
+}
+
+paperweight {
+    addServerDependencyTo = configurations.named(JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME).map { setOf(it) }
 }
 
 tasks.withType<Test> {
