@@ -105,7 +105,7 @@
     "game.advantage.using.exchange.message": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」と入れ替わりました。</bold></gray>",
 
     "game.announcement.remaining.time": "<yellow><bold>残り時間: <arg-0>分 <arg-1>秒</bold></yellow>",
-    "game.announcement.glowing": "<gray><bold>5分から、定期発行が始まります。</bold></gray>",
+    "game.announcement.glowing": "<gray><bold>5分から、定期発光が始まります。</bold></gray>",
     "game.announcement.getaway": "<gray><bold>時間切れでの終了は、市民陣営の勝利です。</bold></gray>",
     "game.announcement.revelation": "<gray><bold>3分で、「人狼」、「妖狐」の参加者が明かされます。</bold></gray>",
 

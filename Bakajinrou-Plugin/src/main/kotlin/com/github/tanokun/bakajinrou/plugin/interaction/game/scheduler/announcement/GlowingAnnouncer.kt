@@ -61,7 +61,7 @@ class GlowingAnnouncer(
     }
 
     /**
-     * 5分からの定期発行の予告をします。
+     * 5分からの定期発光の予告をします。
      *
      * @param participants ゲームの全ての参加者
      */
