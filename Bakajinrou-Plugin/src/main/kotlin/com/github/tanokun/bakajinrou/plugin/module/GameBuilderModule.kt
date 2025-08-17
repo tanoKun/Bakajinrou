@@ -1,6 +1,8 @@
 package com.github.tanokun.bakajinrou.plugin.module
 
 import com.comphenix.protocol.ProtocolLibrary
+import com.github.ajalt.mordant.rendering.AnsiLevel
+import com.github.ajalt.mordant.terminal.Terminal
 import com.github.shynixn.mccoroutine.bukkit.scope
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.UpdateMutexProvider
@@ -14,7 +16,6 @@ import com.github.tanokun.bakajinrou.game.ability.medium.CommuneAbilityExecutor
 import com.github.tanokun.bakajinrou.game.attacking.Attacking
 import com.github.tanokun.bakajinrou.game.chat.ChatIntegrity
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
-import com.github.tanokun.bakajinrou.game.logger.DebugLogger
 import com.github.tanokun.bakajinrou.game.method.advantage.using.LocationExchanger
 import com.github.tanokun.bakajinrou.game.method.resistance.activator.ResistanceActivator
 import com.github.tanokun.bakajinrou.game.method.transferring.TransferMethod
@@ -54,7 +55,7 @@ class GameBuilderModule(plugin: Plugin) {
         singleOf(ProtocolLibrary::getProtocolManager)
         singleOf(Bukkit::getServer)
         singleOf(Bukkit::getScheduler)
-        singleOf(::DebugLogger)
+        single { Terminal(interactive = true, ansiLevel = AnsiLevel.TRUECOLOR) }
     }
 
     private val topScope by lazy { CoroutineScope(plugin.scope.coroutineContext) }

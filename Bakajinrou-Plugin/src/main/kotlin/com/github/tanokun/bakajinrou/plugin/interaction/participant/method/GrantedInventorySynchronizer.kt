@@ -8,7 +8,6 @@ import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
 import com.github.tanokun.bakajinrou.game.crafting.CraftingInfo
 import com.github.tanokun.bakajinrou.game.crafting.CraftingStyle
-import com.github.tanokun.bakajinrou.game.logger.DebugLogger
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.filter
@@ -35,7 +34,6 @@ abstract class GrantedInventorySynchronizer(
     private val mainScope: CoroutineScope,
     private val playerProvider: BukkitPlayerProvider,
     private val crafting: Crafting,
-    private val logger: DebugLogger,
     vararg assetKey: MethodAssetKeys
 ): Observer {
     init {
@@ -55,16 +53,16 @@ abstract class GrantedInventorySynchronizer(
      * - 同じ手段が削除されると中断されます。
      */
     @OptIn(FlowPreview::class)
-    private fun syncInventory(add: MethodDifference.Granted) = mainScope.launch main@ {
-        launch { uselessMethodObserver(this, add) }
+    private fun syncInventory(granted: MethodDifference.Granted) = mainScope.launch main@ {
+        launch { uselessMethodObserver(this, granted) }
 
-        val asyncPlayer = async { playerProvider.waitPlayerOnline(add.participantId) }
+        val asyncPlayer = async { playerProvider.waitPlayerOnline(granted.participantId) }
 
-        if (add.grantedMethod.reason == GrantedReason.CRAFTED) {
+        if (granted.grantedMethod.reason == GrantedReason.CRAFTED) {
             val asyncCraftingInfo = async {
                 crafting.observeCrafting(this@main)
-                    .filter { it.crafterId == add.participantId }
-                    .filter { it.method == add.grantedMethod }
+                    .filter { it.crafterId == granted.participantId }
+                    .filter { it.method == granted.grantedMethod }
                     .timeout(10.seconds)
                     .first()
             }.apply {
@@ -76,8 +74,7 @@ abstract class GrantedInventorySynchronizer(
             val player = asyncPlayer.await()
             val craftingInfo = asyncCraftingInfo.await()
 
-            syncInventoryOnCrafting(player, craftingInfo, add)
-            logger.logAddMethod(add.participantId, add)
+            syncInventoryOnCrafting(player, craftingInfo, granted)
 
             this@main.cancel()
             return@main
@@ -85,8 +82,7 @@ abstract class GrantedInventorySynchronizer(
 
         val player = asyncPlayer.await()
 
-        syncInventoryOnNormal(player, add)
-        logger.logAddMethod(add.participantId, add)
+        syncInventoryOnNormal(player, granted)
         this.cancel()
     }
 
@@ -98,17 +94,17 @@ abstract class GrantedInventorySynchronizer(
      *
      * @param player 対象プレイヤー
      * @param craftingInfo クラフティングの詳細情報
-     * @param add 付与された手段の差分情報
+     * @param granted 付与された手段の差分情報
      */
-    private fun syncInventoryOnCrafting(player: Player, craftingInfo: CraftingInfo, add: MethodDifference.Granted) {
+    private fun syncInventoryOnCrafting(player: Player, craftingInfo: CraftingInfo, granted: MethodDifference.Granted) {
         val style = craftingInfo.style
 
         when (style) {
             CraftingStyle.BULK -> {
-                syncInventoryOnNormal(player, add)
+                syncInventoryOnNormal(player, granted)
             }
             CraftingStyle.SINGLE -> {
-                player.setItemOnCursor(createItem(player, add))
+                player.setItemOnCursor(createItem(player, granted))
             }
         }
     }
@@ -119,10 +115,10 @@ abstract class GrantedInventorySynchronizer(
      * 表示用アイテムを作成し、プレイヤーのインベントリに追加します。
      *
      * @param player 対象プレイヤー
-     * @param add 付与された手段の差分情報
+     * @param granted 付与された手段の差分情報
      */
-    private fun syncInventoryOnNormal(player: Player, add: MethodDifference.Granted) {
-        val item = createItem(player, add)
+    private fun syncInventoryOnNormal(player: Player, granted: MethodDifference.Granted) {
+        val item = createItem(player, granted)
 
         player.inventory.addItem(item)
     }
@@ -133,12 +129,12 @@ abstract class GrantedInventorySynchronizer(
      * 同じ手段が削除された場合、関連する同期処理スコープをキャンセルします。
      *
      * @param scope 収集後キャンセルされるスコープ
-     * @param add 付与された手段の差分情報
+     * @param granted 付与された手段の差分情報
      */
-    private suspend fun uselessMethodObserver(scope: CoroutineScope, add: MethodDifference.Granted) = grantedStrategiesPublisher.observeDifference()
+    private suspend fun uselessMethodObserver(scope: CoroutineScope, granted: MethodDifference.Granted) = grantedStrategiesPublisher.observeDifference()
         .filterIsInstance<MethodDifference.Removed>()
         .collect {
-            if (it.removedMethod != add.grantedMethod) return@collect
+            if (it.removedMethod != granted.grantedMethod) return@collect
             scope.cancel()
         }
 

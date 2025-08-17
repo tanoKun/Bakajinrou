@@ -3,7 +3,7 @@ package com.github.tanokun.bakajinrou.plugin.interaction.participant.method
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
-import com.github.tanokun.bakajinrou.game.logger.DebugLogger
+
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.getRawUuid
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
@@ -31,7 +31,6 @@ class SyncRemoveInventoryObserver(
     private val grantedStrategiesPublisher: GrantedStrategiesPublisher,
     private val mainScope: CoroutineScope,
     private val playerProvider: BukkitPlayerProvider,
-    private val logger: DebugLogger,
 ): Observer {
     init {
         mainScope.launch {
@@ -46,8 +45,6 @@ class SyncRemoveInventoryObserver(
      */
     @OptIn(FlowPreview::class)
     private fun syncInventory(remove: MethodDifference.Removed) {
-        logger.logRemoveMethod(remove.participantId, remove)
-
         mainScope.launch {
             val player = playerProvider.waitPlayerOnline(remove.participantId)
             val methodId = remove.removedMethod.methodId

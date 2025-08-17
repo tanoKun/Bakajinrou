@@ -5,7 +5,7 @@ import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesP
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
 import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
-import com.github.tanokun.bakajinrou.game.logger.DebugLogger
+
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemViewer
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.formatter.toTick
@@ -31,9 +31,8 @@ class GrantedResistanceMethodSynchronizer(
     mainScope: CoroutineScope,
     playerProvider: BukkitPlayerProvider,
     crafting: Crafting,
-    logger: DebugLogger,
     private val translator: JinrouTranslator,
-): GrantedInventorySynchronizer(grantedStrategiesPublisher, mainScope, playerProvider, crafting, logger, MethodAssetKeys.Protective.RESISTANCE) {
+): GrantedInventorySynchronizer(grantedStrategiesPublisher, mainScope, playerProvider, crafting, MethodAssetKeys.Protective.RESISTANCE) {
     private val effectTime = 20.seconds
 
     override fun createItem(player: Player, add: MethodDifference.Granted): ItemStack {

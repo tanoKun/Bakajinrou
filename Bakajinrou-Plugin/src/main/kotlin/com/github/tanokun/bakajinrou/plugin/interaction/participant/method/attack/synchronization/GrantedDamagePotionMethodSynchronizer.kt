@@ -5,7 +5,7 @@ import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesP
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
 import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
-import com.github.tanokun.bakajinrou.game.logger.DebugLogger
+
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemViewer.createBasicItem
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
@@ -27,9 +27,8 @@ class GrantedDamagePotionMethodSynchronizer(
     mainScope: CoroutineScope,
     playerProvider: BukkitPlayerProvider,
     crafting: Crafting,
-    logger: DebugLogger,
     private val translator: JinrouTranslator,
-): GrantedInventorySynchronizer(grantedStrategiesPublisher, mainScope, playerProvider, crafting, logger, MethodAssetKeys.Attack.DAMAGE_POTION) {
+): GrantedInventorySynchronizer(grantedStrategiesPublisher, mainScope, playerProvider, crafting, MethodAssetKeys.Attack.DAMAGE_POTION) {
 
     override fun createItem(player: Player, add: MethodDifference.Granted): ItemStack {
         val item = createBasicItem(Material.SPLASH_POTION,

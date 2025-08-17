@@ -5,7 +5,7 @@ import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesP
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
 import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
-import com.github.tanokun.bakajinrou.game.logger.DebugLogger
+
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemViewer
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
@@ -25,9 +25,8 @@ class GrantedProtectAbilitySynchronizer(
     mainScope: CoroutineScope,
     playerProvider: BukkitPlayerProvider,
     crafting: Crafting,
-    logger: DebugLogger,
     private val translator: JinrouTranslator,
-): GrantedInventorySynchronizer(grantedStrategiesPublisher, mainScope, playerProvider, crafting, logger, MethodAssetKeys.Ability.PROTECT) {
+): GrantedInventorySynchronizer(grantedStrategiesPublisher, mainScope, playerProvider, crafting, MethodAssetKeys.Ability.PROTECT) {
     override fun createItem(player: Player, add: MethodDifference.Granted): ItemStack =
         ItemViewer.createBasicItem(
             Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE,

@@ -33,7 +33,7 @@ open class BakaJinrou(): JavaPlugin() {
         startKoin {
             modules(GameComponentsModule.module)
             modules(gameBuilderModule.gameBuildScopeModule)
-            printLogger(org.koin.core.logger.Level.DEBUG)
+           // printLogger(org.koin.core.logger.Level.DEBUG)
         }
     }
 
