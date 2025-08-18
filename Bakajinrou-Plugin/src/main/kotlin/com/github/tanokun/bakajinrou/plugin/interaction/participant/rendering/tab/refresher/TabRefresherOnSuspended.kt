@@ -24,11 +24,11 @@ class TabRefresherOnSuspended(
             game.observeParticipants(mainScope)
                 .distinctUntilChangedByParticipantOf(Participant::isSuspended)
                 .map { it.after }
-                .collect(::returned)
+                .collect(::suspended)
         }
     }
 
-    private fun returned(suspended: Participant) {
+    private fun suspended(suspended: Participant) {
         tabListModifier.updateDisplayNameToAll(targetId = suspended.participantId)
     }
 }
