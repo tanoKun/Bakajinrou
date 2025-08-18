@@ -35,7 +35,7 @@ class ConsumedShieldByAttackEffector(
         mainScope.launch {
             attacking.observeAttack(mainScope)
                 .filter { it.result.consumedProtectiveMethods.any(::isShield) }
-                .collect(::usedResistance)
+                .collect(::usedShield)
         }
     }
 
@@ -44,7 +44,7 @@ class ConsumedShieldByAttackEffector(
      *
      * @param resolution 攻撃の結果情報。
      */
-    fun usedResistance(resolution: AttackResolution) {
+    fun usedShield(resolution: AttackResolution) {
         val victim = playerProvider.getAllowNull(resolution.victimId) ?: return
 
         victim.world.playSound(victim.location, Sound.ITEM_SHIELD_BLOCK, SoundCategory.PLAYERS, 1.0f, 1.0f)

@@ -20,13 +20,13 @@ import org.koin.core.annotation.Scoped
 
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
-class GrantedFakeTotemMethodSynchronizer(
+class GrantedTotemModelMethodSynchronizer(
     grantedStrategiesPublisher: GrantedStrategiesPublisher,
     mainScope: CoroutineScope,
     playerProvider: BukkitPlayerProvider,
     crafting: Crafting,
     private val translator: JinrouTranslator,
-): GrantedInventorySynchronizer(grantedStrategiesPublisher, mainScope, playerProvider, crafting, MethodAssetKeys.Protective.FAKE_TOTEM) {
+): GrantedInventorySynchronizer(grantedStrategiesPublisher, mainScope, playerProvider, crafting, MethodAssetKeys.Protective.TOTEM, MethodAssetKeys.Protective.FAKE_TOTEM) {
     override fun createItem(player: Player, add: MethodDifference.Granted): ItemStack =
         ItemViewer.createBasicItem(
             Material.TOTEM_OF_UNDYING,
