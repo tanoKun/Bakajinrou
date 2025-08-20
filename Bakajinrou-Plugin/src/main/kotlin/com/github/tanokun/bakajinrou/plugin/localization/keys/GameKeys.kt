@@ -11,6 +11,7 @@ sealed class GameKeys(key: String): TranslationKey("game.$key") {
 
         class Notification private constructor(key: String): Start("notification.$key") { companion object {
             val POSITION = Notification("position")
+            val KNOWN_WOLF = Notification("known.wolf")
         } }
     }
 

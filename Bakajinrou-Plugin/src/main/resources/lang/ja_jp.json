@@ -78,7 +78,8 @@
 
     "game.start.title": "<wolf><bold>～ バカ人狼 ～</bold></wolf>",
     "game.start.sub.title": "<wolf>スタート</wolf>",
-    "game.start.notification.position": "<gray><bold>貴方の役職は「<arg-0>」です。</bold></gray>",
+    "game.start.notification.position": "<gray><bold>あなたの役職は「<arg-0>」です。</bold></gray>",
+    "game.start.notification.known.wolf": "<gray><bold>あなたが唯一知る人狼は「<wolf><arg-0></wolf>」です。</bold></gray>",
 
     "game.finish.victory.message": "<green>あなたは勝利しました。</green>",
     "game.finish.lose.message": "<red>あなたは敗北しました。</red>",
