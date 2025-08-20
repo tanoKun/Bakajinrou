@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.participant.position.initialization
+package com.github.tanokun.bakajinrou.plugin.interaction.participant.position.notification
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.observing.Observer
@@ -16,7 +16,7 @@ import org.koin.core.annotation.Scoped
 
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
-class WolfInitializer(
+class WolfEachOtherNotifier(
     private val game: JinrouGame,
     private val translator: JinrouTranslator,
     gameSession: JinrouGameSession,
