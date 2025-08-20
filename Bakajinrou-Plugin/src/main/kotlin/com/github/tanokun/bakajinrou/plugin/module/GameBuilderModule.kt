@@ -48,14 +48,12 @@ import kotlin.random.Random
 import kotlin.time.Duration
 
 class GameBuilderModule(plugin: Plugin) {
-    val singleModule = module {
+    val bukkitModule = module {
         single { plugin }
         single { plugin.logger }
-        single { ChatIntegrity }
         singleOf(ProtocolLibrary::getProtocolManager)
         singleOf(Bukkit::getServer)
         singleOf(Bukkit::getScheduler)
-        single { Terminal(interactive = true, ansiLevel = AnsiLevel.TRUECOLOR) }
     }
 
     private val topScope by lazy { CoroutineScope(plugin.scope.coroutineContext) }
@@ -75,27 +73,40 @@ class GameBuilderModule(plugin: Plugin) {
         }
     }
 
-    val otherModule = module {
+    val methodModule = module {
         scope<GameComponents> {
-            scopedOf(::Crafting)
-            scopedOf(::TabListModifier)
-            scopedOf(::TransferMethod)
             scopedOf(::DivineAbilityExecutor)
             scopedOf(::CommuneAbilityExecutor)
             scopedOf(::ProtectAbilityExecutor)
-            scopedOf(::GrantedStrategiesPublisher)
             scopedOf(::ResistanceActivator)
-            scopedOf(::Attacking)
-            scopedOf(::ChangeSuspended)
             scopedOf(::ExchangeSelector)
             scopedOf(::LocationExchanger)
+            scopedOf(::Crafting)
+            scopedOf(::TransferMethod)
+        }
+    }
+
+    val participantModule = module {
+        scope<GameComponents> {
+            scopedOf(::GrantedStrategiesPublisher)
+            scopedOf(::Attacking)
+            scopedOf(::ChangeSuspended)
             scopedOf(::ComingOutHandler)
+        }
+    }
+
+    val renderingModule = module {
+        single { ChatIntegrity }
+        single { Terminal(interactive = true, ansiLevel = AnsiLevel.TRUECOLOR) }
+
+        scope<GameComponents> {
+            scopedOf(::TabListModifier)
             scoped { ViewTeamModifier(get(), get(), get<JinrouGame>().getCurrentParticipants().excludeSpectators()) }
         }
     }
 
     val gameBuildScopeModule = module {
-        includes(singleModule, observersModule, listenersModule, otherModule)
+        includes(bukkitModule, observersModule, listenersModule, methodModule, participantModule, renderingModule)
 
         single<Random> { Random.Default }
 
