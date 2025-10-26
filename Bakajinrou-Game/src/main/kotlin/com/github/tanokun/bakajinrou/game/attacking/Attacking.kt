@@ -91,6 +91,22 @@ class Attacking(private val game: JinrouGame) {
         }
     }
 
+    /**
+     * 特定の矢の手段を [shooter] から剥奪します。
+     * 参加者または手段が存在しない場合、何も行いません。
+     *
+     * @param shooter 矢を発射した参加者の Id
+     * @param arrowId 剥奪する矢の手段の Id
+     */
+    suspend fun consumeArrow(shooter: ParticipantId, arrowId: MethodId) {
+        val target = game.getParticipant(shooter) ?: return
+        val arrowMethod = target.getGrantedMethod(arrowId) as? ArrowMethod ?: return
+
+        game.updateParticipant(shooter) { current ->
+            current.removeMethod(arrowMethod)
+        }
+    }
+
     fun observeAttack(scope: CoroutineScope): Flow<AttackResolution> =
         _attackResolution.shareIn(scope, SharingStarted.Eagerly, replay = 1)
 

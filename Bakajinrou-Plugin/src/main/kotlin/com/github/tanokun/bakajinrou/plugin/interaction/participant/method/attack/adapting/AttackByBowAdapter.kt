@@ -9,15 +9,18 @@ import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListen
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleListener
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.bukkit.entity.AbstractArrow
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityShootBowEvent
+import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.plugin.Plugin
 import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * 攻撃手段「弓」が、攻撃に使用されることを検出します。
@@ -46,6 +49,20 @@ class AttackByBowAdapter(
         }
     }
 
+    register<ProjectileHitEvent> { event ->
+        val arrow = (event.entity as? Arrow) ?: return@register
+        val methodId = arrow.itemStack.getMethodId() ?: return@register
+
+        val attacker = arrow.shooter as? Player ?: return@register
+        val attackerId = attacker.uniqueId.asParticipantId()
+
+        mainScope.launch {
+            // Damageイベントの干渉を避ける。
+            delay(3.seconds)
+            attacking.consumeArrow(attackerId, methodId)
+        }
+    }
+
     register<EntityShootBowEvent> { event ->
         val shooterPlayer = (event.entity as? Player) ?: return@register
         val arrow = event.consumable ?: return@register
@@ -57,7 +74,7 @@ class AttackByBowAdapter(
         }
 
         mainScope.launch {
-            attacking.arrowShoot(shooterPlayer.uniqueId.asParticipantId())
+            attacking.shootArrow(shooterPlayer.uniqueId.asParticipantId())
         }
     }
 })
