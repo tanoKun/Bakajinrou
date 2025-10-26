@@ -9,7 +9,6 @@ import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListen
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleListener
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.bukkit.entity.AbstractArrow
 import org.bukkit.entity.Arrow
@@ -20,7 +19,6 @@ import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.plugin.Plugin
 import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
-import kotlin.time.Duration.Companion.seconds
 
 /**
  * 攻撃手段「弓」が、攻撃に使用されることを検出します。
@@ -50,6 +48,8 @@ class AttackByBowAdapter(
     }
 
     register<ProjectileHitEvent> { event ->
+        if (event.hitEntity != null) return@register
+
         val arrow = (event.entity as? Arrow) ?: return@register
         val methodId = arrow.itemStack.getMethodId() ?: return@register
 
@@ -57,8 +57,6 @@ class AttackByBowAdapter(
         val attackerId = attacker.uniqueId.asParticipantId()
 
         mainScope.launch {
-            // Damageイベントの干渉を避ける。
-            delay(3.seconds)
             attacking.consumeArrow(attackerId, methodId)
         }
     }
