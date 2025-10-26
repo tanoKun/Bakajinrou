@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.shareIn
 import kotlin.reflect.KClass
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * 攻撃手段ごとの攻撃を統括処理するコントローラーです。
@@ -81,14 +82,12 @@ class Attacking(private val game: JinrouGame) {
      *
      * @param shooter 矢を発射した参加者の Id
      */
-    suspend fun arrowShoot(shooter: ParticipantId) {
+    suspend fun shootArrow(shooter: ParticipantId) {
         if (!game.existParticipant(shooter)) return
 
-        delay(3000)
+        delay(3.seconds)
         game.updateParticipant(shooter) { current ->
-            current
-                .removeAll { it is ArrowMethod }
-                .grantMethod(ArrowMethod(reason = GrantedReason.SYSTEM))
+            current.grantMethod(ArrowMethod(reason = GrantedReason.SYSTEM))
         }
     }
 
