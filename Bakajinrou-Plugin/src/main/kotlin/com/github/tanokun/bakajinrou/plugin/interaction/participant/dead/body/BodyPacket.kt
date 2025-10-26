@@ -17,15 +17,14 @@ import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
 import java.util.*
 
-
 class BodyPacket(server: Server, body: Player) {
     private val randomUuid = UUID.randomUUID()
 
     private val profile = let {
         val origin = (body as CraftPlayer).profile
 
-         GameProfile(origin.id, "body_${body.handle.id}").apply {
-             origin.properties.forEach { key, property -> this.properties.put(key, property) }
+        GameProfile(origin.id, "body_${body.handle.id}").apply {
+            origin.properties.forEach { key, property -> this.properties.put(key, property) }
         }
     }
 
@@ -46,15 +45,10 @@ class BodyPacket(server: Server, body: Player) {
         val connection = to.handle.connection
         dummy.connection = connection
 
-        val playerInfoPacket = ClientboundPlayerInfoUpdatePacket.createSinglePlayerInitializing(dummy, false)
-        connection.send(playerInfoPacket)
-
-        val addEntityPacket = createAddEntityPacket(dummy)
-        connection.send(addEntityPacket)
-
-        val dataPacket = ClientboundSetEntityDataPacket(dummy.id, dummy.entityData.packAll())
-        connection.send(dataPacket)
-
+        connection.send(ClientboundPlayerInfoUpdatePacket.createSinglePlayerInitializing(dummy, false))
+        connection.send(createAddEntityPacket(dummy))
+        connection.send(ClientboundSetEntityDataPacket(dummy.id, dummy.entityData.packAll()))
+        connection.send(createRemovePlayerInfoPacket(dummy))
         hiddenNameTag(to.handle)
     }
 
@@ -70,8 +64,8 @@ class BodyPacket(server: Server, body: Player) {
 
     private fun hiddenNameTag(to: ServerPlayer) {
         val dummyTeam = PlayerTeam(Scoreboard(), "hidden_team_${dummy.id}").apply {
-            setNameTagVisibility(Visibility.NEVER)
-            setColor(ChatFormatting.RESET)
+            nameTagVisibility = Visibility.NEVER
+            color = ChatFormatting.RESET
         }
 
         val createTeamPacket = ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(dummyTeam, true)
@@ -88,4 +82,6 @@ class BodyPacket(server: Server, body: Player) {
         dummy.deltaMovement,
         dummy.yHeadRot.toDouble()
     )
+
+    private fun createRemovePlayerInfoPacket(dummy: ServerPlayer) = ClientboundPlayerInfoRemovePacket(listOf(dummy.uuid))
 }
