@@ -24,8 +24,9 @@ class TabHandler(
         val engine = engines[type] ?: throw IllegalArgumentException("Unknown engine type: $type")
         val renderer = renderers[player] ?: throw IllegalArgumentException("Unknown renderer for $player")
 
-        eachEngines.put(player, engine)?.renderRemoval()
+        val previousEngine = eachEngines.put(player, engine)
 
+        previousEngine?.unregisterRenderer(renderer)
         engine.registerRenderer(renderer)
         engine.applyInitialization()
     }
