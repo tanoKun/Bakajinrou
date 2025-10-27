@@ -1,10 +1,8 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.player.preparation
 
-import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.common.cache.PlayerSkinCache
 import com.github.tanokun.bakajinrou.plugin.common.setting.GameSettings
-import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -14,12 +12,9 @@ import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.InventoryHolder
-import plutoproject.adventurekt.component
-import plutoproject.adventurekt.text.raw
-import plutoproject.adventurekt.text.text
 
 class NonLifecycleEventListener(
-    private val gameSettings: GameSettings, private val translator: JinrouTranslator
+    private val gameSettings: GameSettings
 ): Listener {
     @EventHandler
     fun onFall(e: EntityDamageEvent) {
@@ -45,11 +40,6 @@ class NonLifecycleEventListener(
             gameSettings.addCandidate(uniqueId)
             return
         }
-
-        e.player.playerListName(component {
-            raw { translator.translate(PrefixKeys.Companion.SPECTATOR, e.player.locale()) }
-            text(" ${e.player.name}")
-        })
     }
 
     @EventHandler
