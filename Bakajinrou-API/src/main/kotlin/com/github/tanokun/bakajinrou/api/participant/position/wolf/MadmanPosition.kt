@@ -9,7 +9,7 @@ import com.github.tanokun.bakajinrou.api.participant.prefix.PrefixSource
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedReason
 import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 
-class MadmanPosition(private val hasFakeProtectAbility: Boolean): Position {
+data class MadmanPosition(private val hasFakeProtectAbility: Boolean): Position {
     override val prefixSource: PrefixSource = DefaultPrefix(PrefixKeys.MADMAN)
 
     override val abilityResult: ResultSource = ResultSource.CITIZENS

@@ -13,7 +13,7 @@ import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
  * - 観察者が被観察者と一緒 -> 人狼プレフィックス
  * - その他 -> null
  **/
-class WolfPrefix(private val knownByMadmans: ParticipantScope.NonSpectators): PrefixSource {
+data class WolfPrefix(private val knownByMadmans: ParticipantScope.NonSpectators): PrefixSource {
     private val prefixKey: PrefixKeys = PrefixKeys.WOLF
 
     override fun getVisibleSource(viewer: Participant, target: Participant): PrefixKeys? {

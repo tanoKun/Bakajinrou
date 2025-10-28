@@ -27,4 +27,22 @@ class WolfPosition(knownByMadmans: ParticipantScope.NonSpectators): Position {
     override val prefixSource: PrefixSource = WolfPrefix(knownByMadmans)
 
     override val abilityResult: ResultSource = ResultSource.WOLF
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is WolfPosition) return false
+
+        if (knownByMadmans != other.knownByMadmans) return false
+        if (prefixSource != other.prefixSource) return false
+        if (abilityResult != other.abilityResult) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = knownByMadmans.hashCode()
+        result = 31 * result + prefixSource.hashCode()
+        result = 31 * result + abilityResult.hashCode()
+        return result
+    }
 }
