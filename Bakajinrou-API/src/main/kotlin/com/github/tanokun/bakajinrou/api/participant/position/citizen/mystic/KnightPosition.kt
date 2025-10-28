@@ -7,7 +7,7 @@ import com.github.tanokun.bakajinrou.api.participant.prefix.PrefixSource
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedReason
 import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 
-object KnightPosition: MysticPosition() {
+data object KnightPosition: MysticPosition() {
     override val prefixSource: PrefixSource = DefaultPrefix( PrefixKeys.Mystic.KNIGHT)
 
     override fun inherentMethods(): List<InitialMethod> {

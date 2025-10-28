@@ -55,9 +55,9 @@ class QuartzDistribution(
     private suspend fun collectRemainingTime() {
         scheduler.observe(mainScope)
             .filterIsInstance<ScheduleState.Active>()
-            .filter { it.passedTime > 1.minutes }
+            .filter { it.passedTime > 2.minutes }
             .every(2.minutes)
-            .collect { state ->
+            .collect { _ ->
                 distributeQuartz(game.getCurrentParticipants().excludeSpectators())
             }
     }

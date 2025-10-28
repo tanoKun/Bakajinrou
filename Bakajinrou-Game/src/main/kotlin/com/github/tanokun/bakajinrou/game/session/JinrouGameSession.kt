@@ -16,15 +16,17 @@ class JinrouGameSession(
     debug: Logger,
     topScope: CoroutineScope
 ) {
-    private val job: Job = SupervisorJob()
+    private val job: CompletableJob = SupervisorJob()
 
-    private val exceptionHandler = CoroutineExceptionHandler { context, throwable ->
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         debug.severe(throwable.stackTraceToString())
     }
 
     val mainDispatcherScope: CoroutineScope = CoroutineScope(topScope.coroutineContext + exceptionHandler + job)
 
     private val _initFlow: MutableSharedFlow<ParticipantId> = MutableSharedFlow()
+
+    private var stopped = false
 
     init {
         require(game.judge() == null) {
@@ -45,10 +47,14 @@ class JinrouGameSession(
      * - ゲームがアクティブであること
      */
     fun finish() {
-        if (!scheduler.isActive()) return
+        if (stopped) return
 
-        scheduler.abort()
+        if (scheduler.isActive()) scheduler.abort()
+        job.complete()
         job.cancel()
+        mainDispatcherScope.cancel()
+
+        stopped = true
     }
 
     /**
@@ -107,5 +113,5 @@ class JinrouGameSession(
      */
     fun observeParticipantAtLaunched() = _initFlow
         .take(game.getCurrentParticipants().size)
-        .shareIn(mainDispatcherScope, SharingStarted.Companion.Eagerly, replay = 1)
+        .shareIn(mainDispatcherScope, SharingStarted.Eagerly, replay = 1)
 }

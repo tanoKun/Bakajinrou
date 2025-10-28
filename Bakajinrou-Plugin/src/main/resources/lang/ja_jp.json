@@ -43,10 +43,10 @@
     "prefix.mystic.medium": "<medium><bold>霊媒師<bold></medium>",
     "prefix.mystic.knight": "<knight><bold>騎士<bold></knight>",
 
-    "prefix.coming.out.last.wolf": "<wolf><bold>ラスト人狼CO<bold></wolf>",
-    "prefix.coming.out.fortune": "<fortune><bold>占い師CO<bold></fortune>",
-    "prefix.coming.out.medium": "<medium><bold>霊媒師CO<bold></medium>",
-    "prefix.coming.out.knight": "<knight><bold>騎士CO<bold></knight>",
+    "prefix.coming.out.last.wolf": "<wolf><bold>ラ狼CO<bold></wolf>",
+    "prefix.coming.out.fortune": "<fortune><bold>占CO<bold></fortune>",
+    "prefix.coming.out.medium": "<medium><bold>霊CO<bold></medium>",
+    "prefix.coming.out.knight": "<knight><bold>騎CO<bold></knight>",
 
     "prefix.wolf": "<wolf><bold>人狼<bold></wolf>",
     "prefix.madman": "<madman><bold>狂人<bold></madman>",

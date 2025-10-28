@@ -6,13 +6,16 @@ import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.whenOvertime
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.coroutine.TopCoroutineScope
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.finisher.SystemFinishNotifier
 import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.finisher.each.CitizenSideFinishNotifier
 import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.finisher.each.FoxSideFinishNotifier
 import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.finisher.each.WolfSideFinishNotifier
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
 
 /**
  * 勝利を監視します。
@@ -22,12 +25,14 @@ import kotlinx.coroutines.launch
  *
  * 監視対象が "ゲーム終了" であるため、その時点で監視は自動終了します。
  **/
+@Scoped(binds = [Observer::class])
+@Scope(value = GameComponents::class)
 class WonPositionAssigner(
     private val playerProvider: BukkitPlayerProvider,
     private val gameSession: JinrouGameSession,
     private val translator: JinrouTranslator,
     gameScheduler: GameScheduler,
-    topScope: CoroutineScope
+    topScope: TopCoroutineScope
 ): Observer {
     init {
         topScope.launch {

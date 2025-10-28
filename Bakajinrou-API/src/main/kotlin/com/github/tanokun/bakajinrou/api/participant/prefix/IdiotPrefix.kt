@@ -9,7 +9,7 @@ import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
  * - 観察者が観察者と一緒 -> 偽役職のプレフィックス
  * - その他 -> null
  **/
-class IdiotPrefix(
+data class IdiotPrefix(
     private val realKey: PrefixKeys.Idiot,
     private val fakeKey: PrefixKeys.Mystic,
 ): PrefixSource {

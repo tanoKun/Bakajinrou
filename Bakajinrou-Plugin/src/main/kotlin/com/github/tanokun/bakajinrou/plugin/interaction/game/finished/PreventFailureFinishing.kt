@@ -5,12 +5,17 @@ import com.github.tanokun.bakajinrou.api.map.GameMap
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.coroutine.TopCoroutineScope
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.interaction.game.initialization.asBukkit
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.dead.body.BukkitBodyHandler
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import org.bukkit.Bukkit
 import org.bukkit.GameMode
+import org.bukkit.entity.Item
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
 
 /**
  * ゲームの終了を監視し、勝利条件が確定した際に共通する終了処理を行います。
@@ -25,11 +30,13 @@ import org.bukkit.GameMode
  * @property gameMap ゲームマップ情報
  * @property topScope このクラスの全てのコルーチンが動作する、上位のコルーチンスコープ
  */
+@Scoped(binds = [Observer::class])
+@Scope(value = GameComponents::class)
 class PreventFailureFinishing(
     private val playerProvider: BukkitPlayerProvider,
     private val gameSession: JinrouGameSession,
     private val gameMap: GameMap,
-    private val topScope: CoroutineScope,
+    private val topScope: TopCoroutineScope,
     private val bodyHandler: BukkitBodyHandler
 ): Observer {
     init {
@@ -47,6 +54,12 @@ class PreventFailureFinishing(
      */
     private fun atFinish(wonInfo: WonInfo) {
         bodyHandler.deleteBodies()
+
+        Bukkit.getWorlds().forEach {
+            it.entities
+                .filterIsInstance<Item>()
+                .forEach(Item::remove)
+        }
 
         wonInfo.participants.forEach { participant ->
             topScope.launch {

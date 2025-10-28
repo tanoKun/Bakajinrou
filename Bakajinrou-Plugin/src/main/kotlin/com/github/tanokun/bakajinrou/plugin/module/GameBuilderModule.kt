@@ -24,15 +24,12 @@ import com.github.tanokun.bakajinrou.game.participant.initialization.InherentMet
 import com.github.tanokun.bakajinrou.game.participant.state.suspended.ChangeSuspended
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
+import com.github.tanokun.bakajinrou.plugin.common.coroutine.TopCoroutineScope
 import com.github.tanokun.bakajinrou.plugin.common.setting.RequestedPositions
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.BindingListeners
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBuilder
-import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.PreventFailureFinishing
-import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.WonPositionAssigner
-import com.github.tanokun.bakajinrou.plugin.interaction.game.finished.notification.AllPositionsNotifier
 import com.github.tanokun.bakajinrou.plugin.interaction.game.scheduler.JinrouGameScheduler
-import com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.tab.modifier.TabListModifier
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.team.modifier.ViewTeamModifier
 import kotlinx.coroutines.CoroutineScope
 import org.bukkit.Bukkit
@@ -56,14 +53,9 @@ class GameBuilderModule(plugin: Plugin) {
         singleOf(Bukkit::getScheduler)
     }
 
-    private val topScope by lazy { CoroutineScope(plugin.scope.coroutineContext) }
-
     val observersModule = module {
         scope<GameComponents> {
             scopedOf(::InherentMethodsInitializer) bind Observer::class
-            scoped { PreventFailureFinishing(get(), get(), get(), topScope, get()) } bind Observer::class
-            scoped { WonPositionAssigner(get(), get(), get(), get(), topScope) } bind Observer::class
-            scoped { AllPositionsNotifier(get(), get(), get(), topScope) } bind Observer::class
         }
     }
 
@@ -100,7 +92,6 @@ class GameBuilderModule(plugin: Plugin) {
         single { Terminal(interactive = true, ansiLevel = AnsiLevel.TRUECOLOR) }
 
         scope<GameComponents> {
-            scopedOf(::TabListModifier)
             scoped { ViewTeamModifier(get(), get(), get<JinrouGame>().getCurrentParticipants().excludeSpectators()) }
         }
     }
@@ -128,10 +119,11 @@ class GameBuilderModule(plugin: Plugin) {
                     game = get { parametersOf(participants) },
                     scheduler = get { parametersOf(timer) },
                     debug = get(),
-                    topScope = topScope
+                    topScope = get<TopCoroutineScope>()
                 )
             }
 
+            scoped<TopCoroutineScope> { TopCoroutineScope(CoroutineScope(plugin.scope.coroutineContext)) }
             scoped<CoroutineScope> { get<JinrouGameSession>().mainDispatcherScope }
         }
     }

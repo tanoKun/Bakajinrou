@@ -15,6 +15,7 @@ import org.bukkit.entity.Arrow
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityShootBowEvent
+import org.bukkit.event.entity.ProjectileHitEvent
 import org.bukkit.plugin.Plugin
 import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
@@ -46,6 +47,20 @@ class AttackByBowAdapter(
         }
     }
 
+    register<ProjectileHitEvent> { event ->
+        if (event.hitEntity != null) return@register
+
+        val arrow = (event.entity as? Arrow) ?: return@register
+        val methodId = arrow.itemStack.getMethodId() ?: return@register
+
+        val attacker = arrow.shooter as? Player ?: return@register
+        val attackerId = attacker.uniqueId.asParticipantId()
+
+        mainScope.launch {
+            attacking.consumeArrow(attackerId, methodId)
+        }
+    }
+
     register<EntityShootBowEvent> { event ->
         val shooterPlayer = (event.entity as? Player) ?: return@register
         val arrow = event.consumable ?: return@register
@@ -57,7 +72,7 @@ class AttackByBowAdapter(
         }
 
         mainScope.launch {
-            attacking.arrowShoot(shooterPlayer.uniqueId.asParticipantId())
+            attacking.shootArrow(shooterPlayer.uniqueId.asParticipantId())
         }
     }
 })

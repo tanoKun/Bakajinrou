@@ -1,11 +1,13 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.tab.refresher
+package com.github.tanokun.bakajinrou.plugin.rendering.tab.gaming.changer
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.distinctUntilChangedByParticipantOf
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
-import com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.tab.modifier.TabListModifier
+import com.github.tanokun.bakajinrou.plugin.rendering.tab.handler.TabHandler
+import com.github.tanokun.bakajinrou.plugin.rendering.tab.handler.TabHandlerType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
@@ -15,9 +17,10 @@ import org.koin.core.annotation.Scoped
 
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
-class TabRefresherOnDeath(
-    private val game: JinrouGame,
-    private val tabListModifier: TabListModifier,
+class GameTabChangerOnDeath(
+    game: JinrouGame,
+    private val tabHandler: TabHandler,
+    private val playerProvider: BukkitPlayerProvider,
     private val mainScope: CoroutineScope,
 ): Observer {
     init {
@@ -26,14 +29,13 @@ class TabRefresherOnDeath(
                 .filter { it.after.isDead() }
                 .distinctUntilChangedByParticipantOf(Participant::isDead)
                 .map { it.after }
-                .collect(::onDeath)
+                .collect(::changer)
         }
     }
 
-    private fun onDeath(dead: Participant) {
-        tabListModifier.updateDisplayNameOfAll(viewerId = dead.participantId)
-        tabListModifier.updateGameModeOfAll(viewerId = dead.participantId)
+    private fun changer(target: Participant) {
+        val player = playerProvider.getAllowNull(target) ?: return
 
-        tabListModifier.updateDisplayNameToAll(targetId = dead.participantId)
+        tabHandler.joinEngine(TabHandlerType.SharedBySpectators, player)
     }
 }

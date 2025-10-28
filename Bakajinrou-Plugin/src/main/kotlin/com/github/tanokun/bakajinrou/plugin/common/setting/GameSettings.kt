@@ -25,13 +25,17 @@ import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBu
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBuilder.MadmanAssigner.Companion.assignMadmans
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBuilder.WolfAssigner.Companion.assignWolfs
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 import org.bukkit.plugin.Plugin
+import org.koin.core.annotation.Single
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.getKoin
 import java.util.*
 
+@Single
 class GameSettings(private val plugin: Plugin) {
     private val _candidates = hashSetOf<UUID>()
 
@@ -55,6 +59,11 @@ class GameSettings(private val plugin: Plugin) {
         )
 
     var selectedMap: GameMap? = null
+
+    private val _changedSpectators = MutableSharedFlow<ChangedSpectator>()
+
+    val changedSpectators: SharedFlow<ChangedSpectator>
+        get() = _changedSpectators
 
     fun getAmountBy(positions: RequestedPositions): Int {
         return selectedPositions[positions] ?: 0
@@ -80,12 +89,22 @@ class GameSettings(private val plugin: Plugin) {
     fun addSpectator(uuid: UUID) {
         removeCandidate(uuid)
 
-        _spectators.add(uuid)
+        if (!_spectators.add(uuid)) return
+
+        plugin.scope.launch {
+            _changedSpectators.emit(ChangedSpectator.Added(uuid))
+        }
     }
 
     fun removeCandidate(uuid: UUID) = _candidates.remove(uuid)
 
-    fun removeSpectator(uuid: UUID) = _spectators.remove(uuid)
+    fun removeSpectator(uuid: UUID) {
+        if (!_spectators.remove(uuid)) return
+
+        plugin.scope.launch {
+            _changedSpectators.emit(ChangedSpectator.Removed(uuid))
+        }
+    }
 
     fun buildGameSession(translator: JinrouTranslator): GameBuildResult {
         val selectedMap = selectedMap ?: return GameBuildResult.NotFoundSettingMap
@@ -123,6 +142,13 @@ class GameSettings(private val plugin: Plugin) {
     }
 
     private fun createSpectators() = spectators.map { Participant(it.asParticipantId(), SpectatorPosition, GrantedStrategy(mapOf())) }
+
+    sealed interface ChangedSpectator {
+        val uuid: UUID
+
+        class Added(override val uuid: UUID): ChangedSpectator
+        class Removed(override val uuid: UUID): ChangedSpectator
+    }
 }
 
 sealed interface GameBuildResult {

@@ -5,7 +5,7 @@ import com.github.tanokun.bakajinrou.api.participant.prefix.DefaultPrefix
 import com.github.tanokun.bakajinrou.api.participant.prefix.PrefixSource
 import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 
-object CitizenPosition: CitizensPosition() {
+data object CitizenPosition: CitizensPosition() {
     override val prefixSource: PrefixSource = DefaultPrefix( PrefixKeys.CITIZEN)
 
     override val abilityResult: ResultSource = ResultSource.CITIZENS

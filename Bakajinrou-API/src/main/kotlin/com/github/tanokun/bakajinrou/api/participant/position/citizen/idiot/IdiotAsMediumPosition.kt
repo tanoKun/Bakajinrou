@@ -5,7 +5,7 @@ import com.github.tanokun.bakajinrou.api.method.InitialMethod
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedReason
 import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 
-object IdiotAsMediumPosition: IdiotPosition(
+data object IdiotAsMediumPosition: IdiotPosition(
     realKey =  PrefixKeys.Idiot.MEDIUM,
     fakeKey =  PrefixKeys.Mystic.MEDIUM
 ) {

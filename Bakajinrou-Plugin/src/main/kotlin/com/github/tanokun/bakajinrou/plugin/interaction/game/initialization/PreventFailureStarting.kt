@@ -48,12 +48,14 @@ class PreventFailureStarting(
         mainScope.launch {
             val player = playerProvider.waitPlayerOnline(participant.participantId)
             player.isInvisible = false
-            player.gameMode = GameMode.ADVENTURE
+
+            if (participant.isAlive()) player.gameMode = GameMode.ADVENTURE
+            else player.gameMode = GameMode.SPECTATOR
 
             val timeState = gameScheduler.getCurrentState() as? ScheduleState.Active ?: return@launch
             val period = period - timeState.passedTime
 
-            if (period > Duration.Companion.ZERO) {
+            if (period > Duration.ZERO) {
                 player.addPotionEffect(PotionEffect(PotionEffectType.SPEED, period.toTick(), 2, true, false))
                 player.addPotionEffect(PotionEffect(PotionEffectType.INVISIBILITY, period.toTick(), 1, true, false))
             }
