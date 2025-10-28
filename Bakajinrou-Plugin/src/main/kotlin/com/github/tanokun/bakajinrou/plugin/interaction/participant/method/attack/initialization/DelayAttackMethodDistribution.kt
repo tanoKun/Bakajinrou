@@ -13,6 +13,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import org.bukkit.Material
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemStack
 import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
@@ -43,7 +44,11 @@ class DelayAttackMethodDistribution(
             delay(period)
 
             playerProvider.waitPlayerOnline(participant.participantId) { player ->
-                player.inventory.addItem(ItemStack.of(Material.BOW))
+                player.inventory.addItem(
+                    ItemStack.of(Material.BOW).apply { editMeta { meta ->
+                        meta.addEnchant(Enchantment.UNBREAKING, 1, true)
+                    } }
+                )
             }
 
             game.updateParticipant(participant.participantId) { current ->
