@@ -25,7 +25,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
-class PreventFailureStarting(
+class ParticipantStarter(
     private val playerProvider: BukkitPlayerProvider,
     private val game: JinrouGame,
     private val gameScheduler: GameScheduler,

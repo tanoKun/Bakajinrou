@@ -32,7 +32,7 @@ import org.koin.core.annotation.Scoped
  */
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
-class PreventFailureFinishing(
+class ParticipantsDeactivator(
     private val playerProvider: BukkitPlayerProvider,
     private val gameSession: JinrouGameSession,
     private val gameMap: GameMap,
