@@ -1,6 +1,9 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.participant.dead.body
 
 import com.mojang.authlib.GameProfile
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import net.minecraft.ChatFormatting
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.network.protocol.game.*
@@ -17,7 +20,7 @@ import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
 import java.util.*
 
-class BodyPacket(server: Server, body: Player) {
+class BodyPacket(server: Server, body: Player, private val scope: CoroutineScope) {
     private val randomUuid = UUID.randomUUID()
 
     private val profile = let {
@@ -48,7 +51,11 @@ class BodyPacket(server: Server, body: Player) {
         connection.send(ClientboundPlayerInfoUpdatePacket.createSinglePlayerInitializing(dummy, false))
         connection.send(createAddEntityPacket(dummy))
         connection.send(ClientboundSetEntityDataPacket(dummy.id, dummy.entityData.packAll()))
-        connection.send(createRemovePlayerInfoPacket(dummy))
+        scope.launch {
+            delay(50)
+            connection.send(createRemovePlayerInfoPacket(dummy))
+        }
+
         hiddenNameTag(to.handle)
     }
 
