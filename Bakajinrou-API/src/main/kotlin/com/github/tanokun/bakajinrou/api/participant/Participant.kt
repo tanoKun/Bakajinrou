@@ -102,14 +102,6 @@ data class Participant(
     fun isAlive(): Boolean = state == ParticipantStates.ALIVE
 
     /**
-     * この参加者が観戦者リストを閲覧できるかどうかを判定します。
-     * 死亡しているか、元々が [SpectatorPosition] の役職である場合に閲覧可能です。
-     *
-     * @return 観戦者リストを閲覧できる場合は `true`
-     */
-    fun isVisibleSpectators(): Boolean = isPosition<SpectatorPosition>() || state == ParticipantStates.DEAD
-
-    /**
      * 参加者が指定された [Position] であるかを確認します。
      *
      * @return 指定された [Position] と一致する場合は `true`
@@ -142,16 +134,7 @@ data class Participant(
      * @return 手段が削除された新しい [Participant] インスタンス
      */
     fun removeMethod(method: GrantedMethod) = copy(strategy = strategy.remove(method))
-
-    /**
-     * 指定された条件に一致するすべての手段を参加者から削除します。
-     *
-     * @param filter 削除する [GrantedMethod] を判定するラムダ式
-     *
-     * @return 条件に合う手段が削除された新しい [Participant] インスタンス
-     */
-    fun removeAll(filter: (GrantedMethod) -> Boolean) = copy(strategy = strategy.removeAll(filter))
-
+    
     /**
      * 指定されたコレクションに含まれるすべての手段を参加者から削除します。
      *
