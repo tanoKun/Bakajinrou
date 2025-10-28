@@ -8,13 +8,13 @@ import net.minecraft.world.level.GameType
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
 
-class CandidateInLobbyComponent(
+class CandidateInLobbyFixedComponent(
     override val dummyUuid: DummyUUID,
     target: Player,
     gameType: GameType
 ): TabEntryComponent {
     private val entry = run {
-        val gameProfile = createGameProfile(target as CraftPlayer)
+        val gameProfile = (target as CraftPlayer).profile
 
         val latency = target.ping
 
@@ -23,5 +23,5 @@ class CandidateInLobbyComponent(
         )
     }
 
-    override fun toPacketEntry() = entry
+    override fun toPacketEntry(viewer: Player) = entry
 }

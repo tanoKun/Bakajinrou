@@ -6,10 +6,10 @@ import com.github.tanokun.bakajinrou.plugin.common.setting.GameSettings
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.rendering.tab.DummyUUID
 import com.github.tanokun.bakajinrou.plugin.rendering.tab.TabEntryComponent
-import com.github.tanokun.bakajinrou.plugin.rendering.tab.handler.HandlerType
 import com.github.tanokun.bakajinrou.plugin.rendering.tab.handler.TabHandler
-import com.github.tanokun.bakajinrou.plugin.rendering.tab.lobby.component.CandidateInLobbyComponent
-import com.github.tanokun.bakajinrou.plugin.rendering.tab.lobby.component.SpectatorInLobbyComponent
+import com.github.tanokun.bakajinrou.plugin.rendering.tab.handler.TabHandlerType
+import com.github.tanokun.bakajinrou.plugin.rendering.tab.lobby.component.CandidateInLobbyFixedComponent
+import com.github.tanokun.bakajinrou.plugin.rendering.tab.lobby.component.SpectatorInLobbyFixedComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -39,13 +39,13 @@ class LobbyTabRefresher(
                 val gameType = GameType.byId(targetPlayer.gameMode.value)
 
                 when (it) {
-                    is GameSettings.ChangedSpectator.Added -> tabHandler.editEngine(HandlerType.LOBBY) {
-                        val component = SpectatorInLobbyComponent(dummyId, targetPlayer, gameType, jinrouTranslator)
+                    is GameSettings.ChangedSpectator.Added -> tabHandler.editEngine(TabHandlerType.ShareInLobby) {
+                        val component = SpectatorInLobbyFixedComponent(dummyId, targetPlayer, gameType, jinrouTranslator)
                         updateComponent(component)
                     }
 
-                    is GameSettings.ChangedSpectator.Removed -> tabHandler.editEngine(HandlerType.LOBBY) {
-                        val component = CandidateInLobbyComponent(dummyId, targetPlayer, gameType)
+                    is GameSettings.ChangedSpectator.Removed -> tabHandler.editEngine(TabHandlerType.ShareInLobby) {
+                        val component = CandidateInLobbyFixedComponent(dummyId, targetPlayer, gameType)
                         updateComponent(component)
                     }
                 }
@@ -57,8 +57,8 @@ class LobbyTabRefresher(
     suspend fun onJoin(e: PlayerJoinEvent) {
         delay(50)
 
-        tabHandler.joinEngine(HandlerType.LOBBY, e.player)
-        tabHandler.editEngine(HandlerType.LOBBY) {
+        tabHandler.joinEngine(TabHandlerType.ShareInLobby, e.player)
+        tabHandler.editEngine(TabHandlerType.ShareInLobby) {
             val gameType = GameType.byId(e.player.gameMode.value)
             addComponent(getComponent(e.player, gameType))
         }
@@ -66,18 +66,16 @@ class LobbyTabRefresher(
 
     @EventHandler
     fun onQuit(e: PlayerQuitEvent) {
-        tabHandler.quitEngine(e.player)
-
         val dummyId = getDummyUuid(e.player.uniqueId)
 
-        tabHandler.editEngine(HandlerType.LOBBY) {
+        tabHandler.editEngine(TabHandlerType.ShareInLobby) {
             removeComponent(dummyId)
         }
     }
 
     @EventHandler
     fun onChangeGameMode(e: PlayerGameModeChangeEvent) {
-        tabHandler.editEngine(HandlerType.LOBBY) {
+        tabHandler.editEngine(TabHandlerType.ShareInLobby) {
             updateComponent(getComponent(e.player, GameType.byId(e.newGameMode.value)))
         }
     }
@@ -90,9 +88,9 @@ class LobbyTabRefresher(
         val dummyId = getDummyUuid(player.uniqueId)
 
         return if (player.uniqueId in gameSettings.spectators)
-             SpectatorInLobbyComponent(dummyId, player, gameType, jinrouTranslator)
+             SpectatorInLobbyFixedComponent(dummyId, player, gameType, jinrouTranslator)
          else
-             CandidateInLobbyComponent(dummyId, player, gameType)
+             CandidateInLobbyFixedComponent(dummyId, player, gameType)
 
     }
 }

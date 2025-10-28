@@ -1,11 +1,14 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.tab.refresher
+package com.github.tanokun.bakajinrou.plugin.rendering.tab.gaming.refresher
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.distinctUntilChangedByParticipantOf
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
-import com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.tab.modifier.TabListModifier
+import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
+import com.github.tanokun.bakajinrou.plugin.rendering.tab.gaming.DummyPlayers
+import com.github.tanokun.bakajinrou.plugin.rendering.tab.handler.TabHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -14,21 +17,20 @@ import org.koin.core.annotation.Scoped
 
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
-class TabRefresherOnComingOut(
-    private val game: JinrouGame,
-    private val mainScope: CoroutineScope,
-    private val tabListModifier: TabListModifier,
-): Observer {
+class GameTabRefresherOnComingOut(
+    game: JinrouGame,
+    tabHandler: TabHandler,
+    dummyPlayers: DummyPlayers,
+    playerProvider: BukkitPlayerProvider,
+    jinrouTranslator: JinrouTranslator,
+    mainScope: CoroutineScope,
+): GameTabRefresher(game, tabHandler, dummyPlayers, playerProvider, jinrouTranslator) {
     init {
         mainScope.launch {
             game.observeParticipants(mainScope)
                 .distinctUntilChangedByParticipantOf(Participant::comingOut)
                 .map { it.after }
-                .collect(::onComingOut)
+                .collect(::rerender)
         }
-    }
-
-    private fun onComingOut(participant: Participant) {
-        tabListModifier.updateDisplayNameToAll(participant.participantId)
     }
 }

@@ -1,8 +1,9 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.tab.modifier
+package com.github.tanokun.bakajinrou.plugin.rendering.tab.gaming.component
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
+import com.github.tanokun.bakajinrou.plugin.rendering.tab.TabEntryComponent
 import net.kyori.adventure.text.Component
 import plutoproject.adventurekt.component
 import plutoproject.adventurekt.text.*
@@ -10,18 +11,22 @@ import plutoproject.adventurekt.text.style.bold
 import plutoproject.adventurekt.text.style.gray
 import java.util.*
 
-class PrefixCreator(private val translator: JinrouTranslator) {
-    /**
-     * 役職別のプレフィックスと、カミングアウトを足し合わせたプレフィックスを作成します。
-     * 主なルールは[com.github.tanokun.bakajinrou.api.participant.prefix.PrefixSource]を参照してください。
-     *
-     * @param viewer 観察者
-     *
-     * @return 統合したプレフィックス、または空のコンポーネント
-     *
-     * @see com.github.tanokun.bakajinrou.api.participant.prefix.PrefixSource
-     */
-    fun createPrefix(viewer: Participant, target: Participant, locale: Locale): Component {
+abstract class ParticipantInfoInGameComponent(private val translator: JinrouTranslator): TabEntryComponent {
+    abstract fun orderDecider(target: Participant): Int
+
+    protected fun createDisplayName(viewer: Participant, target: Participant, name: String, locale: Locale): Component =
+        component {
+            val prefix = createPrefix(viewer, target, locale)
+
+            if (prefix != Component.text("")) {
+                raw { prefix }
+                text(" ")
+            }
+
+            text(name)
+        }
+
+    private fun createPrefix(viewer: Participant, target: Participant, locale: Locale): Component {
         val resolvedPrefix = target.getPrefix(viewer)?.let {
             translator.translate(it, locale)
         }

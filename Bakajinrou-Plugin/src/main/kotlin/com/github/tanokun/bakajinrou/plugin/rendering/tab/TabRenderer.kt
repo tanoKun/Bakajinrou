@@ -40,7 +40,7 @@ class TabRenderer(private val authenticator: TabAuthenticator, private val recei
     private fun render(components: Collection<TabEntryComponent>, actions: EnumSet<ClientboundPlayerInfoUpdatePacket.Action>) {
         if (components.isEmpty()) return
 
-        val entries = components.map { it.toPacketEntry() }
+        val entries = components.map { it.toPacketEntry(receiver) }
         val packet = ClientboundPlayerInfoUpdatePacket(actions, entries)
 
         authenticator.approvePacket(packet)

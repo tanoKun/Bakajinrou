@@ -42,9 +42,11 @@ class TabEngine {
      * 差分を各描画者に適用します。
      */
     fun applyDifferences() {
-        renderers.forEach { renderer -> renderer.renderUpdate(updateDiff.values) }
-        renderers.forEach { renderer -> renderer.renderInitialization(addDiff.values) }
-        renderers.forEach { renderer -> renderer.renderRemoval(removeDiff.map { it.uuid }) }
+        renderers.forEach { renderer ->
+            renderer.renderUpdate(updateDiff.values)
+            renderer.renderInitialization(addDiff.values)
+            renderer.renderRemoval(removeDiff.map { it.uuid })
+        }
 
         updateDiff.clear()
         addDiff.clear()
@@ -63,5 +65,13 @@ class TabEngine {
         renderers.remove(renderer)
 
         renderer.renderRemoval(components.keys.map { it.uuid })
+    }
+
+    fun unregisterAll() {
+        renderers.forEach { renderer ->
+            renderer.renderRemoval(components.keys.map { it.uuid })
+        }
+
+        renderers.clear()
     }
 }

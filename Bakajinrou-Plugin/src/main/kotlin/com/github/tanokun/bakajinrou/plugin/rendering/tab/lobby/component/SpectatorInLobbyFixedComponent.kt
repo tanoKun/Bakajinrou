@@ -13,14 +13,14 @@ import plutoproject.adventurekt.component
 import plutoproject.adventurekt.text.raw
 import plutoproject.adventurekt.text.text
 
-class SpectatorInLobbyComponent(
+class SpectatorInLobbyFixedComponent(
     override val dummyUuid: DummyUUID,
     target: Player,
     gameType: GameType,
     private val translator: JinrouTranslator,
 ): TabEntryComponent {
     private val entry = run {
-        val gameProfile = createGameProfile(target as CraftPlayer)
+        val gameProfile = (target as CraftPlayer).profile
 
         val latency = target.ping
 
@@ -34,5 +34,5 @@ class SpectatorInLobbyComponent(
         )
     }
 
-    override fun toPacketEntry() = entry
+    override fun toPacketEntry(viewer: Player) = entry
 }

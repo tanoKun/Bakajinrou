@@ -5,7 +5,6 @@ import com.github.tanokun.bakajinrou.plugin.rendering.tab.TabRenderer
 import com.github.tanokun.bakajinrou.plugin.rendering.tab.authentication.TabAuthenticator
 import org.bukkit.entity.Player
 import org.koin.core.annotation.Single
-import java.util.*
 
 @Single(createdAtStart = true)
 class TabHandler(
@@ -13,10 +12,40 @@ class TabHandler(
 ) {
     private val renderers = hashMapOf<Player, TabRenderer>()
 
-    private val eachEngines = hashMapOf<Player, TabEngine>()
+    private val eachHandlerTypes = hashMapOf<Player, TabHandlerType>()
 
-    private val engines = EnumMap<HandlerType, TabEngine>(HandlerType::class.java).apply {
-        HandlerType.entries.forEach { put(it, TabEngine()) }
+    private val engines = hashMapOf<TabHandlerType, TabEngine>()
+
+    /**
+     * 指定した種類のエンジンを作成します。
+     *
+     * @param type 作成するエンジンの種類
+     *
+     * @throws IllegalArgumentException 指定した種類のエンジンが既に存在する場合
+     */
+    fun createEngine(type: TabHandlerType) {
+        if (engines.containsKey(type)) throw IllegalArgumentException("Engine $type already exists")
+
+        engines[type] = TabEngine()
+    }
+
+    /**
+     * 指定した種類のエンジンを削除します。
+     *
+     * @param type 削除するエンジンの種類
+     *
+     * @throws IllegalArgumentException 指定した種類のエンジンが存在しない場合
+     */
+    fun deleteEngine(type: TabHandlerType) {
+        if (!engines.containsKey(type)) throw IllegalArgumentException("Engine $type is not found")
+
+        val engine = engines.remove(type)
+
+        eachHandlerTypes
+            .filter { (_, eachType) -> eachType == type }
+            .forEach { (player, _) -> quitEngine(player) }
+
+        engine?.unregisterAll()
     }
 
     /**
@@ -28,25 +57,20 @@ class TabHandler(
      *
      * @throws IllegalArgumentException 指定した種類のエンジンが存在しない場合、または指定したプレイヤーのレンダラーが存在しない場合
      */
-    fun joinEngine(type: HandlerType, player: Player) {
+    fun joinEngine(type: TabHandlerType, player: Player) {
         val engine = engines[type] ?: throw IllegalArgumentException("Unknown engine type: $type")
         val renderer = renderers[player] ?: throw IllegalArgumentException("Unknown renderer for $player")
 
         quitEngine(player)
 
-        eachEngines[player] = engine
+        eachHandlerTypes[player] = type
 
         engine.registerRenderer(renderer)
     }
 
-    /**
-     * 指定したプレイヤーを、参加しているエンジンから退出させます。
-     * 参加しているエンジンがない場合、何も起こりません。
-     *
-     * @param player 退出させるプレイヤー
-     */
-    fun quitEngine(player: Player) {
-        val previousEngine = eachEngines.remove(player)
+    private fun quitEngine(player: Player) {
+        val previousType = eachHandlerTypes.remove(player)
+        val previousEngine = engines[previousType]
         val renderer = renderers[player]
 
         if (renderer != null && previousEngine != null) previousEngine.unregisterRenderer(renderer)
@@ -77,7 +101,8 @@ class TabHandler(
         renderers.remove(player)
     }
 
-    fun editEngine(type: HandlerType, block: TabEngineHandlerDsl.() -> Unit) {
+
+    fun editEngine(type: TabHandlerType, block: TabEngineHandlerDsl.() -> Unit) {
         val engine = engines[type] ?: throw IllegalArgumentException("Unknown engine type: $type")
 
         engine.apply {
