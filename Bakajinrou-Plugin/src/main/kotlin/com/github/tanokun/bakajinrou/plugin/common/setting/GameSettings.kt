@@ -89,7 +89,7 @@ class GameSettings(private val plugin: Plugin) {
     fun addSpectator(uuid: UUID) {
         removeCandidate(uuid)
 
-        _spectators.add(uuid)
+        if (!_spectators.add(uuid)) return
 
         plugin.scope.launch {
             _changedSpectators.emit(ChangedSpectator.Added(uuid))
@@ -99,7 +99,7 @@ class GameSettings(private val plugin: Plugin) {
     fun removeCandidate(uuid: UUID) = _candidates.remove(uuid)
 
     fun removeSpectator(uuid: UUID) {
-        _spectators.remove(uuid)
+        if (!_spectators.remove(uuid)) return
 
         plugin.scope.launch {
             _changedSpectators.emit(ChangedSpectator.Removed(uuid))
