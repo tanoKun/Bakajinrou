@@ -9,6 +9,7 @@ version = projectVersion
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization") version "2.2.0"
+    id("xyz.jpenilla.run-paper") version "2.3.1"
     alias(libs.plugins.paper)
     alias(libs.plugins.shadow)
     alias(libs.plugins.paperweight)
@@ -82,20 +83,12 @@ tasks.withType<Test> {
 }
 
 tasks {
-    val copyJarToPlugins by registering(Copy::class) {
-        dependsOn(shadowJar)
-        from(shadowJar.get().archiveFile)
-        into("C:/Users/owner/Desktop/1.21.4 paper 2/plugins")
-    }
-
-    shadowJar {
-        dependsOn(subprojects.map { it.tasks.named("test") })
-
-        archiveBaseName.set("BakaJinrou")
-        archiveVersion.set(projectVersion)
-
-        mergeServiceFiles()
-        finalizedBy(copyJarToPlugins)
+    runServer {
+        minecraftVersion("1.21.4")
+        downloadPlugins {
+            url("https://github.com/CommandAPI/CommandAPI/releases/download/10.1.1/CommandAPI-10.1.1-Mojang-Mapped.jar")
+            url("https://github.com/dmulloy2/ProtocolLib/releases/download/5.4.0/ProtocolLib.jar")
+        }
     }
 }
 
