@@ -15,7 +15,7 @@ import org.koin.core.annotation.Scoped
 
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
-class DeathConfirmedObserver(
+class DeathToSpectatorObserver(
     private val game: JinrouGame,
     private val playerProvider: BukkitPlayerProvider,
     private val mainScope: CoroutineScope,
@@ -32,7 +32,6 @@ class DeathConfirmedObserver(
     private fun onDeath(dead: Participant) {
         val player = playerProvider.getAllowNull(dead) ?: return
 
-        player.inventory.clear()
         player.gameMode = GameMode.SPECTATOR
     }
 }

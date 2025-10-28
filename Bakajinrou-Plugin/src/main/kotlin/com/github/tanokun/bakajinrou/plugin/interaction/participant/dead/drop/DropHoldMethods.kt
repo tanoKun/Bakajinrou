@@ -55,5 +55,8 @@ class DropHoldMethods(
             .forEach {
                 world.dropItemNaturally(location, it)
             }
+
+
+        player.inventory.clear()
     }
 }
