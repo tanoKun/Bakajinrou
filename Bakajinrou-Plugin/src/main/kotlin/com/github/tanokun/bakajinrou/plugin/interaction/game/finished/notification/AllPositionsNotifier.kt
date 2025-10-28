@@ -5,18 +5,23 @@ import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.position.*
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.coroutine.TopCoroutineScope
 import com.github.tanokun.bakajinrou.plugin.common.formatter.ParticipantsFormatter
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.localization.keys.FormatKeys
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
 
+@Scoped(binds = [Observer::class])
+@Scope(value = GameComponents::class)
 class AllPositionsNotifier(
     private val playerProvider: BukkitPlayerProvider,
     private val translator: JinrouTranslator,
     private val gameSession: JinrouGameSession,
-    private val topScope: CoroutineScope,
+    private val topScope: TopCoroutineScope,
 ): Observer {
     init {
         topScope.launch {
