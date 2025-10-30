@@ -1,14 +1,10 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.participant.dead.drop
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
-import com.github.tanokun.bakajinrou.api.advantage.AdvantageMethod
-import com.github.tanokun.bakajinrou.api.attacking.method.ArrowMethod
-import com.github.tanokun.bakajinrou.api.attacking.method.AttackMethod
 import com.github.tanokun.bakajinrou.api.method.asMethodId
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.distinctUntilChangedByParticipantOf
-import com.github.tanokun.bakajinrou.api.protection.method.ProtectiveMethod
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.getMethodId
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
@@ -47,13 +43,12 @@ class DropHoldMethods(
                 val methodId = it.getMethodId() ?: UUID.randomUUID().asMethodId()
                 val method = dead.getGrantedMethod(methodId)
 
-                it.type == Material.QUARTZ
-                    || (method is AttackMethod && method !is ArrowMethod)
-                    || method is ProtectiveMethod
-                    || method is AdvantageMethod
+                it.type == Material.QUARTZ || (method?.transportable == true)
             }
             .forEach {
-                world.dropItemNaturally(location, it)
+                world.dropItemNaturally(location, it).apply {
+                    thrower = player.uniqueId
+                }
             }
 
 
