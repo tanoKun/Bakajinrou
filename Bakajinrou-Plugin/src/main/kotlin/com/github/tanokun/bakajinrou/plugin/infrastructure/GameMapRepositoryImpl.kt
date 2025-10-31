@@ -1,8 +1,8 @@
 package com.github.tanokun.bakajinrou.plugin.infrastructure
 
-import com.github.tanokun.bakajinrou.api.map.GameMap
-import com.github.tanokun.bakajinrou.api.map.MapName
-import com.github.tanokun.bakajinrou.api.map.repository.GameMapRepository
+import com.github.tanokun.bakajinrou.plugin.map.GameMap
+import com.github.tanokun.bakajinrou.plugin.map.MapName
+import com.github.tanokun.bakajinrou.plugin.map.repository.GameMapRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow

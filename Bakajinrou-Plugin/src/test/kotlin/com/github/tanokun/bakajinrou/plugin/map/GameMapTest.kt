@@ -1,6 +1,7 @@
-package com.github.tanokun.bakajinrou.api.map
+package com.github.tanokun.bakajinrou.plugin.map
 
 import kotlinx.serialization.json.Json
+import org.bukkit.Material
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import kotlin.time.Duration.Companion.minutes
@@ -11,11 +12,11 @@ class GameMapTest {
 
     @Test
     fun serializeTest() {
-        val gameMap = GameMap(MapName("testMap"), point1, point2, 15.minutes)
+        val gameMap = GameMap(MapName("testMap"), point1, point2, 15.minutes, Material.STONE)
         val encode = Json.encodeToString(gameMap)
 
         assertEquals(
-            "{\"mapName\":{\"name\":\"testMap\"},\"spawnPoint\":{\"worldName\":\"testWorld\",\"x\":1,\"y\":1,\"z\":1},\"lobbyPoint\":{\"worldName\":\"testWorld2\",\"x\":2,\"y\":2,\"z\":2},\"startTime\":\"PT15M\"}",
+            "{\"mapName\":{\"name\":\"testMap\"},\"spawnPoint\":{\"worldName\":\"testWorld\",\"x\":1,\"y\":1,\"z\":1},\"lobbyPoint\":{\"worldName\":\"testWorld2\",\"x\":2,\"y\":2,\"z\":2},\"startTime\":\"PT15M\",\"icon\":\"STONE\"}",
             encode
         )
 

@@ -1,13 +1,13 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.player.setting.command
 
-import com.github.tanokun.bakajinrou.api.map.GameMap
-import com.github.tanokun.bakajinrou.api.map.MapName
-import com.github.tanokun.bakajinrou.api.map.PointLocation
-import com.github.tanokun.bakajinrou.game.map.GameMapRegistry
-import com.github.tanokun.bakajinrou.game.map.result.MapCreationResult
-import com.github.tanokun.bakajinrou.game.map.result.MapDeletionResult
-import com.github.tanokun.bakajinrou.game.map.result.MapUpdateResult
 import com.github.tanokun.bakajinrou.plugin.common.command.Command
+import com.github.tanokun.bakajinrou.plugin.map.GameMap
+import com.github.tanokun.bakajinrou.plugin.map.GameMapRegistry
+import com.github.tanokun.bakajinrou.plugin.map.MapName
+import com.github.tanokun.bakajinrou.plugin.map.PointLocation
+import com.github.tanokun.bakajinrou.plugin.map.result.MapCreationResult
+import com.github.tanokun.bakajinrou.plugin.map.result.MapDeletionResult
+import com.github.tanokun.bakajinrou.plugin.map.result.MapUpdateResult
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.arguments.ArgumentSuggestions
 import dev.jorel.commandapi.arguments.IntegerArgument
@@ -18,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.minutes
@@ -70,7 +71,7 @@ class MapSettingCommand(private val gameMapRegistry: GameMapRegistry, private va
                     val spawnPoint = (args["spawn"] as Location).toPoint()
                     val lobbyPoint = (args["lobby"] as Location).toPoint()
 
-                    val map = GameMap(mapName, spawnPoint, lobbyPoint, 15.minutes)
+                    val map = GameMap(mapName, spawnPoint, lobbyPoint, 15.minutes, Material.STONE)
 
                     sender.info("「${mapName.name}」マップを作成中...")
 

@@ -2,7 +2,6 @@ package com.github.tanokun.bakajinrou.plugin.common.setting
 
 import com.github.shynixn.mccoroutine.bukkit.scope
 import com.github.tanokun.bakajinrou.api.JinrouGame
-import com.github.tanokun.bakajinrou.api.map.GameMap
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.all
@@ -25,6 +24,7 @@ import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBu
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBuilder.MadmanAssigner.Companion.assignMadmans
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBuilder.WolfAssigner.Companion.assignWolfs
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
+import com.github.tanokun.bakajinrou.plugin.map.GameMap
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.filterIsInstance
