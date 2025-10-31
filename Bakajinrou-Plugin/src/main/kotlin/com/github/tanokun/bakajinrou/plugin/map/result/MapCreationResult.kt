@@ -1,6 +1,7 @@
-package com.github.tanokun.bakajinrou.game.map.result
+package com.github.tanokun.bakajinrou.plugin.map.result
 
-import com.github.tanokun.bakajinrou.api.map.GameMap
+import com.github.tanokun.bakajinrou.plugin.map.GameMap
+
 
 /**
  * マップを新規作成した時の、結果を表すオブジェクトです。

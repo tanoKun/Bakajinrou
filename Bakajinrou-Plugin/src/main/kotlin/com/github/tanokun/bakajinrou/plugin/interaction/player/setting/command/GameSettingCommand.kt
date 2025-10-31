@@ -1,14 +1,14 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.player.setting.command
 
-import com.github.tanokun.bakajinrou.api.map.MapName
 import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
-import com.github.tanokun.bakajinrou.game.map.GameMapRegistry
 import com.github.tanokun.bakajinrou.plugin.common.command.Command
 import com.github.tanokun.bakajinrou.plugin.common.formatter.ColorPallet
 import com.github.tanokun.bakajinrou.plugin.common.setting.GameSettings
 import com.github.tanokun.bakajinrou.plugin.common.setting.template.DistributionTemplates
 import com.github.tanokun.bakajinrou.plugin.interaction.player.setting.gui.SettingPositionGUI
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
+import com.github.tanokun.bakajinrou.plugin.map.GameMapRegistry
+import com.github.tanokun.bakajinrou.plugin.map.MapName
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.arguments.ArgumentSuggestions
 import dev.jorel.commandapi.arguments.PlayerArgument
@@ -70,7 +70,7 @@ class GameSettingCommand(
         )
 
         CommandAPICommand("jobs").withPermission("bakajinrou.command.gamesetting")
-            .executesPlayer(PlayerCommandExecutor { sender, args ->
+            .executesPlayer(PlayerCommandExecutor { sender, _ ->
                 SettingPositionGUI(gameSettings, templates, translator).open(sender)
             })
             .register()

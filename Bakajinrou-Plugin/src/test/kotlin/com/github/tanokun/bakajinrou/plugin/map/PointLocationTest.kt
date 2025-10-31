@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.api.map
+package com.github.tanokun.bakajinrou.plugin.map
 
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.Assertions.assertEquals

@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.game.map.result
+package com.github.tanokun.bakajinrou.plugin.map.result
 
 /**
  * マップを上書きした時の、結果を表すオブジェクトです。

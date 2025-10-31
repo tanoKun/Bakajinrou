@@ -1,11 +1,9 @@
-package com.github.tanokun.bakajinrou.game.map
+package com.github.tanokun.bakajinrou.plugin.map
 
-import com.github.tanokun.bakajinrou.api.map.GameMap
-import com.github.tanokun.bakajinrou.api.map.MapName
-import com.github.tanokun.bakajinrou.api.map.repository.GameMapRepository
-import com.github.tanokun.bakajinrou.game.map.result.MapCreationResult
-import com.github.tanokun.bakajinrou.game.map.result.MapDeletionResult
-import com.github.tanokun.bakajinrou.game.map.result.MapUpdateResult
+import com.github.tanokun.bakajinrou.plugin.map.repository.GameMapRepository
+import com.github.tanokun.bakajinrou.plugin.map.result.MapCreationResult
+import com.github.tanokun.bakajinrou.plugin.map.result.MapDeletionResult
+import com.github.tanokun.bakajinrou.plugin.map.result.MapUpdateResult
 import java.util.concurrent.ConcurrentHashMap
 
 class GameMapRegistry(

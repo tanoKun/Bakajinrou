@@ -1,7 +1,7 @@
-package com.github.tanokun.bakajinrou.api.map.repository
+package com.github.tanokun.bakajinrou.plugin.map.repository
 
-import com.github.tanokun.bakajinrou.api.map.GameMap
-import com.github.tanokun.bakajinrou.api.map.MapName
+import com.github.tanokun.bakajinrou.plugin.map.GameMap
+import com.github.tanokun.bakajinrou.plugin.map.MapName
 import kotlinx.coroutines.flow.Flow
 
 interface GameMapRepository {
