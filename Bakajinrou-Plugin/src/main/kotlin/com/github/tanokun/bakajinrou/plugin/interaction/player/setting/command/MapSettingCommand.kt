@@ -47,7 +47,7 @@ import kotlin.time.Duration.Companion.seconds
  * ### `/mapsetting update lobby <mapName> <lobby>`
  * 指定マップのロビー地点を更新します。
  *
- * ### `/mapsetting update starttime <mapName> <seconds>`
+ * ### `/mapsetting update time <mapName> <seconds>`
  * 指定マップのゲーム開始後の制限時間(秒)を変更します。
  *
  * ### `/mapsetting update quartztime <mapName> <seconds>`
@@ -129,7 +129,7 @@ class MapSettingCommand(private val gameMapRegistry: GameMapRegistry, private va
                         update(map.copy(lobbyPoint = lobbyPoint), sender)
                     })
                 )
-                .withSubcommand(CommandAPICommand("starttime")
+                .withSubcommand(CommandAPICommand("time")
                     .withArguments(argumentMapName(gameMapRegistry))
                     .withArguments(IntegerArgument("seconds",0, Int.MAX_VALUE))
                     .executes(CommandExecutor { sender, args ->
