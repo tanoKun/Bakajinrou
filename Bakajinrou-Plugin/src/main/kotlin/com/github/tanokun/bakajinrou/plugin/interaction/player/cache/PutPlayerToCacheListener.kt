@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.player.preparation
+package com.github.tanokun.bakajinrou.plugin.interaction.player.cache
 
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.common.cache.PlayerSkinCache
@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.InventoryHolder
 
-class NonLifecycleEventListener(
+class PutPlayerToCacheListener(
     private val gameSettings: GameSettings
 ): Listener {
     @EventHandler
