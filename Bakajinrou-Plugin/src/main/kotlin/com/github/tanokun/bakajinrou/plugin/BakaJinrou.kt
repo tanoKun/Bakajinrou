@@ -4,8 +4,8 @@ import com.comphenix.protocol.ProtocolLibrary
 import com.github.shynixn.mccoroutine.bukkit.registerSuspendingEvents
 import com.github.shynixn.mccoroutine.bukkit.scope
 import com.github.tanokun.bakajinrou.plugin.common.setting.GameSettings
+import com.github.tanokun.bakajinrou.plugin.interaction.player.cache.PutPlayerToCacheListener
 import com.github.tanokun.bakajinrou.plugin.interaction.player.handling.command.HandleGameCommand
-import com.github.tanokun.bakajinrou.plugin.interaction.player.preparation.NonLifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.interaction.player.setting.command.GameSettingCommand
 import com.github.tanokun.bakajinrou.plugin.interaction.player.setting.command.MapSettingCommand
 import com.github.tanokun.bakajinrou.plugin.module.GameBuilderModule
@@ -60,7 +60,7 @@ open class BakaJinrou(): JavaPlugin() {
             MapSettingCommand(gameMapRegistry, scope)
             GameSettingCommand(gameSettings, templatesDeferred.await(), gameMapRegistry, translator, colorPalletDeferred.await())
 
-            Bukkit.getPluginManager().registerEvents(NonLifecycleEventListener(gameSettings), this@BakaJinrou)
+            Bukkit.getPluginManager().registerEvents(PutPlayerToCacheListener(gameSettings), this@BakaJinrou)
 
             Bukkit.getPluginManager().registerSuspendingEvents(LobbyTabRefresher(gameSettings, getKoin().get(), translator, getKoin().get(), this), this@BakaJinrou)
             Bukkit.getPluginManager().registerEvents(RendererLifecycle(getKoin().get()), this@BakaJinrou)
