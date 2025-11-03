@@ -33,7 +33,7 @@ class TransferMethod(private val game: JinrouGame) {
 
         val origin = from.getGrantedMethod(methodId) ?: return false
 
-        val grantMethod = if (origin is ProtectiveMethod) origin.asTransferred(toId) else origin
+        val grantMethod = if (origin is ProtectiveMethod) origin.asTransferred(toId) else origin.asTransferred()
 
         game.updateParticipant(fromId) { current -> current.removeMethod(origin) }
         game.updateParticipant(toId) { current -> current.grantMethod(grantMethod) }
