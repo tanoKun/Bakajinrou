@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
@@ -46,7 +47,10 @@ class DelayAttackMethodDistribution(
             playerProvider.waitPlayerOnline(participant.participantId) { player ->
                 player.inventory.addItem(
                     ItemStack.of(Material.BOW).apply { editMeta { meta ->
+                        meta.isUnbreakable = true
                         meta.addEnchant(Enchantment.UNBREAKING, 1, true)
+
+                        meta.addItemFlags(*ItemFlag.entries.toTypedArray())
                     } }
                 )
             }
