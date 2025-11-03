@@ -9,6 +9,7 @@ import com.github.tanokun.bakajinrou.plugin.interaction.player.setting.gui.Setti
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.map.GameMapRegistry
 import com.github.tanokun.bakajinrou.plugin.map.MapName
+import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.arguments.ArgumentSuggestions
 import dev.jorel.commandapi.arguments.PlayerArgument
@@ -81,10 +82,8 @@ class GameSettingCommand(
                 .executesPlayer(PlayerCommandExecutor { sender, args ->
                     val target = args["target"] as Player
 
-                    if (gameSettings.spectators.contains(target.uniqueId)) {
-                        sender.error("「${target.name}」 は既に観戦者です。")
-                        return@PlayerCommandExecutor
-                    }
+                    if (gameSettings.spectators.contains(target.uniqueId))
+                        throw CommandAPI.failWithString("「${target.name}」 は既に観戦者です。")
 
                     gameSettings.addSpectator(target.uniqueId)
 
@@ -110,10 +109,8 @@ class GameSettingCommand(
                 .executesPlayer(PlayerCommandExecutor { sender, args ->
                     val target = args["target"] as Player
 
-                    if (!gameSettings.spectators.contains(target.uniqueId)) {
-                        sender.error("「${target.name}」は観戦者ではありません。")
-                        return@PlayerCommandExecutor
-                    }
+                    if (!gameSettings.spectators.contains(target.uniqueId))
+                        throw CommandAPI.failWithString("「${target.name}」は観戦者ではありません。")
 
                     gameSettings.addCandidate(target.uniqueId)
 
