@@ -89,6 +89,8 @@ tasks {
             url("https://github.com/CommandAPI/CommandAPI/releases/download/10.1.1/CommandAPI-10.1.1-Mojang-Mapped.jar")
             url("https://github.com/dmulloy2/ProtocolLib/releases/download/5.4.0/ProtocolLib.jar")
         }
+
+        this.jvmArgs = listOf("-Xms2G", "-Xmx8G")
     }
 }
 
