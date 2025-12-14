@@ -2,7 +2,6 @@ package com.github.tanokun.bakajinrou.plugin.interaction.player.cache
 
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.common.cache.PlayerSkinCache
-import com.github.tanokun.bakajinrou.plugin.common.setting.GameSettings
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -13,9 +12,7 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.InventoryHolder
 
-class PutPlayerToCacheListener(
-    private val gameSettings: GameSettings
-): Listener {
+class PutPlayerToCacheListener : Listener {
     @EventHandler
     fun onFall(e: EntityDamageEvent) {
         if (e.entity !is Player) return
@@ -35,17 +32,10 @@ class PutPlayerToCacheListener(
         val uniqueId = e.player.uniqueId
         PlayerNameCache.put(uniqueId, e.player.name)
         PlayerSkinCache.put(uniqueId, e.player.playerProfile)
-
-        if (!gameSettings.spectators.contains(uniqueId)) {
-            gameSettings.addCandidate(uniqueId)
-            return
-        }
     }
 
     @EventHandler
     fun onPlayerQuit(e: PlayerQuitEvent) {
         val uniqueId = e.player.uniqueId
-
-        gameSettings.removeCandidate(uniqueId)
     }
 }
