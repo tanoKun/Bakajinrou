@@ -31,6 +31,7 @@ import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponent
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBuilder
 import com.github.tanokun.bakajinrou.plugin.interaction.game.scheduler.JinrouGameScheduler
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.rendering.team.modifier.ViewTeamModifier
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedPositions
 import kotlinx.coroutines.CoroutineScope
 import org.bukkit.Bukkit
 import org.bukkit.plugin.Plugin
@@ -48,6 +49,7 @@ class GameBuilderModule(plugin: Plugin) {
     val bukkitModule = module {
         single { plugin }
         single { plugin.logger }
+        single<TopCoroutineScope> { TopCoroutineScope(CoroutineScope(plugin.scope.coroutineContext)) }
         singleOf(ProtocolLibrary::getProtocolManager)
         singleOf(Bukkit::getServer)
         singleOf(Bukkit::getScheduler)
@@ -102,7 +104,7 @@ class GameBuilderModule(plugin: Plugin) {
         single<Random> { Random.Default }
 
         scope<GameComponents> {
-            scoped<ParticipantBuilder> { (template: HashMap<RequestedPositions, Int>, candidates: Set<UUID>) ->
+            scoped<ParticipantBuilder> { (template: SelectedPositions, candidates: Set<UUID>) ->
                 ParticipantBuilder(template, candidates, get<Random>())
             }
 
@@ -123,7 +125,6 @@ class GameBuilderModule(plugin: Plugin) {
                 )
             }
 
-            scoped<TopCoroutineScope> { TopCoroutineScope(CoroutineScope(plugin.scope.coroutineContext)) }
             scoped<CoroutineScope> { get<JinrouGameSession>().mainDispatcherScope }
         }
     }
