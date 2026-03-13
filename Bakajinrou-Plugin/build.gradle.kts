@@ -53,6 +53,8 @@ dependencies {
     implementation(libs.bundles.koin)
     ksp(libs.koin.ksp.compiler)
 
+    implementation(libs.fastboard)
+
     implementation(project(":Bakajinrou-API"))
     implementation(project(":Bakajinrou-Game"))
 
@@ -111,7 +113,11 @@ paper {
     }
 
     permissions {
-        register("testplugin.command.mapsetting") {
+        register("bakajinrou.command.mapsetting") {
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("bakajinrou.command.prepare") {
             default = BukkitPluginDescription.Permission.Default.OP
         }
     }
