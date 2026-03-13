@@ -1,15 +1,19 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.player.setting.prepare.gui.map.button
+package com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.map.button
 
-import com.github.tanokun.bakajinrou.plugin.interaction.player.setting.prepare.SelectedMap
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.RecentSelectedMap
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedMap
 import com.github.tanokun.bakajinrou.plugin.map.GameMap
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Deferred
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.inventory.ItemFlag
 import plutoproject.adventurekt.component
 import plutoproject.adventurekt.text.color
 import plutoproject.adventurekt.text.deco
+import plutoproject.adventurekt.text.style.blue
 import plutoproject.adventurekt.text.style.bold
 import plutoproject.adventurekt.text.style.gray
 import plutoproject.adventurekt.text.style.white
@@ -23,23 +27,38 @@ private val lore = listOf(
     component {
         text("「左クリック」") color white deco bold
         text("で") color gray
+        text("直近のマップを除き、") color gray deco bold
+    },
+
+    component {
+        text("ランダム") color gray deco bold
+        text("で") color gray
         text("選択") color gray deco bold
         text("します。") color gray
     }
 ).map { AdventureComponentWrapper(it) }
 
-class SelectSingleMapButton(private val map: GameMap): AbstractItem() {
+class RandomlySelectMapButton(maps: List<GameMap>, recentSelectedMap: RecentSelectedMap?) : AbstractItem() {
     private val deferred = CompletableDeferred<SelectedMap>()
 
-    override fun getItemProvider(): ItemProvider =
-        ItemBuilder(map.icon)
-            .setDisplayName(map.mapName.name)
-            .addLoreLines(lore)
+    private val candidates = if (recentSelectedMap == null) maps else maps - recentSelectedMap.recentMap
 
-    override fun handleClick(type: ClickType, clicker: Player, e: InventoryClickEvent) {
+    override fun getItemProvider(): ItemProvider =
+        ItemBuilder(Material.WRITTEN_BOOK)
+            .setDisplayName(
+                AdventureComponentWrapper(
+                    component {
+                        text("ランダム選択") color blue deco bold
+                    }
+                )
+            )
+            .addLoreLines(lore)
+            .setItemFlags(ItemFlag.entries)
+
+    override fun handleClick(type: ClickType, player: Player, e: InventoryClickEvent) {
         if (!type.isLeftClick) return
 
-        deferred.complete(SelectedMap(map))
+        deferred.complete(SelectedMap(candidates.random()))
     }
 
     fun deferredSelection() = deferred as Deferred<SelectedMap>

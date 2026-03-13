@@ -1,9 +1,9 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.player.setting.prepare.gui.map
+package com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.map
 
-import com.github.tanokun.bakajinrou.plugin.interaction.player.setting.prepare.RecentSelectedMap
-import com.github.tanokun.bakajinrou.plugin.interaction.player.setting.prepare.SelectedMap
-import com.github.tanokun.bakajinrou.plugin.interaction.player.setting.prepare.gui.map.button.RandomlySelectMapButton
-import com.github.tanokun.bakajinrou.plugin.interaction.player.setting.prepare.gui.map.button.SelectSingleMapButton
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.RecentSelectedMap
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedMap
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.map.button.RandomlySelectMapButton
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.map.button.SelectSingleMapButton
 import com.github.tanokun.bakajinrou.plugin.map.GameMap
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.selects.select
@@ -21,7 +21,7 @@ import xyz.xenondevs.invui.gui.structure.Markers
 import xyz.xenondevs.invui.gui.structure.Structure
 import xyz.xenondevs.invui.window.Window
 
-class SelectMapGui(private val player: Player, maps: List<GameMap>, recentSelectedMap: RecentSelectedMap) {
+class SelectMapGui(maps: List<GameMap>, recentSelectedMap: RecentSelectedMap?) {
     private val candidates = maps.map { SelectSingleMapButton(it) }
 
     private val randomSelectButton = RandomlySelectMapButton(maps, recentSelectedMap)
@@ -37,7 +37,9 @@ class SelectMapGui(private val player: Player, maps: List<GameMap>, recentSelect
         candidates
     )
 
-    suspend fun deferredSelection(): SelectedMap? {
+    suspend fun deferredSelection(player: Player): SelectedMap? {
+        if (candidates.isEmpty()) return null
+
         val deferredSelections = candidates.map { it.deferredSelection() } + randomSelectButton.deferredSelection()
 
         Window.single()
@@ -62,5 +64,6 @@ class SelectMapGui(private val player: Player, maps: List<GameMap>, recentSelect
             }
         }
         catch (_: CancellationException) { null }
+        finally { player.closeInventory() }
     }
 }

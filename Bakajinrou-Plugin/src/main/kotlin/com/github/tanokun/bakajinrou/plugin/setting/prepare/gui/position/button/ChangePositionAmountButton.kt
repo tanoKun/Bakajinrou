@@ -1,7 +1,7 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.player.setting.gui
+package com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.position.button
 
-import com.github.tanokun.bakajinrou.plugin.common.setting.GameSettings
 import com.github.tanokun.bakajinrou.plugin.common.setting.RequestedPositions
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.position.PositionCandidates
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import kotlinx.coroutines.*
 import net.kyori.adventure.sound.Sound
@@ -45,7 +45,7 @@ private val lore = listOf(
 
 class ChangePositionAmountButton(
     private val position: RequestedPositions,
-    private val settings: GameSettings,
+    private val candidates: PositionCandidates,
     private val material: Material,
     private val translator: JinrouTranslator,
 ): AbstractItem() {
@@ -54,13 +54,13 @@ class ChangePositionAmountButton(
     private val cooltimeScope = CoroutineScope(SupervisorJob() + CoroutineExceptionHandler { context, throwable -> throwable.printStackTrace() })
 
     override fun getItemProvider(player: Player): ItemProvider {
-        val amount = settings.getAmountBy(position)
+        val amount = candidates.getAmountBy(position)
 
         val displayName = component {
             text("「") color gray deco bold
             raw { translator.translate(position.formatKey, player.locale()) } deco bold
             text("」→ ") color gray deco bold
-            text("${settings.getAmountBy(position)}人") color white deco bold
+            text("${candidates.getAmountBy(position)}人") color white deco bold
         }
 
         val builder = if (amount <= 0)
@@ -84,15 +84,14 @@ class ChangePositionAmountButton(
         }
 
         if (clickType == ClickType.LEFT) {
-            settings.increase(position)
-            sendChangeMessage()
+            candidates.increase(position)
             clicker.playSound(Sound.sound(NamespacedKey("minecraft", "entity.experience_orb.pickup"), Sound.Source.PLAYER, 1.0f, 1.0f))
             notifyWindows()
             return
         }
 
         if (clickType == ClickType.RIGHT) {
-            if (settings.getAmountBy(position) <= 0) {
+            if (candidates.getAmountBy(position) <= 0) {
                 clicker.sendMessage(component {
                     text("予約数を0人未満にすることはできません。") color gray deco bold
                 })
@@ -101,20 +100,9 @@ class ChangePositionAmountButton(
                 return
             }
 
-            settings.decrease(position)
-            sendChangeMessage()
+            candidates.decrease(position)
             clicker.playSound(Sound.sound(NamespacedKey("minecraft", "entity.experience_orb.pickup"), Sound.Source.PLAYER, 1.0f, 1.0f))
             notifyWindows()
-        }
-    }
-
-    private fun sendChangeMessage() {
-        Bukkit.getOnlinePlayers().forEach { player ->
-            player.sendMessage(component {
-                text("「") color gray deco bold
-                raw { translator.translate(position.formatKey, player.locale()) } deco bold
-                text("」の予約数を${settings.getAmountBy(position)}人にしました。") color gray deco bold
-            })
         }
     }
 }

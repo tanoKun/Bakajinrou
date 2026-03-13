@@ -1,7 +1,7 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.player.setting.gui
+package com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.position.button
 
-import com.github.tanokun.bakajinrou.plugin.common.setting.GameSettings
 import com.github.tanokun.bakajinrou.plugin.common.setting.template.DistributionTemplates
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.position.PositionCandidates
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import net.kyori.adventure.sound.Sound
 import org.bukkit.Material
@@ -23,7 +23,10 @@ import xyz.xenondevs.invui.item.builder.ItemBuilder
 import xyz.xenondevs.invui.item.impl.AbstractItem
 
 class ReplaceTemplateButton(
-    private val gameSettings: GameSettings, private val templates: DistributionTemplates, private val translator: JinrouTranslator
+    private val candidates: PositionCandidates,
+    private val playerAmount: Int,
+    private val templates: DistributionTemplates,
+    private val updater: () -> Unit
 ): AbstractItem() {
     override fun getItemProvider(): ItemProvider {
         val displayName = component {
@@ -37,26 +40,27 @@ class ReplaceTemplateButton(
     }
 
     override fun handleClick(clickType: ClickType, clicker: Player, event: InventoryClickEvent) {
-        val amount = gameSettings.candidates.size
-        val template = templates.getPositions(amount) ?: let {
+        val template = templates.getPositions(playerAmount) ?: let {
             clicker.sendMessage(component {
-                text("${amount}人の役職テンプレートが見つかりませんでした。") color gray deco bold
+                text("${playerAmount}人の役職テンプレートが見つかりませんでした。") color gray deco bold
             })
 
             clicker.playSound(Sound.sound(NamespacedKey("minecraft", "block.note_block.bass"), Sound.Source.PLAYER, 3.0f, 1.0f))
-            clicker.closeInventory()
 
             return
         }
 
+
         template.forEach { (position, amount) ->
-            gameSettings.updateAmount(position, amount)
+            candidates.updateAmount(position, amount)
         }
 
+        updater()
+
         clicker.sendMessage(component {
-            text("${amount}人の役職テンプレートを読み込みました。") color gray deco bold
+            text("${playerAmount}人の役職テンプレートを読み込みました。") color gray deco bold
         })
+
         clicker.playSound(Sound.sound(NamespacedKey("minecraft", "entity.experience_orb.pickup"), Sound.Source.PLAYER, 1.0f, 1.0f))
-        SettingPositionGUI(gameSettings, templates, translator).open(clicker)
     }
 }
