@@ -1,6 +1,7 @@
-package com.github.tanokun.bakajinrou.plugin.interaction.player.setting.command
+package com.github.tanokun.bakajinrou.plugin.setting.command
 
 import com.github.tanokun.bakajinrou.plugin.common.command.Command
+import com.github.tanokun.bakajinrou.plugin.common.coroutine.TopCoroutineScope
 import com.github.tanokun.bakajinrou.plugin.map.GameMap
 import com.github.tanokun.bakajinrou.plugin.map.GameMapRegistry
 import com.github.tanokun.bakajinrou.plugin.map.MapName
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
+import org.koin.core.annotation.Single
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -53,13 +55,17 @@ import kotlin.time.Duration.Companion.seconds
  * ### `/mapsetting update quartztime <mapName> <seconds>`
  * 指定マップにおいて、ゲーム開始からクオーツを配布するまでの時間(秒)を設定します。
  *
+ * ### `/mapsetting update icon <mapName> <material>`
+ * 指定マップのアイコンを更新します。
+ *
  * ## パーミッション
  * - `bakajinrou.command.mapsetting`
  *
  * @property gameMapRegistry マップの作成・更新・削除を管理するレジストリ
  * @property scope 非同期処理に使用する CoroutineScope
  */
-class MapSettingCommand(private val gameMapRegistry: GameMapRegistry, private val scope: CoroutineScope): Command() {
+@Single
+class MapSettingCommand(private val gameMapRegistry: GameMapRegistry, private val scope: TopCoroutineScope): Command() {
     private val materials = Material.entries.map { it.name }
 
     init {
