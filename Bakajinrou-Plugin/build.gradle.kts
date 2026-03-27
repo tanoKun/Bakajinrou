@@ -53,6 +53,8 @@ dependencies {
     implementation(libs.bundles.koin)
     ksp(libs.koin.ksp.compiler)
 
+    implementation(libs.fastboard)
+
     implementation(project(":Bakajinrou-API"))
     implementation(project(":Bakajinrou-Game"))
 
@@ -89,6 +91,8 @@ tasks {
             url("https://github.com/CommandAPI/CommandAPI/releases/download/10.1.1/CommandAPI-10.1.1-Mojang-Mapped.jar")
             url("https://github.com/dmulloy2/ProtocolLib/releases/download/5.4.0/ProtocolLib.jar")
         }
+
+        this.jvmArgs = listOf("-Xms2G", "-Xmx8G")
     }
 }
 
@@ -109,7 +113,11 @@ paper {
     }
 
     permissions {
-        register("testplugin.command.mapsetting") {
+        register("bakajinrou.command.mapsetting") {
+            default = BukkitPluginDescription.Permission.Default.OP
+        }
+
+        register("bakajinrou.command.prepare") {
             default = BukkitPluginDescription.Permission.Default.OP
         }
     }

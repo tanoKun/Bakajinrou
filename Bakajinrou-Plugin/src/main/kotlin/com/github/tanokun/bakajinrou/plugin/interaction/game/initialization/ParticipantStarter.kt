@@ -1,8 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.game.initialization
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
-import com.github.tanokun.bakajinrou.api.map.GameMap
-import com.github.tanokun.bakajinrou.api.map.PointLocation
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.ScheduleState
@@ -10,6 +8,8 @@ import com.github.tanokun.bakajinrou.game.scheduler.whenLaunched
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.formatter.toTick
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
+import com.github.tanokun.bakajinrou.plugin.map.GameMap
+import com.github.tanokun.bakajinrou.plugin.map.PointLocation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch

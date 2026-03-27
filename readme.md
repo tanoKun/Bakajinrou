@@ -22,7 +22,7 @@
 
 また、以下のプラグインに依存しています。
 - CommandAPI (Mojang-Mapping) 10.1.1
-- ProtocolLib 5.3.0
+- ProtocolLib 5.4.0
 
 ## ドキュメント
 使用者・開発者で、それぞれのドキュメントを用意しています。

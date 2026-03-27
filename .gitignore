@@ -16,6 +16,7 @@ build/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+Bakajinrou-Plugin/run
 
 ### Kotlin ###
 .kotlin
@@ -43,4 +44,4 @@ bin/
 .vscode/
 
 ### Mac OS ###
-.DS_Store
+.DS_Storep

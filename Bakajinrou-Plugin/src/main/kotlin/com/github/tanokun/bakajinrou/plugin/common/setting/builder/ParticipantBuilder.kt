@@ -11,20 +11,18 @@ import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPositio
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategy
 import com.github.tanokun.bakajinrou.plugin.common.setting.RequestedPositions
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedPositions
 import java.util.*
 import kotlin.random.Random
 
 class ParticipantBuilder(
-    private val template: HashMap<RequestedPositions, Int>,
+    template: SelectedPositions,
     candidates: Set<UUID>,
     private val random: Random,
 ) {
+    private val template = template.positions
+
     private val candidates = candidates.map { it.asParticipantId() }.toSet()
-
-    init {
-        if (template.values.sum() > candidates.size) throw IllegalStateException("現在の参加人数では、選択されている役職が多すぎます。")
-
-    }
 
     class MadmanAssigner private constructor(
         internal val template: Map<RequestedPositions, Int>,

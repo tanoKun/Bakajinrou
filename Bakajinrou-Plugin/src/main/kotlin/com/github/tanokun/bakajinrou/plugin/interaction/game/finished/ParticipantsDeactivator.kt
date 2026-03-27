@@ -1,7 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.interaction.game.finished
 
 import com.github.tanokun.bakajinrou.api.WonInfo
-import com.github.tanokun.bakajinrou.api.map.GameMap
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
@@ -9,6 +8,7 @@ import com.github.tanokun.bakajinrou.plugin.common.coroutine.TopCoroutineScope
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.interaction.game.initialization.asBukkit
 import com.github.tanokun.bakajinrou.plugin.interaction.participant.dead.body.BukkitBodyHandler
+import com.github.tanokun.bakajinrou.plugin.map.GameMap
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import org.bukkit.Bukkit

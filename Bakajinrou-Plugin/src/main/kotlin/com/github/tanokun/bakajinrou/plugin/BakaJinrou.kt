@@ -3,17 +3,17 @@ package com.github.tanokun.bakajinrou.plugin
 import com.comphenix.protocol.ProtocolLibrary
 import com.github.shynixn.mccoroutine.bukkit.registerSuspendingEvents
 import com.github.shynixn.mccoroutine.bukkit.scope
-import com.github.tanokun.bakajinrou.plugin.common.setting.GameSettings
-import com.github.tanokun.bakajinrou.plugin.interaction.player.handling.command.HandleGameCommand
-import com.github.tanokun.bakajinrou.plugin.interaction.player.preparation.NonLifecycleEventListener
-import com.github.tanokun.bakajinrou.plugin.interaction.player.setting.command.GameSettingCommand
-import com.github.tanokun.bakajinrou.plugin.interaction.player.setting.command.MapSettingCommand
+import com.github.tanokun.bakajinrou.plugin.interaction.player.cache.PutPlayerToCacheListener
 import com.github.tanokun.bakajinrou.plugin.module.GameBuilderModule
 import com.github.tanokun.bakajinrou.plugin.rendering.tab.authentication.TabListCensor
 import com.github.tanokun.bakajinrou.plugin.rendering.tab.handler.TabHandler
 import com.github.tanokun.bakajinrou.plugin.rendering.tab.handler.TabHandlerType
 import com.github.tanokun.bakajinrou.plugin.rendering.tab.handler.lifecycle.RendererLifecycle
 import com.github.tanokun.bakajinrou.plugin.rendering.tab.lobby.LobbyTabRefresher
+import com.github.tanokun.bakajinrou.plugin.setting.command.MapSettingCommand
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.board.adapter.RenderingBoardAdapter
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.command.PrepareCommand
+import com.github.tanokun.bakajinrou.plugin.setting.start.adapter.StartGameAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -48,24 +48,28 @@ open class BakaJinrou(): JavaPlugin() {
         val gameMapRegistryDeferred = scope.async(Dispatchers.IO) { asyncLoader.loadMaps() }
         val templatesDeferred = scope.async(Dispatchers.IO) { asyncLoader.loadTemplate() }
 
-        val gameSettings = getKoin().get<GameSettings>()
+        val koin = getKoin()
 
-        getKoin().get<TabHandler>().createEngine(TabHandlerType.ShareInLobby)
+        koin.get<TabHandler>().createEngine(TabHandlerType.ShareInLobby)
 
         scope.launch {
-            val translator = translatorDeferred.await()
-            val gameMapRegistry = gameMapRegistryDeferred.await()
+            koin.declare(colorPalletDeferred.await())
+            koin.declare(translatorDeferred.await())
+            koin.declare(gameMapRegistryDeferred.await())
+            koin.declare(templatesDeferred.await())
 
-            HandleGameCommand(gameSettings, translator)
-            MapSettingCommand(gameMapRegistry, scope)
-            GameSettingCommand(gameSettings, templatesDeferred.await(), gameMapRegistry, translator, colorPalletDeferred.await())
+            koin.get<PrepareCommand>()
+            koin.get<MapSettingCommand>()
 
-            Bukkit.getPluginManager().registerEvents(NonLifecycleEventListener(gameSettings), this@BakaJinrou)
+            Bukkit.getPluginManager().registerEvents(RenderingBoardAdapter(koin.get(), koin.get()), this@BakaJinrou)
+            Bukkit.getPluginManager().registerEvents(StartGameAdapter(koin.get()), this@BakaJinrou)
 
-            Bukkit.getPluginManager().registerSuspendingEvents(LobbyTabRefresher(gameSettings, getKoin().get(), translator, getKoin().get(), this), this@BakaJinrou)
-            Bukkit.getPluginManager().registerEvents(RendererLifecycle(getKoin().get()), this@BakaJinrou)
+            Bukkit.getPluginManager().registerEvents(PutPlayerToCacheListener(), this@BakaJinrou)
 
-            ProtocolLibrary.getProtocolManager().addPacketListener(TabListCensor(getKoin().get(), this@BakaJinrou))
+            Bukkit.getPluginManager().registerSuspendingEvents(LobbyTabRefresher(koin.get()), this@BakaJinrou)
+            Bukkit.getPluginManager().registerEvents(RendererLifecycle(koin.get()), this@BakaJinrou)
+
+            ProtocolLibrary.getProtocolManager().addPacketListener(TabListCensor(koin.get(), this@BakaJinrou))
         }
 
         addQuartzRecipe()

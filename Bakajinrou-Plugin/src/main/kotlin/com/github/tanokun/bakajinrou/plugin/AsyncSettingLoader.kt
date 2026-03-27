@@ -1,7 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin
 
 import com.github.shynixn.mccoroutine.bukkit.minecraftDispatcher
-import com.github.tanokun.bakajinrou.game.map.GameMapRegistry
 import com.github.tanokun.bakajinrou.plugin.common.formatter.ColorPallet
 import com.github.tanokun.bakajinrou.plugin.common.setting.template.DistributionTemplates
 import com.github.tanokun.bakajinrou.plugin.infrastructure.GameMapRepositoryImpl
@@ -9,6 +8,7 @@ import com.github.tanokun.bakajinrou.plugin.infrastructure.formatter.ColorPallet
 import com.github.tanokun.bakajinrou.plugin.infrastructure.localization.DictionaryRepository
 import com.github.tanokun.bakajinrou.plugin.infrastructure.template.PositionTemplateRepository
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
+import com.github.tanokun.bakajinrou.plugin.map.GameMapRegistry
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
