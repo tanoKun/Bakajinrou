@@ -47,7 +47,7 @@ class GlowingAnnouncer(
      * @param isInclude 人狼、妖狐の発光を含めます。
      * @param participants ゲームの全ての参加者
      */
-    fun glowCitizens(participants: ParticipantScope.NonSpectators, isInclude: Boolean) {
+    fun glowParticipants(participants: ParticipantScope.NonSpectators, isInclude: Boolean) {
         val filter = if (isInclude) { { false } } else ::isWolf or ::isFox
 
         participants
@@ -85,7 +85,7 @@ class GlowingAnnouncer(
             .filter { it.remainingTime in 0.seconds..5.minutes }
             .every(40.seconds)
             .collect { state ->
-                glowCitizens(game.getCurrentParticipants().excludeSpectators(), isInclude = state.remainingTime > 3.minutes)
+                glowParticipants(game.getCurrentParticipants().excludeSpectators(), isInclude = state.remainingTime > 3.minutes)
             }
     }
 }
