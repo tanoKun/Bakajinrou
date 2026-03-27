@@ -14,7 +14,6 @@ import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.arguments.*
 import dev.jorel.commandapi.arguments.CustomArgument.*
 import dev.jorel.commandapi.executors.CommandExecutor
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bukkit.Location

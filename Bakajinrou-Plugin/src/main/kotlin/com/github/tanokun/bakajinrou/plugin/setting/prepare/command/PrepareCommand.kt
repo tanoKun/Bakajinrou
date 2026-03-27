@@ -5,13 +5,13 @@ import com.github.tanokun.bakajinrou.plugin.common.setting.RequestedPositions
 import com.github.tanokun.bakajinrou.plugin.common.setting.template.DistributionTemplates
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.map.GameMapRegistry
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.board.PreparedGameBoardRenderer
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedMap
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedParticipants
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedPositions
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.map.SelectMapGui
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.participant.SelectParticipantGui
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.position.SelectPositionGui
-import com.github.tanokun.bakajinrou.plugin.setting.prepare.board.PreparedGameBoardRenderer
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.executors.PlayerCommandExecutor
 import kotlinx.coroutines.job
@@ -27,11 +27,7 @@ import org.koin.core.annotation.Single
 import plutoproject.adventurekt.component
 import plutoproject.adventurekt.text.color
 import plutoproject.adventurekt.text.deco
-import plutoproject.adventurekt.text.style.blue
-import plutoproject.adventurekt.text.style.bold
-import plutoproject.adventurekt.text.style.gray
-import plutoproject.adventurekt.text.style.red
-import plutoproject.adventurekt.text.style.white
+import plutoproject.adventurekt.text.style.*
 import plutoproject.adventurekt.text.text
 
 val MAP = NamespacedKey("jinrou", "prepared_game_map")

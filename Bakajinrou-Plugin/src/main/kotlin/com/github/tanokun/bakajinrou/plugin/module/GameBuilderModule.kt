@@ -25,7 +25,6 @@ import com.github.tanokun.bakajinrou.game.participant.state.suspended.ChangeSusp
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
 import com.github.tanokun.bakajinrou.plugin.common.coroutine.TopCoroutineScope
-import com.github.tanokun.bakajinrou.plugin.common.setting.RequestedPositions
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.BindingListeners
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBuilder

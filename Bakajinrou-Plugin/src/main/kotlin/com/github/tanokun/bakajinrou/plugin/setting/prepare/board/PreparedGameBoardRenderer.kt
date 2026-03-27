@@ -2,10 +2,10 @@ package com.github.tanokun.bakajinrou.plugin.setting.prepare.board
 
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.common.setting.RequestedPositions
-import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedPositions
+import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedMap
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedParticipants
-import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedPositions
 import fr.mrmicky.fastboard.adventure.FastBoard
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player

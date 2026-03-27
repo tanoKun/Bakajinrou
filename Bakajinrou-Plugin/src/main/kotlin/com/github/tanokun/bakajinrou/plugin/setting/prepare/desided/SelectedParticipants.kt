@@ -1,9 +1,8 @@
 package com.github.tanokun.bakajinrou.plugin.setting.prepare.desided
 
 import com.github.tanokun.bakajinrou.plugin.common.serialize.UUIDSerializer
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
-import java.util.UUID
+import java.util.*
 
 @Serializable
 data class SelectedParticipants(

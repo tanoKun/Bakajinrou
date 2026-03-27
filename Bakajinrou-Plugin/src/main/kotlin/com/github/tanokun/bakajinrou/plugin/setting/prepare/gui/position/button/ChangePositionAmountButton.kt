@@ -1,11 +1,10 @@
 package com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.position.button
 
 import com.github.tanokun.bakajinrou.plugin.common.setting.RequestedPositions
-import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.position.PositionCandidates
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.position.PositionCandidates
 import kotlinx.coroutines.*
 import net.kyori.adventure.sound.Sound
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
@@ -51,7 +50,7 @@ class ChangePositionAmountButton(
 ): AbstractItem() {
     private val cooltime = hashSetOf<UUID>()
 
-    private val cooltimeScope = CoroutineScope(SupervisorJob() + CoroutineExceptionHandler { context, throwable -> throwable.printStackTrace() })
+    private val cooltimeScope = CoroutineScope(SupervisorJob() + CoroutineExceptionHandler { _, throwable -> throwable.printStackTrace() })
 
     override fun getItemProvider(player: Player): ItemProvider {
         val amount = candidates.getAmountBy(position)

@@ -11,8 +11,8 @@ import com.github.tanokun.bakajinrou.plugin.rendering.tab.handler.TabHandlerType
 import com.github.tanokun.bakajinrou.plugin.rendering.tab.handler.lifecycle.RendererLifecycle
 import com.github.tanokun.bakajinrou.plugin.rendering.tab.lobby.LobbyTabRefresher
 import com.github.tanokun.bakajinrou.plugin.setting.command.MapSettingCommand
-import com.github.tanokun.bakajinrou.plugin.setting.prepare.command.PrepareCommand
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.board.adapter.RenderingBoardAdapter
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.command.PrepareCommand
 import com.github.tanokun.bakajinrou.plugin.setting.start.adapter.StartGameAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

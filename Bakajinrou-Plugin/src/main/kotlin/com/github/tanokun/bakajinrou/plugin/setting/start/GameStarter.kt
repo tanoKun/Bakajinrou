@@ -33,7 +33,7 @@ import org.bukkit.plugin.Plugin
 import org.koin.core.annotation.Single
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.getKoin
-import java.util.UUID
+import java.util.*
 
 @Single
 class GameStarter(

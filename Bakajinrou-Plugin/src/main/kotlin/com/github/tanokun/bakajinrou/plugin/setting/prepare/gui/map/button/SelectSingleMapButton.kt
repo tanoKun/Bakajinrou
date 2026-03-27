@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.map.button
 
-import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedMap
 import com.github.tanokun.bakajinrou.plugin.map.GameMap
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedMap
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Deferred
 import org.bukkit.entity.Player

@@ -2,19 +2,17 @@ package com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.position
 
 import com.github.tanokun.bakajinrou.plugin.common.setting.RequestedPositions
 import com.github.tanokun.bakajinrou.plugin.common.setting.template.DistributionTemplates
-import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedParticipants
+import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedPositions
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.common.button.DecideButton
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.position.button.ChangePositionAmountButton
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.position.button.ReplaceTemplateButton
-import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import kotlinx.coroutines.CompletableDeferred
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import plutoproject.adventurekt.component
 import plutoproject.adventurekt.text.color
 import plutoproject.adventurekt.text.deco
-import plutoproject.adventurekt.text.style.blue
 import plutoproject.adventurekt.text.style.bold
 import plutoproject.adventurekt.text.style.gold
 import plutoproject.adventurekt.text.text
@@ -22,7 +20,6 @@ import xyz.xenondevs.inventoryaccess.component.AdventureComponentWrapper
 import xyz.xenondevs.invui.gui.Gui
 import xyz.xenondevs.invui.gui.PagedGui
 import xyz.xenondevs.invui.gui.structure.Markers
-import xyz.xenondevs.invui.gui.structure.Structure
 import xyz.xenondevs.invui.window.Window
 
 class SelectPositionGui(

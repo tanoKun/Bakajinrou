@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.participant
 
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedParticipants
-import java.util.UUID
+import java.util.*
 
 class ParticipantCandidates(candidates: Set<UUID>) {
     private val participants: HashMap<UUID, Boolean> = hashMapOf()

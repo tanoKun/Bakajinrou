@@ -1,10 +1,10 @@
 package com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.map
 
+import com.github.tanokun.bakajinrou.plugin.map.GameMap
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.RecentSelectedMap
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedMap
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.map.button.RandomlySelectMapButton
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.map.button.SelectSingleMapButton
-import com.github.tanokun.bakajinrou.plugin.map.GameMap
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.selects.select
 import org.bukkit.entity.Player

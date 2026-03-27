@@ -2,7 +2,6 @@ package com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.position.button
 
 import com.github.tanokun.bakajinrou.plugin.common.setting.template.DistributionTemplates
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.position.PositionCandidates
-import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import net.kyori.adventure.sound.Sound
 import org.bukkit.Material
 import org.bukkit.NamespacedKey

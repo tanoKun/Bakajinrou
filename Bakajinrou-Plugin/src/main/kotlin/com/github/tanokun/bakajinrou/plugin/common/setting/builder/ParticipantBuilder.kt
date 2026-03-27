@@ -11,7 +11,6 @@ import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPositio
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategy
 import com.github.tanokun.bakajinrou.plugin.common.setting.RequestedPositions
-import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedParticipants
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedPositions
 import java.util.*
 import kotlin.random.Random

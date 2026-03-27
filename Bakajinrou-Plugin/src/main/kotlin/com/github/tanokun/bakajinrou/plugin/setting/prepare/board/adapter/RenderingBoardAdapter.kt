@@ -2,8 +2,8 @@ package com.github.tanokun.bakajinrou.plugin.setting.prepare.board.adapter
 
 import com.github.tanokun.bakajinrou.plugin.common.coroutine.TopCoroutineScope
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
-import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.adapter.getSelectedData
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.board.PreparedGameBoardRenderer
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.adapter.getSelectedData
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
