@@ -1,5 +1,59 @@
 {
   "templates": {
+    "2": {
+      "wolf": 1,
+      "madman": 0,
+      "idiot": 0,
+      "fortune": 0,
+      "medium": 0,
+      "knight": 0,
+      "fox": 0
+    },
+    "3": {
+      "wolf": 1,
+      "madman": 0,
+      "idiot": 0,
+      "fortune": 1,
+      "medium": 0,
+      "knight": 0,
+      "fox": 0
+    },
+    "4": {
+      "wolf": 1,
+      "madman": 1,
+      "idiot": 0,
+      "fortune": 0,
+      "medium": 0,
+      "knight": 0,
+      "fox": 0
+    },
+    "5": {
+      "wolf": 1,
+      "madman": 1,
+      "idiot": 0,
+      "fortune": 1,
+      "medium": 0,
+      "knight": 0,
+      "fox": 0
+    },
+    "6": {
+      "wolf": 2,
+      "madman": 0,
+      "idiot": 0,
+      "fortune": 1,
+      "medium": 0,
+      "knight": 0,
+      "fox": 0
+    },
+    "7": {
+      "wolf": 2,
+      "madman": 0,
+      "idiot": 1,
+      "fortune": 1,
+      "medium": 0,
+      "knight": 0,
+      "fox": 0
+    },
     "8": {
       "wolf": 2,
       "madman": 1,
