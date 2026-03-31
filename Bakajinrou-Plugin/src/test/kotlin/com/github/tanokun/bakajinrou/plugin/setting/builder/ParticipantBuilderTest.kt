@@ -19,6 +19,7 @@ import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBu
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBuilder.IdiotAssigner.Companion.assignIdiots
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBuilder.MadmanAssigner.Companion.assignMadmans
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.ParticipantBuilder.WolfAssigner.Companion.assignWolfs
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedPositions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -26,7 +27,7 @@ import java.util.*
 import kotlin.random.Random
 
 class ParticipantBuilderTest {
-    private val template =
+    private val template = SelectedPositions(
         hashMapOf(
             RequestedPositions.WOLF to 3,
             RequestedPositions.MADMAN to 2,
@@ -36,6 +37,7 @@ class ParticipantBuilderTest {
             RequestedPositions.KNIGHT to 1,
             RequestedPositions.FOX to 1
         )
+    )
 
     private val uuids = setOf(
         UUID.fromString("a8654d52-41bf-8c01-2756-c5ac19891ea0"),
