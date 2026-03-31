@@ -29,7 +29,8 @@ class HiddenPositionAnnouncer(
     private val playerProvider: BukkitPlayerProvider
 ): Observer {
     init {
-        mainScope.launch { collectRemainingTime() }
+        mainScope.launch { announceRevelationWhileCollect() }
+        mainScope.launch { revealWhileCollect() }
     }
 
     /**
@@ -64,17 +65,15 @@ class HiddenPositionAnnouncer(
         }
     }
 
-    private suspend fun collectRemainingTime() {
-        scheduler.observe(mainScope)
-            .remaining(3.minutes)
-            .collect { state ->
-                reveal(game.getCurrentParticipants())
-            }
+    private suspend fun announceRevelationWhileCollect() = scheduler.observe(mainScope)
+        .remaining(5.minutes)
+        .collect { state ->
+            announceRevelation(game.getCurrentParticipants())
+        }
 
-        scheduler.observe(mainScope)
-            .remaining(5.minutes)
-            .collect { state ->
-                announceRevelation(game.getCurrentParticipants())
-            }
-    }
+    private suspend fun revealWhileCollect() = scheduler.observe(mainScope)
+        .remaining(3.minutes)
+        .collect { state ->
+            reveal(game.getCurrentParticipants())
+        }
 }
