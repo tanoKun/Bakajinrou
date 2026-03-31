@@ -36,7 +36,7 @@ class GetawayAnnouncer(
     fun showGetaway(participantId: ParticipantId) {
         val bukkitPlayer = playerProvider.getAllowNull(participantId) ?: return
 
-        bukkitPlayer.sendActionBar(
+        bukkitPlayer.sendMessage(
             translator.translate(GameKeys.Announcement.GETAWAY, bukkitPlayer.locale())
         )
     }
