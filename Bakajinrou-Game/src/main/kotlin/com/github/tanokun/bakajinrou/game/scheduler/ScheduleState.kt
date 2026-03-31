@@ -36,7 +36,7 @@ sealed interface ScheduleState {
     }
 }
 
-private abstract class ActiveImpl(override val startTime: Duration, override val passedTime: Duration) : Active.Launched {
+private abstract class ActiveImpl(override val startTime: Duration, override val passedTime: Duration) : Active {
     override fun advance(time: Duration): ScheduleState {
         val nextState =
             if (remainingTime < time) OverTimeImpl(startTime)
@@ -48,7 +48,7 @@ private abstract class ActiveImpl(override val startTime: Duration, override val
     override fun abort() = AbortedImpl(startTime)
 }
 
-private data class LaunchedImpl(override val startTime: Duration) : ActiveImpl(startTime, 0.seconds)
+private data class LaunchedImpl(override val startTime: Duration) : Active.Launched, ActiveImpl(startTime, 0.seconds)
 private data class InProgressImpl(
     override val startTime: Duration, override val passedTime: Duration
 ) : Active.InProgress, ActiveImpl(startTime, passedTime)
