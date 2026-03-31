@@ -36,7 +36,8 @@ class GlowingAnnouncer(
     private val playerProvider: BukkitPlayerProvider
 ): Observer {
     init {
-        mainScope.launch { collectRemainingTime() }
+        mainScope.launch { announceWhileCollect() }
+        mainScope.launch { glowWhileCollect() }
     }
 
     /**
@@ -73,19 +74,17 @@ class GlowingAnnouncer(
         }
     }
 
-    private suspend fun collectRemainingTime() {
-        scheduler.observe(mainScope)
-            .remaining(7.minutes)
-            .collect { state ->
-                announceGlowing(game.getCurrentParticipants())
-            }
+    private suspend fun announceWhileCollect() = scheduler.observe(mainScope)
+        .remaining(7.minutes)
+        .collect { _ ->
+            announceGlowing(game.getCurrentParticipants())
+        }
 
-        scheduler.observe(mainScope)
-            .filterIsInstance<ScheduleState.Active>()
-            .filter { it.remainingTime in 0.seconds..5.minutes }
-            .every(40.seconds)
-            .collect { state ->
-                glowParticipants(game.getCurrentParticipants().excludeSpectators(), isInclude = state.remainingTime > 3.minutes)
-            }
-    }
+    private suspend fun glowWhileCollect() = scheduler.observe(mainScope)
+        .filterIsInstance<ScheduleState.Active>()
+        .filter { it.remainingTime in 0.seconds..5.minutes }
+        .every(40.seconds)
+        .collect { state ->
+            glowParticipants(game.getCurrentParticipants().excludeSpectators(), isInclude = state.remainingTime > 3.minutes)
+        }
 }
