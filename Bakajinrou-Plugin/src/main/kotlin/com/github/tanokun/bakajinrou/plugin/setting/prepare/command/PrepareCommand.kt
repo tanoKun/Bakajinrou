@@ -5,7 +5,7 @@ import com.github.tanokun.bakajinrou.plugin.common.setting.RequestedPositions
 import com.github.tanokun.bakajinrou.plugin.common.setting.template.DistributionTemplates
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.map.GameMapRegistry
-import com.github.tanokun.bakajinrou.plugin.setting.prepare.board.PreparedGameBoardRenderer
+import com.github.tanokun.bakajinrou.plugin.rendering.sidebar.prepare.PreparedGameSidebarRenderer
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedMap
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedParticipants
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedPositions
@@ -44,7 +44,7 @@ class PrepareCommand(
     init {
         CommandAPICommand("prepare").withPermission("bakajinrou.command.prepare")
             .executesPlayer(PlayerCommandExecutor { sender, _ -> singleScope.launch {
-                var renderer = PreparedGameBoardRenderer(
+                var renderer = PreparedGameSidebarRenderer(
                     null, null,
                     SelectedPositions(
                         mapOf(
@@ -67,7 +67,7 @@ class PrepareCommand(
 
                 suspend fun <T> step(
                     selector: suspend () -> T?,
-                    updater: (PreparedGameBoardRenderer, T) -> PreparedGameBoardRenderer
+                    updater: (PreparedGameSidebarRenderer, T) -> PreparedGameSidebarRenderer
                 ): T? {
                     val pickupSound = Sound.sound(NamespacedKey("minecraft", "entity.experience_orb.pickup"), Sound.Source.PLAYER, 1.0f, 1.0f)
                     val cancelMsg = component { text("ゲーム設定がキャンセルされました") color red }
