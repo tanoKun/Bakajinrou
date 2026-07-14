@@ -109,6 +109,6 @@ class BukkitBodyHandler(
     }
 
     private companion object {
-        const val MAX_NAME_DISTANCE = 3.0
+        const val MAX_NAME_DISTANCE = 4.0
     }
 }

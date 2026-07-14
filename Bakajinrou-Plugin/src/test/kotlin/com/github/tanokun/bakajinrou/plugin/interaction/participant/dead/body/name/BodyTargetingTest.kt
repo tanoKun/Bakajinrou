@@ -8,22 +8,22 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 class BodyTargetingTest {
-    private val bodyBounds = BoundingBox(2.0, 0.0, -0.3, 2.6, 0.6, 0.3)
+    private val bodyBounds = BoundingBox(3.5, 0.0, -0.3, 4.1, 0.6, 0.3)
     private val eyePosition = Vector(0.0, 0.3, 0.0)
     private val eyeDirection = Vector(1.0, 0.0, 0.0)
 
     @Test
-    @DisplayName("3ブロック以内で死体に照準が合う")
+    @DisplayName("4ブロック以内で死体に照準が合う")
     fun hitsBodyWithinRange() {
         val distance = BodyTargeting.intersectionDistance(
             eyePosition,
             eyeDirection,
             bodyBounds,
-            maxDistance = 3.0,
+            maxDistance = 4.0,
             obstructionDistance = null
         )
 
-        assertEquals(2.0, distance)
+        assertEquals(3.5, distance)
     }
 
     @Test
@@ -33,7 +33,7 @@ class BodyTargetingTest {
             eyePosition,
             eyeDirection,
             bodyBounds,
-            maxDistance = 1.9,
+            maxDistance = 3.4,
             obstructionDistance = null
         )
 
@@ -47,7 +47,7 @@ class BodyTargetingTest {
             eyePosition,
             Vector(1.0, 0.0, 1.0).normalize(),
             bodyBounds,
-            maxDistance = 3.0,
+            maxDistance = 4.0,
             obstructionDistance = null
         )
 
@@ -61,8 +61,8 @@ class BodyTargetingTest {
             eyePosition,
             eyeDirection,
             bodyBounds,
-            maxDistance = 3.0,
-            obstructionDistance = 1.5
+            maxDistance = 4.0,
+            obstructionDistance = 3.0
         )
 
         assertNull(distance)
@@ -75,10 +75,10 @@ class BodyTargetingTest {
             eyePosition,
             eyeDirection,
             bodyBounds,
-            maxDistance = 3.0,
-            obstructionDistance = 2.5
+            maxDistance = 4.0,
+            obstructionDistance = 3.8
         )
 
-        assertEquals(2.0, distance)
+        assertEquals(3.5, distance)
     }
 }
