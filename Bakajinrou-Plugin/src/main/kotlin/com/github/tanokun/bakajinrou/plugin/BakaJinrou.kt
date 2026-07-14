@@ -11,7 +11,7 @@ import com.github.tanokun.bakajinrou.plugin.rendering.tab.handler.TabHandlerType
 import com.github.tanokun.bakajinrou.plugin.rendering.tab.handler.lifecycle.RendererLifecycle
 import com.github.tanokun.bakajinrou.plugin.rendering.tab.lobby.LobbyTabRefresher
 import com.github.tanokun.bakajinrou.plugin.setting.command.MapSettingCommand
-import com.github.tanokun.bakajinrou.plugin.setting.prepare.board.adapter.RenderingBoardAdapter
+import com.github.tanokun.bakajinrou.plugin.rendering.sidebar.prepare.RenderingSidebarAdapter
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.command.PrepareCommand
 import com.github.tanokun.bakajinrou.plugin.setting.start.adapter.StartGameAdapter
 import kotlinx.coroutines.Dispatchers
@@ -61,7 +61,7 @@ open class BakaJinrou(): JavaPlugin() {
             koin.get<PrepareCommand>()
             koin.get<MapSettingCommand>()
 
-            Bukkit.getPluginManager().registerEvents(RenderingBoardAdapter(koin.get(), koin.get()), this@BakaJinrou)
+            Bukkit.getPluginManager().registerEvents(RenderingSidebarAdapter(koin.get(), koin.get()), this@BakaJinrou)
             Bukkit.getPluginManager().registerEvents(StartGameAdapter(koin.get()), this@BakaJinrou)
 
             Bukkit.getPluginManager().registerEvents(PutPlayerToCacheListener(), this@BakaJinrou)

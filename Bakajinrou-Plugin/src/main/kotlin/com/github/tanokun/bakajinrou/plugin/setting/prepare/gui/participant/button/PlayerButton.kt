@@ -1,14 +1,17 @@
 package com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.participant.button
 
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.participant.ParticipantCandidates
+import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemFlag
+import plutoproject.adventurekt.item.Item
 import xyz.xenondevs.invui.item.ItemProvider
 import xyz.xenondevs.invui.item.builder.AbstractItemBuilder
+import xyz.xenondevs.invui.item.builder.ItemBuilder
 import xyz.xenondevs.invui.item.builder.SkullBuilder
 import xyz.xenondevs.invui.item.impl.AbstractItem
 
@@ -17,8 +20,12 @@ const val WHEN_BE_HEAD_TEXTURE = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly
 class PlayerButton(private val target: Player, private val participantCandidates: ParticipantCandidates): AbstractItem() {
 
     override fun getItemProvider(): ItemProvider {
-        val builder: AbstractItemBuilder<SkullBuilder> = try {
-            SkullBuilder(SkullBuilder.HeadTexture.of(target))
+        val builder: AbstractItemBuilder<*> = try {
+            if (participantCandidates.isParticipant(target.uniqueId))
+                SkullBuilder(SkullBuilder.HeadTexture.of(target))
+            else
+                ItemBuilder(Material.BARRIER)
+
         } catch (_: Exception) {
             SkullBuilder(SkullBuilder.HeadTexture(WHEN_BE_HEAD_TEXTURE))
         }
