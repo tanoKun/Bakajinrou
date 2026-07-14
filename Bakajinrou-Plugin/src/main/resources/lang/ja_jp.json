@@ -81,6 +81,8 @@
     "game.start.notification.position": "<gray><bold>あなたの役職は「<arg-0>」です。</bold></gray>",
     "game.start.notification.known.wolf": "<gray><bold>あなたが唯一知る人狼は「<wolf><arg-0></wolf>」です。</bold></gray>",
 
+    "game.death.title": "<red><bold>死亡しました</bold></red>",
+
     "game.finish.victory.message": "<green>あなたは勝利しました。</green>",
     "game.finish.lose.message": "<red>あなたは敗北しました。</red>",
 

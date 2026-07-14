@@ -3,6 +3,10 @@ package com.github.tanokun.bakajinrou.plugin.localization.keys
 import com.github.tanokun.bakajinrou.api.translation.TranslationKey
 
 sealed class GameKeys(key: String): TranslationKey("game.$key") {
+    class Death private constructor(key: String): GameKeys("death.$key") { companion object {
+        val TITLE = Death("title")
+    } }
+
     open class Start private constructor(key: String): GameKeys("start.$key") {
         companion object {
             val TITLE = Start("title")
