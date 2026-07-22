@@ -42,19 +42,19 @@ class Attacking(private val game: JinrouGame) {
      * @see AttackVerificator
      * @see AttackMethod
      */
-    suspend inline fun <reified T: AttackMethod> attack(by: ParticipantId, victims: List<ParticipantId>, with: MethodId) {
-        attack(by, victims, with, T::class)
+    suspend inline fun <reified T: AttackMethod> attack(by: ParticipantId, victims: List<ParticipantId>, withId: MethodId) {
+        attack(by, victims, withId, T::class)
     }
 
-    suspend fun <T: AttackMethod> attack(by: ParticipantId, victims: List<ParticipantId>, with: MethodId, klass: KClass<T>) {
+    suspend fun <T: AttackMethod> attack(by: ParticipantId, victims: List<ParticipantId>, withId: MethodId, klass: KClass<T>) {
         val attackerParticipant = game.getParticipant(by) ?: return
 
-        val with = attackerParticipant.getGrantedMethod(with) as? AttackMethod ?: return
+        val attackMethod = attackerParticipant.getGrantedMethod(withId) as? AttackMethod ?: return
 
-        if (with::class != klass) return
+        if (attackMethod::class != klass) return
 
         val attackResolutions = victims.mapNotNull { victim ->
-            val result = AttackVerificator.attack(with, game.getParticipant(victim) ?: return@mapNotNull null)
+            val result = AttackVerificator.attack(attackMethod, game.getParticipant(victim) ?: return@mapNotNull null)
 
             when (result) {
                 is AttackByMethodResult.SucceedAttack -> AttackResolution.Killed(attackerId = by, victim, result)
@@ -63,13 +63,13 @@ class Attacking(private val game: JinrouGame) {
         }
 
         attackResolutions.forEach {
-            game.updateParticipant(it.victimId) { victim -> victim.removeAll(it.result.consumedProtectiveMethods)
+            game.updateParticipant(it.victimId) { victim ->
                 val victimAfterConsumption = victim.removeAll(it.result.consumedProtectiveMethods)
                 if (it is AttackResolution.Killed) victimAfterConsumption.dead() else victimAfterConsumption
             }
 
             game.updateParticipant(it.attackerId) { attacker ->
-                attacker.removeMethod(with)
+                attacker.removeMethod(attackMethod)
             }
         }
 
