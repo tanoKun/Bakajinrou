@@ -62,7 +62,7 @@ open class BakaJinrou(): JavaPlugin() {
             koin.get<PrepareCommand>()
             koin.get<MapSettingCommand>()
 
-            Bukkit.getPluginManager().registerEvents(RenderingSidebarAdapter(koin.get(), koin.get()), this@BakaJinrou)
+            Bukkit.getPluginManager().registerEvents(RenderingSidebarAdapter(koin.get()), this@BakaJinrou)
             Bukkit.getPluginManager().registerEvents(PreparedGameTabRefresher(koin.get(), koin.get(), koin.get()), this@BakaJinrou)
             Bukkit.getPluginManager().registerEvents(StartGameAdapter(koin.get()), this@BakaJinrou)
 

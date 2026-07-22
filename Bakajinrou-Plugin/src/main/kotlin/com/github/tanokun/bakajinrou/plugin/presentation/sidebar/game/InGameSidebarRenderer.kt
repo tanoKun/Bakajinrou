@@ -12,10 +12,10 @@ import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponent
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.presentation.sidebar.Sidebar
 import com.github.tanokun.bakajinrou.plugin.presentation.sidebar.SidebarContent
-import com.github.tanokun.bakajinrou.plugin.presentation.sidebar.SidebarPage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
@@ -30,7 +30,6 @@ import plutoproject.adventurekt.text.style.gray
 import plutoproject.adventurekt.text.style.green
 import plutoproject.adventurekt.text.style.white
 import plutoproject.adventurekt.text.text
-import kotlin.time.Duration.Companion.seconds
 
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
@@ -44,24 +43,21 @@ class InGameSidebarRenderer(
     private val sidebar = Sidebar()
 
     init {
+        mainScope.coroutineContext.job.invokeOnCompletion { sidebar.deleteAll() }
+
         mainScope.launch {
             scheduler.observe(mainScope)
                 .whenLaunched()
                 .take(1)
-                .collect { cycle() }
+                .collect { render() }
         }
     }
 
-    private suspend fun cycle() = sidebar.cycle(
-        viewers = {
-            game.getCurrentParticipants().mapNotNull { participant ->
-                playerProvider.getAllowNull(participant.participantId)
-            }
-        },
-        pages = listOf(
-            SidebarPage(5.seconds, ::createPositionDistribution),
-        ),
-    )
+    private fun render() {
+        game.getCurrentParticipants()
+            .mapNotNull { participant -> playerProvider.getAllowNull(participant.participantId) }
+            .forEach { player -> sidebar.render(player, createPositionDistribution(player)) }
+    }
 
     private fun createPositionDistribution(player: Player): SidebarContent {
         val lines = createViewerHeader(player)

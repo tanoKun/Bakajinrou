@@ -4,7 +4,6 @@ import com.github.tanokun.bakajinrou.plugin.common.setting.RequestedPositions
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.presentation.sidebar.Sidebar
 import com.github.tanokun.bakajinrou.plugin.presentation.sidebar.SidebarContent
-import com.github.tanokun.bakajinrou.plugin.presentation.sidebar.SidebarPage
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedMap
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedParticipants
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedPositions
@@ -19,7 +18,6 @@ import plutoproject.adventurekt.text.style.gray
 import plutoproject.adventurekt.text.style.green
 import plutoproject.adventurekt.text.style.white
 import plutoproject.adventurekt.text.text
-import kotlin.time.Duration.Companion.seconds
 
 data class PreparedGameSidebarRenderer(
     val selectedMap: SelectedMap?,
@@ -30,13 +28,6 @@ data class PreparedGameSidebarRenderer(
     private val sidebar = Sidebar()
 
     fun renderGameOverview(player: Player) = sidebar.render(player, createOverview(player))
-
-    suspend fun cycle(viewers: () -> Collection<Player>) = sidebar.cycle(
-        viewers = viewers,
-        pages = listOf(
-            SidebarPage(5.seconds, ::createOverview),
-        ),
-    )
 
     private fun createOverview(player: Player): SidebarContent {
         val lines = mutableListOf<Component>()
