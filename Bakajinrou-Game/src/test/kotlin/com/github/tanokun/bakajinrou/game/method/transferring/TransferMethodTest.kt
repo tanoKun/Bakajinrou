@@ -31,11 +31,13 @@ class TransferMethodTest : ShouldSpec({
 
     context("参加者間の譲渡") {
         should("正常に譲渡できる場合、trueを返し、両者の状態を更新すべき") {
+            val transferred = mockk<GrantedMethod>()
             val fromAfterRemove = mockk<Participant>()
             val toAfterGrant = mockk<Participant>()
 
+            every { method.asTransferred() } returns transferred
             every { fromParticipant.removeMethod(method) } returns fromAfterRemove
-            every { toParticipant.grantMethod(method) } returns toAfterGrant
+            every { toParticipant.grantMethod(transferred) } returns toAfterGrant
 
             val result = transfer.transport(methodId, fromId, toId)
 
