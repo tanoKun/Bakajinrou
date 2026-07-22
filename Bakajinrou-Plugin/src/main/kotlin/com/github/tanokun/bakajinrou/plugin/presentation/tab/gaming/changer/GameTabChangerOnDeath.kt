@@ -36,6 +36,6 @@ class GameTabChangerOnDeath(
     private fun changer(target: Participant) {
         val player = playerProvider.getAllowNull(target) ?: return
 
-        tabHandler.joinEngine(TabHandlerType.SharedBySpectators, player)
+        tabHandler.joinEngine(TabHandlerType.SharedObserverView, player)
     }
 }

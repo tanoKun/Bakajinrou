@@ -7,7 +7,7 @@ import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerPro
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.presentation.tab.gaming.DummyPlayers
 import com.github.tanokun.bakajinrou.plugin.presentation.tab.gaming.component.EachInfoBySurvivorComponent
-import com.github.tanokun.bakajinrou.plugin.presentation.tab.gaming.component.SharedInfoBySpectatorComponent
+import com.github.tanokun.bakajinrou.plugin.presentation.tab.gaming.component.SharedInfoByObserverComponent
 import com.github.tanokun.bakajinrou.plugin.presentation.tab.handler.TabHandler
 import com.github.tanokun.bakajinrou.plugin.presentation.tab.handler.TabHandlerType
 
@@ -23,15 +23,14 @@ abstract class GameTabRefresher(
         val player = playerProvider.getAllowNull(target) ?: return
 
         game.getCurrentParticipants()
-            .excludeSpectators()
             .forEach {
-                tabHandler.editEngine(TabHandlerType.EachPlayer(it.participantId)) {
+                tabHandler.editEngine(TabHandlerType.EachParticipant(it.participantId)) {
                     updateComponent(EachInfoBySurvivorComponent(dummyUuid, game, player, jinrouTranslator))
                 }
             }
 
-        tabHandler.editEngine(TabHandlerType.SharedBySpectators) {
-            updateComponent(SharedInfoBySpectatorComponent(dummyUuid, game, player, jinrouTranslator))
+        tabHandler.editEngine(TabHandlerType.SharedObserverView) {
+            updateComponent(SharedInfoByObserverComponent(dummyUuid, game, player, jinrouTranslator))
         }
     }
 }

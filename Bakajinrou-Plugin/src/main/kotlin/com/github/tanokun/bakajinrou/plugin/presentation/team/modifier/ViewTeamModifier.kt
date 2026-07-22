@@ -15,7 +15,7 @@ import net.minecraft.world.scores.Team
 class ViewTeamModifier(
     private val game: GameStore,
     private val playerProvider: BukkitPlayerProvider,
-    participants: ParticipantScope.NonSpectators,
+    participants: ParticipantScope.All,
 ) {
     private val hiddenTeam: TeamPackets =
         TeamPackets("all_always_hidden", participants.mapNotNull { PlayerNameCache.get(it) }) {

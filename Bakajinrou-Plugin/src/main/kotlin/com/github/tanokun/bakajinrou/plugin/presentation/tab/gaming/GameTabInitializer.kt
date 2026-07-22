@@ -4,7 +4,8 @@ import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
-import com.github.tanokun.bakajinrou.api.participant.position.SpectatorPosition
+import com.github.tanokun.bakajinrou.game.audience.AudienceChange
+import com.github.tanokun.bakajinrou.game.audience.GameAudience
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.whenLaunched
@@ -14,7 +15,7 @@ import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.presentation.tab.DummyUUID
 import com.github.tanokun.bakajinrou.plugin.presentation.tab.gaming.component.EachInfoBySurvivorComponent
 import com.github.tanokun.bakajinrou.plugin.presentation.tab.gaming.component.OfflineSurvivorComponent
-import com.github.tanokun.bakajinrou.plugin.presentation.tab.gaming.component.SharedInfoBySpectatorComponent
+import com.github.tanokun.bakajinrou.plugin.presentation.tab.gaming.component.SharedInfoByObserverComponent
 import com.github.tanokun.bakajinrou.plugin.presentation.tab.handler.TabHandler
 import com.github.tanokun.bakajinrou.plugin.presentation.tab.handler.TabHandlerType
 import kotlinx.coroutines.CoroutineScope
@@ -32,9 +33,12 @@ class GameTabInitializer(
     private val tabHandler: TabHandler,
     private val dummyPlayers: DummyPlayers,
     private val game: GameStore,
+    private val audience: GameAudience,
     private val gameScheduler: GameScheduler,
     private val mainScope: CoroutineScope,
 ): Observer {
+    private var started = false
+
     init {
         mainScope.launch {
             gameScheduler
@@ -43,36 +47,41 @@ class GameTabInitializer(
                 .take(1)
                 .collect { atStarted() }
         }
+
+        mainScope.launch {
+            audience.changes.collect(::onAudienceChanged)
+        }
     }
 
     private fun atStarted() {
-        tabHandler.createEngine(TabHandlerType.SharedBySpectators)
+        tabHandler.createEngine(TabHandlerType.SharedObserverView)
+        started = true
 
         game.getCurrentParticipants().forEach { participant ->
             mainScope.launch {
                 val dummyUuid = dummyPlayers.getDummyUuidOrPut(participant.participantId.uniqueId)
                 val player = playerProvider.waitPlayerOnline(participant)
 
-                initializeForSpectator(player, dummyUuid, participant)
-                initializeForSurvivor(player, participant, game.getCurrentParticipants())
+                initializeForObserver(dummyUuid, player)
+                initializeForParticipant(player, participant, game.getCurrentParticipants())
+            }
+        }
+
+        audience.current.spectators.forEach { playerId ->
+            mainScope.launch {
+                tabHandler.joinEngine(TabHandlerType.SharedObserverView, playerProvider.waitPlayerOnline(playerId))
             }
         }
     }
 
-    private fun initializeForSpectator(player: Player, dummyUuid: DummyUUID, participant: Participant) {
-        val type = TabHandlerType.SharedBySpectators
-
-        if (participant.isPosition<SpectatorPosition>()) tabHandler.joinEngine(type, player)
-
-        tabHandler.editEngine(type) {
-            addComponent(SharedInfoBySpectatorComponent(dummyUuid, game, player, translator))
+    private fun initializeForObserver(dummyUuid: DummyUUID, target: Player) {
+        tabHandler.editEngine(TabHandlerType.SharedObserverView) {
+            addComponent(SharedInfoByObserverComponent(dummyUuid, game, target, translator))
         }
     }
 
-    private fun initializeForSurvivor(player: Player, survivor: Participant, participants: ParticipantScope.All) {
-        if (survivor.isPosition<SpectatorPosition>()) return
-
-        val type = TabHandlerType.EachPlayer(survivor.participantId)
+    private fun initializeForParticipant(player: Player, participant: Participant, participants: ParticipantScope.All) {
+        val type = TabHandlerType.EachParticipant(participant.participantId)
 
         tabHandler.createEngine(type)
 
@@ -89,6 +98,21 @@ class GameTabInitializer(
 
                     addComponent(EachInfoBySurvivorComponent(dummyUuid, game, player, translator))
                 }
+        }
+    }
+
+    private suspend fun onAudienceChanged(change: AudienceChange) {
+        if (!started) return
+
+        when (change) {
+            is AudienceChange.Joined -> {
+                val player = playerProvider.waitPlayerOnline(change.playerId)
+                tabHandler.joinEngine(TabHandlerType.SharedObserverView, player)
+            }
+            is AudienceChange.Left -> {
+                val player = playerProvider.getAllowNull(change.playerId) ?: return
+                tabHandler.joinEngine(TabHandlerType.ShareInLobby, player)
+            }
         }
     }
 }

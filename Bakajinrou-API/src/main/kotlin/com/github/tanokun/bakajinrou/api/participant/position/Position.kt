@@ -7,11 +7,8 @@ import com.github.tanokun.bakajinrou.api.participant.prefix.PrefixSource
 interface Position {
     val prefixSource: PrefixSource
 
-    /**
-     * この役職が所属する陣営を表します。
-     * 勝敗に関与しない役職 (観戦者など) の場合は null です。
-     */
-    val side: Side?
+    /** この役職が所属する陣営を表します。 */
+    val side: Side
 
     /**
      * この役職が、占いや霊媒によって判定されたときの見え方を表します。

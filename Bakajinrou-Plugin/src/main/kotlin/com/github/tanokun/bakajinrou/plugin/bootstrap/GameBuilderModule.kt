@@ -24,6 +24,9 @@ import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
 import com.github.tanokun.bakajinrou.game.state.GameChanges
 import com.github.tanokun.bakajinrou.game.state.GameStore
+import com.github.tanokun.bakajinrou.game.audience.GameAudience
+import com.github.tanokun.bakajinrou.game.audience.GameViewers
+import com.github.tanokun.bakajinrou.api.player.PlayerId
 import com.github.tanokun.bakajinrou.plugin.common.coroutine.TopCoroutineScope
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.BindingListeners
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
@@ -82,6 +85,8 @@ class GameBuilderModule(plugin: Plugin) {
     val participantModule = module {
         scope<GameComponents> {
             scopedOf(::GameChanges)
+            scoped<GameAudience> { (spectators: Set<PlayerId>) -> GameAudience(get(), spectators) }
+            scopedOf(::GameViewers)
             scopedOf(::Attacking)
             scopedOf(::ChangeSuspended)
             scopedOf(::ComingOutHandler)
@@ -93,7 +98,7 @@ class GameBuilderModule(plugin: Plugin) {
         single { Terminal(interactive = true, ansiLevel = AnsiLevel.TRUECOLOR) }
 
         scope<GameComponents> {
-            scoped { ViewTeamModifier(get(), get(), get<GameStore>().getCurrentParticipants().excludeSpectators()) }
+            scoped { ViewTeamModifier(get(), get(), get<GameStore>().getCurrentParticipants()) }
         }
     }
 

@@ -1,7 +1,8 @@
 package com.github.tanokun.bakajinrou.plugin.presentation.tab.gaming.refresher
 
-import com.github.tanokun.bakajinrou.game.state.GameStore
-import com.github.tanokun.bakajinrou.api.participant.asParticipantId
+import com.github.tanokun.bakajinrou.api.player.asPlayerId
+import com.github.tanokun.bakajinrou.game.audience.GameViewer
+import com.github.tanokun.bakajinrou.game.audience.GameViewers
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleListener
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
@@ -22,19 +23,16 @@ class GameTabRefresherOnJoin(
     plugin: Plugin,
     mainScope: CoroutineScope,
     tabHandler: TabHandler,
-    game: GameStore
+    viewers: GameViewers
 ): LifecycleEventListener(plugin, {
     register<PlayerJoinEvent>(eventPriority = EventPriority.LOWEST) { event -> mainScope.launch {
         delay(100)
 
-        val participantId = event.player.uniqueId.asParticipantId()
-
-        val participant = game.getParticipant(participantId) ?: return@launch
-
-        val type = if (participant.isDead())
-            TabHandlerType.SharedBySpectators
-        else
-            TabHandlerType.EachPlayer(event.player.uniqueId.asParticipantId())
+        val type = when (val viewer = viewers.resolve(event.player.uniqueId.asPlayerId())) {
+            is GameViewer.Playing -> TabHandlerType.EachParticipant(viewer.participant.participantId)
+            is GameViewer.DeadParticipant, is GameViewer.Spectator -> TabHandlerType.SharedObserverView
+            null -> return@launch
+        }
 
         tabHandler.joinEngine(type, event.player)
     } }

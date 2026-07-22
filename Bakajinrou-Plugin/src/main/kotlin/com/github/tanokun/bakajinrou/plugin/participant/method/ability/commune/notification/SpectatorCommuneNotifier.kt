@@ -1,9 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method.ability.commune.notification
-import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
-import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.participant.or
-import com.github.tanokun.bakajinrou.api.participant.position.isSpectator
+import com.github.tanokun.bakajinrou.game.audience.GameViewers
 import com.github.tanokun.bakajinrou.game.ability.medium.CommuneAbilityExecutor
 import com.github.tanokun.bakajinrou.game.ability.medium.CommuneResult
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
@@ -27,7 +24,7 @@ import org.koin.core.annotation.Scoped
 class SpectatorCommuneNotifier(
     private val playerProvider: BukkitPlayerProvider,
     private val translator: JinrouTranslator,
-    private val game: GameStore,
+    private val viewers: GameViewers,
     mainScope: CoroutineScope,
     executor: CommuneAbilityExecutor
 ): Observer {
@@ -49,9 +46,8 @@ class SpectatorCommuneNotifier(
             is CommuneResult.IsNotDead -> GameKeys.Ability.Using.COMMUNE_FAILURE_MESSAGE
         }
 
-        game.getCurrentParticipants()
-            .includes(::isSpectator or Participant::isDead)
-            .mapNotNull { playerProvider.getAllowNull(it) }
+        viewers.observerPlayerIds()
+            .mapNotNull(playerProvider::getAllowNull)
             .forEach {
                 val resultComponent = translator.translate(result, it.locale())
                 val message = translator.translate(

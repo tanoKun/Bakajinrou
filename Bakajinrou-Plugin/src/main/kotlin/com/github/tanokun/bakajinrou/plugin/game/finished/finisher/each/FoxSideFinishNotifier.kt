@@ -1,15 +1,16 @@
 package com.github.tanokun.bakajinrou.plugin.game.finished.finisher.each
 
 import com.github.tanokun.bakajinrou.api.WonInfo
-import com.github.tanokun.bakajinrou.api.participant.position.SpectatorPosition
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
+import com.github.tanokun.bakajinrou.game.audience.GameAudience
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
 
 class FoxSideFinishNotifier(
     private val playerProvider: BukkitPlayerProvider,
-    private val translator: JinrouTranslator
+    private val translator: JinrouTranslator,
+    private val audience: GameAudience,
 ): EachSideFinishNotifier(translator) {
     override fun notify(wonInfo: WonInfo) {
         if (wonInfo !is WonInfo.Fox) return
@@ -22,12 +23,15 @@ class FoxSideFinishNotifier(
                 text = translator.translate(GameKeys.Finish.Fox.TITLE, bukkitPlayer.locale())
             )
 
-            if (participant.isPosition<SpectatorPosition>()) return@forEach
-
             if (participant.isPosition<FoxPosition>()) sendVictoryMessage(bukkitPlayer)
             else sendLoseMessage(bukkitPlayer)
 
             bukkitPlayer.sendMessage(translator.translate(GameKeys.Finish.Fox.MESSAGE, bukkitPlayer.locale()))
+        }
+
+        audience.current.spectators.forEach { playerId ->
+            val player = playerProvider.getAllowNull(playerId) ?: return@forEach
+            showVictorySideTitle(player, translator.translate(GameKeys.Finish.Fox.TITLE, player.locale()))
         }
     }
 }

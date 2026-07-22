@@ -3,7 +3,6 @@ package com.github.tanokun.bakajinrou.plugin.presentation.tab.gaming.component
 import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
-import com.github.tanokun.bakajinrou.api.participant.position.SpectatorPosition
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.presentation.tab.DummyUUID
 import io.papermc.paper.adventure.PaperAdventure
@@ -25,8 +24,6 @@ open class EachInfoBySurvivorComponent(
     private val latency = target.ping
 
     override fun orderDecider(target: Participant): Int {
-        if (target.isPosition<SpectatorPosition>()) return -1
-
         return abs(target.comingOut.hashCode())
     }
 
@@ -34,7 +31,7 @@ open class EachInfoBySurvivorComponent(
         val viewerParticipant = GameStore.getParticipant(viewer.uniqueId.asParticipantId()) ?: throw IllegalStateException("Viewer is not a participant")
         val targetParticipant = GameStore.getParticipant(targetId) ?: throw IllegalStateException("Target is not a participant")
 
-        val gameType = if (targetParticipant.isPosition<SpectatorPosition>()) GameType.SPECTATOR else GameType.SURVIVAL
+        val gameType = if (targetParticipant.isDead()) GameType.SPECTATOR else GameType.SURVIVAL
         val order = orderDecider(targetParticipant)
 
         val displayName = createDisplayName(viewerParticipant, targetParticipant, gameProfile.name, viewer.locale())

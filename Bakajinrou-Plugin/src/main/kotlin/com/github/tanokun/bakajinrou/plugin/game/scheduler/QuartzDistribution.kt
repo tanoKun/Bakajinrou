@@ -38,7 +38,7 @@ class QuartzDistribution(
      *
      * @param participants ゲームの全ての参加者
      */
-    fun distributeQuartz(participants: ParticipantScope.NonSpectators) {
+    fun distributeQuartz(participants: ParticipantScope.All) {
         participants
             .excludes(Participant::isDead)
             .forEach {
@@ -58,7 +58,7 @@ class QuartzDistribution(
             .filter { it.passedTime > 2.minutes }
             .every(2.minutes)
             .collect { _ ->
-                distributeQuartz(game.getCurrentParticipants().excludeSpectators())
+                distributeQuartz(game.getCurrentParticipants())
             }
     }
 }

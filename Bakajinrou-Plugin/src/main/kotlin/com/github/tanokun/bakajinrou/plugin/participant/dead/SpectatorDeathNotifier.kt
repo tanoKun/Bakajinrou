@@ -1,10 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.participant.dead
 
-import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
-import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.participant.or
-import com.github.tanokun.bakajinrou.api.participant.position.isSpectator
+import com.github.tanokun.bakajinrou.game.audience.GameViewers
 import com.github.tanokun.bakajinrou.game.attacking.AttackResolution
 import com.github.tanokun.bakajinrou.game.attacking.Attacking
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
@@ -27,7 +24,7 @@ import org.koin.core.annotation.Scoped
 class SpectatorDeathNotifier(
     private val playerProvider: BukkitPlayerProvider,
     private val translator: JinrouTranslator,
-    private val game: GameStore,
+    private val viewers: GameViewers,
     mainScope: CoroutineScope,
     attacking: Attacking
 ): Observer {
@@ -44,9 +41,8 @@ class SpectatorDeathNotifier(
         val attackerName = PlayerNameCache.get(result.attackerId) ?: "unknown"
         val victimName = PlayerNameCache.get(result.victimId) ?: "unknown"
 
-        game.getCurrentParticipants()
-            .includes(::isSpectator or Participant::isDead)
-            .mapNotNull { playerProvider.getAllowNull(it) }
+        viewers.observerPlayerIds()
+            .mapNotNull(playerProvider::getAllowNull)
             .forEach {
                 val message = translator.translate(
                     DisplayLoggingKeys.KILL, it.locale(), Component.text(attackerName), Component.text(victimName))

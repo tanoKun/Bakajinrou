@@ -10,7 +10,7 @@ import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 data object FoxPosition: Position {
     override val prefixSource: PrefixSource = DefaultPrefix(PrefixKeys.FOX)
 
-    override val side: Side? = Side.FOX
+    override val side: Side = Side.FOX
 
     override val divinedAs: ResultSource = ResultSource.FOX
 }

@@ -1,9 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method.advantage.using.exchange
-import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
-import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.participant.or
-import com.github.tanokun.bakajinrou.api.participant.position.isSpectator
+import com.github.tanokun.bakajinrou.game.audience.GameViewers
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.game.method.advantage.using.ExchangeInfo
 import com.github.tanokun.bakajinrou.game.method.advantage.using.LocationExchanger
@@ -25,7 +22,7 @@ import org.koin.core.annotation.Scoped
 class SpectatorUsedExchangeNotifier(
     private val playerProvider: BukkitPlayerProvider,
     private val translator: JinrouTranslator,
-    private val game: GameStore,
+    private val viewers: GameViewers,
     mainScope: CoroutineScope,
     locationExchanger: LocationExchanger,
 ): Observer {
@@ -41,9 +38,8 @@ class SpectatorUsedExchangeNotifier(
         val userName = PlayerNameCache.get(info.userId) ?: return
         val targetName = PlayerNameCache.get(info.targetId) ?: return
 
-        game.getCurrentParticipants()
-            .includes(::isSpectator or Participant::isDead)
-            .mapNotNull { playerProvider.getAllowNull(it) }
+        viewers.observerPlayerIds()
+            .mapNotNull(playerProvider::getAllowNull)
             .forEach {
                 val message = translator.translate(
                     DisplayLoggingKeys.Use.EXCHANGE_METHOD, it.locale(), Component.text(userName), Component.text(targetName))

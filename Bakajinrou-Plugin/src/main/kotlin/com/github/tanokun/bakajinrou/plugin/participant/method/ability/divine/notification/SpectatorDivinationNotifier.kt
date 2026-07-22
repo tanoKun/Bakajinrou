@@ -1,9 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method.ability.divine.notification
-import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
-import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.participant.or
-import com.github.tanokun.bakajinrou.api.participant.position.isSpectator
+import com.github.tanokun.bakajinrou.game.audience.GameViewers
 import com.github.tanokun.bakajinrou.game.ability.fortune.DivineAbilityExecutor
 import com.github.tanokun.bakajinrou.game.ability.fortune.DivineResult
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
@@ -26,7 +23,7 @@ import org.koin.core.annotation.Scoped
 class SpectatorDivinationNotifier(
     private val playerProvider: BukkitPlayerProvider,
     private val translator: JinrouTranslator,
-    private val game: GameStore,
+    private val viewers: GameViewers,
     mainScope: CoroutineScope,
     executor: DivineAbilityExecutor
 ): Observer {
@@ -43,9 +40,8 @@ class SpectatorDivinationNotifier(
         val fortuneName = PlayerNameCache.get(result.fortuneId) ?: "unknown"
         val targetName = PlayerNameCache.get(result.targetId) ?: "unknown"
 
-        game.getCurrentParticipants()
-            .includes(::isSpectator or Participant::isDead)
-            .mapNotNull { playerProvider.getAllowNull(it) }
+        viewers.observerPlayerIds()
+            .mapNotNull(playerProvider::getAllowNull)
             .forEach {
                 val resultComponent = translator.translate(result.source.resultKey, it.locale())
                 val message = translator.translate(

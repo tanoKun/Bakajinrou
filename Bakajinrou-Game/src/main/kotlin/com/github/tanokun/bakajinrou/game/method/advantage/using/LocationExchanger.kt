@@ -22,7 +22,7 @@ class LocationExchanger(private val game: GameStore, private val selector: Excha
     suspend fun exchange(method: ExchangeMethod, sideId: ParticipantId) {
         if (!game.existParticipant(sideId)) return
 
-        val targetId = selector.select(sideId, game.getCurrentParticipants().excludeSpectators())
+        val targetId = selector.select(sideId, game.getCurrentParticipants())
 
         game.updateParticipant(sideId) { current ->
             current.removeMethod(method)

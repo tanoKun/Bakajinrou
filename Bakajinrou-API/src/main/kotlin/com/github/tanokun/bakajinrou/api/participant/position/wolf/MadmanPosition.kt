@@ -13,7 +13,7 @@ import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 data class MadmanPosition(private val hasFakeProtectAbility: Boolean): Position {
     override val prefixSource: PrefixSource = DefaultPrefix(PrefixKeys.MADMAN)
 
-    override val side: Side? = Side.WEREWOLF
+    override val side: Side = Side.WEREWOLF
 
     override val divinedAs: ResultSource = ResultSource.CITIZENS
 

@@ -70,7 +70,6 @@ class InGameSidebarRenderer(
         lines.add(component { text("役職分配: ") color gray deco bold })
 
         val positionCounts = game.getCurrentParticipants()
-            .excludeSpectators()
             .mapNotNull { participant -> participant.getOwnPrefix()?.let { it to participant } }
             .groupingBy { (prefix) -> prefix }
             .eachCount()
@@ -93,7 +92,7 @@ class InGameSidebarRenderer(
     private fun createParticipants(player: Player): SidebarContent {
         val lines = createViewerHeader(player)
 
-        game.getCurrentParticipants().excludeSpectators().forEach { participant ->
+        game.getCurrentParticipants().forEach { participant ->
             lines.add(component {
                 text("・") color gray deco bold
                 text(PlayerNameCache.get(participant.participantId.uniqueId) ?: "") color white deco bold

@@ -5,6 +5,7 @@ import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.whenOvertime
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
+import com.github.tanokun.bakajinrou.game.audience.GameAudience
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.coroutine.TopCoroutineScope
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
@@ -31,6 +32,7 @@ class WonPositionAssigner(
     private val playerProvider: BukkitPlayerProvider,
     private val gameSession: JinrouGameSession,
     private val translator: JinrouTranslator,
+    private val audience: GameAudience,
     gameScheduler: GameScheduler,
     topScope: TopCoroutineScope
 ): Observer {
@@ -52,9 +54,9 @@ class WonPositionAssigner(
 
     private fun observeWin(wonInfo: WonInfo) {
         val finisher = when (wonInfo) {
-            is WonInfo.Wolfs -> WolfSideFinishNotifier(playerProvider, translator)
-            is WonInfo.Citizens -> CitizenSideFinishNotifier(playerProvider, translator)
-            is WonInfo.Fox -> FoxSideFinishNotifier(playerProvider, translator)
+            is WonInfo.Wolfs -> WolfSideFinishNotifier(playerProvider, translator, audience)
+            is WonInfo.Citizens -> CitizenSideFinishNotifier(playerProvider, translator, audience)
+            is WonInfo.Fox -> FoxSideFinishNotifier(playerProvider, translator, audience)
             is WonInfo.System -> SystemFinishNotifier
         }
 

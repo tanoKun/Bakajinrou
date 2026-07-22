@@ -4,7 +4,7 @@ import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 
 sealed interface TabHandlerType {
     data object ShareInLobby : TabHandlerType
-    data object SharedBySpectators : TabHandlerType
+    data object SharedObserverView : TabHandlerType
 
-    data class EachPlayer(val participantId: ParticipantId) : TabHandlerType
+    data class EachParticipant(val participantId: ParticipantId) : TabHandlerType
 }

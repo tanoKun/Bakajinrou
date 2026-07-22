@@ -25,7 +25,7 @@ class WolfEachOtherNotifier(
     override suspend fun initialize(selfId: ParticipantId) {
         val player = playerProvider.waitPlayerOnline(selfId)
 
-        val formatter = ParticipantsFormatter(game.getCurrentParticipants().excludeSpectators(), translator)
+        val formatter = ParticipantsFormatter(game.getCurrentParticipants(), translator)
 
         player.sendMessage(formatter.format(player.locale(), FormatKeys.Category.WOLF, ::isWolf to FormatKeys.Participant.WOLF))
     }

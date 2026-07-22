@@ -69,7 +69,7 @@ class ParticipantBuilder(
                     val knownByMadmans = associate
                         .filter { (_, index) -> index == pullIndex }
                         .map { (madman, _) -> madman }
-                        .excludeSpectators()
+                        .all()
 
                     Participant(uniqueId, WolfPosition(knownByMadmans), GrantedStrategy(mapOf()))
                 }
@@ -149,14 +149,14 @@ class ParticipantBuilder(
 
     class CitizenAssigner private constructor() {
         companion object {
-            fun FoxAssigner.assignCitizens(): ParticipantScope.NonSpectators {
+            fun FoxAssigner.assignCitizens(): ParticipantScope.All {
                 val pull = remainingCandidates
 
                 val citizens = pull.map {
                     Participant(it, CitizenPosition, GrantedStrategy(mapOf()))
                 }
 
-                return (assignedParticipants + citizens).excludeSpectators()
+                return (assignedParticipants + citizens).all()
             }
         }
     }

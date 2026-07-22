@@ -4,7 +4,6 @@ import com.github.tanokun.bakajinrou.api.ParticipantStates
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.method.MethodId
 import com.github.tanokun.bakajinrou.api.participant.position.Position
-import com.github.tanokun.bakajinrou.api.participant.position.SpectatorPosition
 import com.github.tanokun.bakajinrou.api.participant.prefix.ComingOut
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategy
 import com.github.tanokun.bakajinrou.api.protection.method.ProtectiveMethod
@@ -23,11 +22,10 @@ data class Participant(
     val participantId: ParticipantId,
     val position: Position,
     internal val strategy: GrantedStrategy,
-    internal val state: ParticipantStates =
-        if (position is SpectatorPosition) ParticipantStates.DEAD
-        else ParticipantStates.ALIVE,
+    internal val state: ParticipantStates = ParticipantStates.ALIVE,
     val comingOut: ComingOut? = null
 ) {
+    val playerId get() = participantId.playerId
 
     /**
      * 状態を死亡状態にします。以下の状態では変更できません。

@@ -18,7 +18,7 @@ import xyz.xenondevs.invui.window.Window
  */
 class AbilityGUI(
     private val translator: JinrouTranslator,
-    participants: ParticipantScope.NonSpectators,
+    participants: ParticipantScope.All,
     description: GameKeys.Ability.Gui.Using,
     onClick: (clicker: ParticipantId, target: ParticipantId) -> Unit,
 ) {

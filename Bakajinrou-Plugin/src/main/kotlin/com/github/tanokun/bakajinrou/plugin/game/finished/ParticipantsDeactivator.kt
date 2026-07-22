@@ -3,6 +3,7 @@ package com.github.tanokun.bakajinrou.plugin.game.finished
 import com.github.tanokun.bakajinrou.api.WonInfo
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
+import com.github.tanokun.bakajinrou.game.audience.GameViewers
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.coroutine.TopCoroutineScope
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
@@ -37,7 +38,8 @@ class ParticipantsDeactivator(
     private val gameSession: JinrouGameSession,
     private val gameMap: GameMap,
     private val topScope: TopCoroutineScope,
-    private val bodyHandler: BukkitBodyHandler
+    private val bodyHandler: BukkitBodyHandler,
+    private val viewers: GameViewers,
 ): Observer {
     init {
         topScope.launch {
@@ -61,9 +63,9 @@ class ParticipantsDeactivator(
                 .forEach(Item::remove)
         }
 
-        wonInfo.participants.forEach { participant ->
+        viewers.allPlayerIds().forEach { playerId ->
             topScope.launch {
-                val player = playerProvider.waitPlayerOnline(participant.participantId)
+                val player = playerProvider.waitPlayerOnline(playerId)
                 player.inventory.clear()
 
                 player.gameMode = GameMode.ADVENTURE

@@ -43,7 +43,7 @@ class HiddenPositionAnnouncer(
      * @see ParticipantsFormatter
      */
     fun reveal(participants: ParticipantScope.All) {
-        val formatter = ParticipantsFormatter(participants.excludeSpectators(), translator)
+        val formatter = ParticipantsFormatter(participants, translator)
         participants.forEach {
             val player = playerProvider.getAllowNull(it) ?: return@forEach
 

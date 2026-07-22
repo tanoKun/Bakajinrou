@@ -92,7 +92,7 @@ class TriggerAdapter(
             if (event.hand != EquipmentSlot.HAND) return@register
             if (event.item?.getMethodId() != ability.methodId) return@register
 
-            AbilityGUI(translator, game.getCurrentParticipants().excludeSpectators(), description) { clicker, target ->
+            AbilityGUI(translator, game.getCurrentParticipants(), description) { clicker, target ->
                 mainScope.launch {
                     executor(clicker, target)
                 }
