@@ -1,0 +1,50 @@
+package com.github.tanokun.bakajinrou.plugin.participant.chat
+
+import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.api.participant.asParticipantId
+import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
+import com.github.tanokun.bakajinrou.game.chat.ChatIntegrity
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListener
+import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleListener
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
+import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
+import io.papermc.paper.event.player.AsyncChatEvent
+import org.bukkit.event.EventPriority
+import org.bukkit.plugin.Plugin
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
+import plutoproject.adventurekt.component
+import plutoproject.adventurekt.text.raw
+import plutoproject.adventurekt.text.text
+
+@Scoped(binds = [LifecycleListener::class])
+@Scope(value = GameComponents::class)
+class ParticipantChatEventListener(
+    plugin: Plugin,
+    game: JinrouGame,
+    chatIntegrity: ChatIntegrity,
+    translator: JinrouTranslator,
+    playerProvider: BukkitPlayerProvider
+): LifecycleEventListener(plugin, {
+    register<AsyncChatEvent>(eventPriority = EventPriority.HIGHEST) { event ->
+        val sender = game.getParticipant(event.player.uniqueId.asParticipantId()) ?: return@register
+
+        if (!sender.isDead()) return@register
+
+        event.isCancelled = true
+
+        game.getCurrentParticipants()
+            .forEach { receiver ->
+                if (!chatIntegrity.isSendingAllowed(sender, receiver)) return@forEach
+
+                playerProvider.getAllowNull(receiver)?.let {
+                    it.sendMessage(component {
+                        raw { translator.translate(PrefixKeys.Companion.SPECTATOR, it.locale()) }
+                        text(" <${event.player.name}> ")
+                        raw { event.message() }
+                    })
+                }
+            }
+    }
+})

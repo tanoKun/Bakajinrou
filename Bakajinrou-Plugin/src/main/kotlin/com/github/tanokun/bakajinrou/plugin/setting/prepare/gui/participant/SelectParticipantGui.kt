@@ -3,7 +3,7 @@ package com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.participant
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedParticipants
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.common.button.DecideButton
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.participant.button.PlayerButton
-import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.participant.button.order.SelectByLoginTimeButton
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.participant.button.SelectByLoginTimeButton
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.participant.button.page.BackPageButton
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.gui.participant.button.page.NextPageButton
 import kotlinx.coroutines.CompletableDeferred

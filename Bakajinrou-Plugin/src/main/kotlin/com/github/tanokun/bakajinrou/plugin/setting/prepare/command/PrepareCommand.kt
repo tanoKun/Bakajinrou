@@ -5,7 +5,7 @@ import com.github.tanokun.bakajinrou.plugin.common.setting.RequestedPositions
 import com.github.tanokun.bakajinrou.plugin.common.setting.template.DistributionTemplates
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.map.GameMapRegistry
-import com.github.tanokun.bakajinrou.plugin.rendering.sidebar.prepare.PreparedGameSidebarRenderer
+import com.github.tanokun.bakajinrou.plugin.presentation.sidebar.prepare.PreparedGameSidebarRenderer
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedMap
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedParticipants
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.SelectedPositions
