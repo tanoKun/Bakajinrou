@@ -8,5 +8,7 @@ import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 data object SpectatorPosition: Position {
     override val prefixSource: PrefixSource = LiteralPrefix(PrefixKeys.SPECTATOR)
 
-    override val abilityResult: ResultSource = ResultSource.CITIZENS
+    override val side: Side? = null
+
+    override val divinedAs: ResultSource = ResultSource.CITIZENS
 }

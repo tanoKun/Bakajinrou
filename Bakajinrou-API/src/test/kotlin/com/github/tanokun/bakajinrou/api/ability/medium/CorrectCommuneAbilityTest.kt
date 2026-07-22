@@ -17,7 +17,7 @@ class CorrectCommuneAbilityTest : ShouldSpec({
             val participant = mockk<Participant> {
                 every { isDead() } returns true
                 every { position } returns mockk {
-                    every { abilityResult } returns ResultSource.CITIZENS
+                    every { divinedAs } returns ResultSource.CITIZENS
                 }
             }
 

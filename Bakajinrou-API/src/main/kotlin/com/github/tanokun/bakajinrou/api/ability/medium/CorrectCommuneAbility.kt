@@ -21,7 +21,7 @@ data class CorrectCommuneAbility(
     override fun commune(target: Participant): CommuneResultSource {
         if (!target.isDead()) return CommuneResultSource.NotDeadError
 
-        return CommuneResultSource.FoundResult(target.position.abilityResult)
+        return CommuneResultSource.FoundResult(target.position.divinedAs)
     }
 
     override fun asCrafted(): GrantedMethod = copy(reason = GrantedReason.CRAFTED)

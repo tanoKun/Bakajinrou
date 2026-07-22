@@ -18,7 +18,7 @@ data class CorrectDivineAbility(
     override val methodId: MethodId = UUID.randomUUID().asMethodId(),
     override val reason: GrantedReason
 ): DivineAbility() {
-    override fun divine(target: Participant): ResultSource = target.position.abilityResult
+    override fun divine(target: Participant): ResultSource = target.position.divinedAs
 
     override fun asCrafted(): GrantedMethod = copy(reason = GrantedReason.CRAFTED)
 }
