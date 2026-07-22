@@ -25,7 +25,7 @@ import kotlin.time.Duration.Companion.seconds
  *
  * @see com.github.tanokun.bakajinrou.api.attacking.method.SwordMethod
  * @see com.github.tanokun.bakajinrou.api.attacking.method.ArrowMethod
- * @see com.github.tanokun.bakajinrou.api.attacking.method.DamagePotionMethod
+ * @see com.github.tanokun.bakajinrou.api.attacking.method.GasMethod
  */
 class Attacking(private val game: JinrouGame) {
     private val _attackResolution = MutableSharedFlow<AttackResolution>()

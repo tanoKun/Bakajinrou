@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.api.protection.method
 
 import com.github.tanokun.bakajinrou.api.attacking.method.ArrowMethod
-import com.github.tanokun.bakajinrou.api.attacking.method.DamagePotionMethod
+import com.github.tanokun.bakajinrou.api.attacking.method.GasMethod
 import com.github.tanokun.bakajinrou.api.attacking.method.SwordMethod
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedReason
 import com.github.tanokun.bakajinrou.api.protection.ProtectResult
@@ -13,7 +13,7 @@ class ResistanceMethodTest : ShouldSpec({
     val method = ResistanceMethod(reason = GrantedReason.INITIALIZED, verificator = mockk())
 
     val arrowAttack = mockk<ArrowMethod>()
-    val potionAttack = mockk<DamagePotionMethod>()
+    val potionAttack = mockk<GasMethod>()
     val swordAttack = mockk<SwordMethod>()
 
     context("耐性") {

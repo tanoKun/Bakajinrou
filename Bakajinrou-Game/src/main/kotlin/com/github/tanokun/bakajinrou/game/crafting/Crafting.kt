@@ -4,7 +4,7 @@ import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.advantage.ExchangeMethod
 import com.github.tanokun.bakajinrou.api.advantage.InvisibilityMethod
 import com.github.tanokun.bakajinrou.api.advantage.SpeedMethod
-import com.github.tanokun.bakajinrou.api.attacking.method.DamagePotionMethod
+import com.github.tanokun.bakajinrou.api.attacking.method.GasMethod
 import com.github.tanokun.bakajinrou.api.attacking.method.SwordMethod
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.method.asMethodId
@@ -50,7 +50,7 @@ class Crafting(
 
     private val crafting = listOf<(ParticipantId) -> GrantedMethod>(
         { SwordMethod(reason = GrantedReason.CRAFTED) },
-        { DamagePotionMethod(reason = GrantedReason.CRAFTED) },
+        { GasMethod(reason = GrantedReason.CRAFTED) },
         { id -> ResistanceMethod(reason = GrantedReason.CRAFTED, verificator = provider.getResistanceVerificator(false)) },
         { id ->
             val methodId = UUID.randomUUID().asMethodId()

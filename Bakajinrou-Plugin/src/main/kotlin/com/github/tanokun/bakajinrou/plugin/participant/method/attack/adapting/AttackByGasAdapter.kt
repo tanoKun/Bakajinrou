@@ -1,5 +1,5 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method.attack.adapting
-import com.github.tanokun.bakajinrou.api.attacking.method.DamagePotionMethod
+import com.github.tanokun.bakajinrou.api.attacking.method.GasMethod
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.game.attacking.Attacking
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.getMethodId
@@ -24,7 +24,7 @@ import org.koin.core.annotation.Scoped
  */
 @Scoped(binds = [LifecycleListener::class])
 @Scope(value = GameComponents::class)
-class AttackByPotionAdapter(
+class AttackByGasAdapter(
     plugin: Plugin, attacking: Attacking, mainScope: CoroutineScope
 ): LifecycleEventListener(plugin, {
     register<PotionSplashEvent> { event ->
@@ -41,7 +41,7 @@ class AttackByPotionAdapter(
         val attackMethod = potion.item.getMethodId() ?: return@register
 
         mainScope.launch {
-            attacking.attack<DamagePotionMethod>(by = attacker.uniqueId.asParticipantId(), victims = victims, attackMethod)
+            attacking.attack<GasMethod>(by = attacker.uniqueId.asParticipantId(), victims = victims, attackMethod)
         }
     }
 })

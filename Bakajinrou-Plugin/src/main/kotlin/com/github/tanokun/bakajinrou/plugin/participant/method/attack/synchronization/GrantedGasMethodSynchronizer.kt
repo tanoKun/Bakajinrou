@@ -21,13 +21,13 @@ import org.koin.core.annotation.Scoped
 
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
-class GrantedDamagePotionMethodSynchronizer(
+class GrantedGasMethodSynchronizer(
     grantedStrategiesPublisher: GrantedStrategiesPublisher,
     mainScope: CoroutineScope,
     playerProvider: BukkitPlayerProvider,
     crafting: Crafting,
     private val translator: JinrouTranslator,
-): GrantedInventorySynchronizer(grantedStrategiesPublisher, mainScope, playerProvider, crafting, MethodAssetKeys.Attack.DAMAGE_POTION) {
+): GrantedInventorySynchronizer(grantedStrategiesPublisher, mainScope, playerProvider, crafting, MethodAssetKeys.Attack.GAS) {
 
     override fun createItem(player: Player, add: MethodDifference.Granted): ItemStack {
         val item = createBasicItem(Material.SPLASH_POTION,
