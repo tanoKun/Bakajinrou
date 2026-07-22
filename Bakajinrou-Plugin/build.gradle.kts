@@ -1,7 +1,7 @@
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 
-val projectVersion = "1.0.1-SNAPSHOT"
+val projectVersion = "1.1.0-SNAPSHOT"
 
 group = "com.github.tanokun"
 version = projectVersion
