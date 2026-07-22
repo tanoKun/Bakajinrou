@@ -57,7 +57,7 @@ data class GrantedStrategy(
      */
     fun removeAll(methods: Collection<GrantedMethod>): GrantedStrategy =
         methods.fold(this) { acc, method ->
-            this.remove(method)
+            acc.remove(method)
         }
 
     /**
