@@ -68,6 +68,8 @@ class TabHandler(
         engine.registerRenderer(renderer)
     }
 
+    fun isJoinedTo(type: TabHandlerType, player: Player): Boolean = eachHandlerTypes[player] == type
+
     private fun quitEngine(player: Player) {
         val previousType = eachHandlerTypes.remove(player)
         val previousEngine = engines[previousType]
