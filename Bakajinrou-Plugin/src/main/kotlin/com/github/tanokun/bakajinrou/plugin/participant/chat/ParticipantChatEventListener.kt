@@ -3,7 +3,7 @@ package com.github.tanokun.bakajinrou.plugin.participant.chat
 import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
-import com.github.tanokun.bakajinrou.game.chat.ChatIntegrity
+import com.github.tanokun.bakajinrou.api.chat.ChatIntegrity
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleListener

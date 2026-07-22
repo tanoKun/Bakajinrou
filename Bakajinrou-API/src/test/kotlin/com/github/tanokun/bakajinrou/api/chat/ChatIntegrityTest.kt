@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.game.chat
+package com.github.tanokun.bakajinrou.api.chat
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import io.mockk.every

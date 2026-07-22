@@ -14,7 +14,7 @@ import com.github.tanokun.bakajinrou.game.ability.fortune.DivineAbilityExecutor
 import com.github.tanokun.bakajinrou.game.ability.knight.ProtectAbilityExecutor
 import com.github.tanokun.bakajinrou.game.ability.medium.CommuneAbilityExecutor
 import com.github.tanokun.bakajinrou.game.attacking.Attacking
-import com.github.tanokun.bakajinrou.game.chat.ChatIntegrity
+import com.github.tanokun.bakajinrou.api.chat.ChatIntegrity
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
 import com.github.tanokun.bakajinrou.game.method.advantage.using.LocationExchanger
 import com.github.tanokun.bakajinrou.game.method.resistance.activator.ResistanceActivator
