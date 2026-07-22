@@ -33,7 +33,7 @@ class Crafting(
     private val provider: ProtectVerificatorProvider,
 ) {
 
-    private val _crafting = MutableSharedFlow<CraftingInfo>()
+    private val _crafting = MutableSharedFlow<CraftingInfo>(replay = 1)
 
     /**
      * クラフトの購読を開始します。

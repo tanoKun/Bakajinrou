@@ -121,7 +121,7 @@ class GrantedInventorySynchronizerTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    @DisplayName("クラフトだった場合、情報を待機する")
+    @DisplayName("クラフト通知後に購読しても最新情報を取得する")
     fun test3() = runTest {
         val diffFlow = MutableSharedFlow<MethodDifference>(replay = 1)
         val craftingFlow = MutableSharedFlow<CraftingInfo>(replay = 1)
@@ -145,13 +145,14 @@ class GrantedInventorySynchronizerTest {
         val add = MethodDifference.Granted(participantMock.participantId, methodMock)
 
         spyk<GrantedInventorySynchronizer>(TestObserverSync(testScope))
+        testDispatcher.scheduler.advanceTimeBy(1.seconds)
 
-        diffFlow.emit(add)
+        craftingFlow.emit(CraftingInfo(participantMock.participantId, CraftingStyle.BULK, methodMock))
         testDispatcher.scheduler.advanceTimeBy(1.seconds)
 
         result shouldBe false
 
-        craftingFlow.emit(CraftingInfo(participantMock.participantId, CraftingStyle.BULK, methodMock))
+        diffFlow.emit(add)
         testDispatcher.scheduler.advanceTimeBy(1.seconds)
 
         result shouldBe true
