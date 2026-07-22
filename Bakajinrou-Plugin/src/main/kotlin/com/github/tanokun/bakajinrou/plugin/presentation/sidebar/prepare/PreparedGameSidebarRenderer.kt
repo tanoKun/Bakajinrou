@@ -1,6 +1,5 @@
 package com.github.tanokun.bakajinrou.plugin.presentation.sidebar.prepare
 
-import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.common.setting.RequestedPositions
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.presentation.sidebar.Sidebar
@@ -36,42 +35,18 @@ data class PreparedGameSidebarRenderer(
         viewers = viewers,
         pages = listOf(
             SidebarPage(5.seconds, ::createOverview),
-            SidebarPage(3.seconds, ::createParticipants),
         ),
     )
 
     private fun createOverview(player: Player): SidebarContent {
         val lines = mutableListOf<Component>()
-        lines.add(component {
-            text("マップ: ") color gray deco bold
-            text(selectedMap?.map?.mapName?.name ?: "未選択") color white deco bold
-        })
-        lines.add(component {
-            text("参加者数: ") color gray deco bold
-            val count = selectedParticipants?.participants?.size ?: "未選択"
-            text("$count") color white deco bold
-        })
         lines.add(component { text("役職分配: ") color gray deco bold })
         selectedPositions.positions.forEach { (position, amount) ->
             lines.add(createPositionLine(position, amount, player))
         }
 
         return SidebarContent(
-            title = component { text("ゲーム設定") color green deco bold },
-            lines = lines,
-        )
-    }
-
-    private fun createParticipants(player: Player): SidebarContent {
-        val lines = selectedParticipants?.participants?.map { uuid ->
-            component {
-                text("・") color gray deco bold
-                text(PlayerNameCache.get(uuid) ?: "") color white deco bold
-            }
-        } ?: listOf(component { text("未選択") color white deco bold })
-
-        return SidebarContent(
-            title = component { text("参加者一覧") color green deco bold },
+            title = component { text("役職分配") color green deco bold },
             lines = lines,
         )
     }

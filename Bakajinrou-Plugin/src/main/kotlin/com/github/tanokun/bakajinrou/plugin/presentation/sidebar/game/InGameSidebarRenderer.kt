@@ -5,7 +5,6 @@ import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
-import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.whenLaunched
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
@@ -61,7 +60,6 @@ class InGameSidebarRenderer(
         },
         pages = listOf(
             SidebarPage(5.seconds, ::createPositionDistribution),
-            SidebarPage(5.seconds, ::createParticipants),
         ),
     )
 
@@ -85,22 +83,6 @@ class InGameSidebarRenderer(
 
         return SidebarContent(
             title = component { text("役職分配") color green deco bold },
-            lines = lines,
-        )
-    }
-
-    private fun createParticipants(player: Player): SidebarContent {
-        val lines = createViewerHeader(player)
-
-        game.getCurrentParticipants().forEach { participant ->
-            lines.add(component {
-                text("・") color gray deco bold
-                text(PlayerNameCache.get(participant.participantId.uniqueId) ?: "") color white deco bold
-            })
-        }
-
-        return SidebarContent(
-            title = component { text("参加者一覧") color green deco bold },
             lines = lines,
         )
     }
