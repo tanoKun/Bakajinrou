@@ -9,6 +9,8 @@ import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import net.kyori.adventure.text.Component
+import org.bukkit.Sound
+import org.bukkit.SoundCategory
 import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
 
@@ -31,11 +33,18 @@ class UsedExchangeEffector(
         mainScope.launch {
             locationExchanger
                 .observeExchanging()
-                .collect(::exchanged)
+                .collect(::exchange)
         }
     }
 
-    private fun exchanged(info: ExchangeInfo) {
+    private fun exchange(info: ExchangeInfo) {
+        when (info) {
+            is ExchangeInfo.Succeeded -> succeed(info)
+            is ExchangeInfo.NoTarget -> fail(info)
+        }
+    }
+
+    private fun succeed(info: ExchangeInfo.Succeeded) {
         val user = playerProvider.getAllowNull(info.userId) ?: return
         val target = playerProvider.getAllowNull(info.targetId) ?: return
 
@@ -48,5 +57,12 @@ class UsedExchangeEffector(
         val message = translator.translate(GameKeys.Advantage.Using.EXCHANGE_MESSAGE, user.locale(), Component.text(target.name))
 
         user.sendMessage(message)
+    }
+
+    private fun fail(info: ExchangeInfo.NoTarget) {
+        val user = playerProvider.getAllowNull(info.userId) ?: return
+
+        user.playSound(user.location, Sound.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, 1.0f, 1.0f)
+        user.sendMessage(translator.translate(GameKeys.Advantage.Using.FAILED_EXCHANGE_MESSAGE, user.locale()))
     }
 }

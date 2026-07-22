@@ -106,6 +106,7 @@
     "game.ability.gui.using.protect.description": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」を加護する</bold></gray>",
 
     "game.advantage.using.exchange.message": "<gray><bold>「</bold></gray><white><bold><arg-0></bold></white><gray><bold>」と入れ替わりました。</bold></gray>",
+    "game.advantage.using.failed.exchange.message": "<red><bold>交換対象が見つかりませんでした。</bold></red>",
 
     "game.announcement.remaining.time": "<yellow><bold>残り時間: <arg-0>分 <arg-1>秒</bold></yellow>",
     "game.announcement.glowing": "<gray><bold>5分から、定期発光が始まります。</bold></gray>",
