@@ -1,10 +1,7 @@
 import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 
-val projectVersion = "1.1.2-SNAPSHOT"
-
 group = "com.github.tanokun"
-version = projectVersion
 
 plugins {
     kotlin("jvm")
@@ -105,7 +102,7 @@ paper {
     load = BukkitPluginDescription.PluginLoadOrder.STARTUP
     apiVersion = "1.21"
     authors = listOf("tanoKun")
-    version = projectVersion
+    version = project.version.toString()
 
     serverDependencies {
         register("CommandAPI")
