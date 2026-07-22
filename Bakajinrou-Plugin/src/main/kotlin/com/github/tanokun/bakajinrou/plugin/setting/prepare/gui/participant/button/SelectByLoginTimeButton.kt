@@ -27,7 +27,7 @@ class SelectByLoginTimeButton(private val participantCandidates: ParticipantCand
 
         val sorted = participantCandidates.getSpectators()
             .mapNotNull { Bukkit.getPlayer(it) }
-            .sortedByDescending { it.lastLogin }
+            .sortedBy { it.lastLogin }
 
         for (i in sorted.indices) {
             if (i >= 15) break
