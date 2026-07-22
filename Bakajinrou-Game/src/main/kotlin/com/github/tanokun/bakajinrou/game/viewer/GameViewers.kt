@@ -1,53 +1,27 @@
 package com.github.tanokun.bakajinrou.game.viewer
 
+import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.player.PlayerId
-import com.github.tanokun.bakajinrou.game.audience.AudienceChange
 import com.github.tanokun.bakajinrou.game.audience.GameAudience
-import com.github.tanokun.bakajinrou.game.state.GameChanges
-import com.github.tanokun.bakajinrou.game.state.GameStore
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.flow.transform
 
-/** Domain の参加者と外部観戦者から、現在の閲覧形態を投影します。 */
+/** ゲームと観戦者のスナップショットから、閲覧形態を導出する helper です。 */
 class GameViewers(
-    private val game: GameStore,
+    private val game: JinrouGame,
     private val audience: GameAudience,
-    gameChanges: GameChanges,
 ) {
-    val current: Set<GameViewer>
-        get() = game.getCurrentParticipants()
-            .mapTo(mutableSetOf(), ::participantViewer) +
-            audience.current.spectators.map(GameViewer::Spectator)
+    val all: Set<GameViewer> = game.participants
+        .mapTo(mutableSetOf(), ::participantViewer) +
+        audience.spectators.map(GameViewer::Spectator)
 
-    val spectating: Set<GameViewer>
-        get() = current.filterTo(mutableSetOf()) { it !is GameViewer.Playing }
-
-    val changes: Flow<GameViewerChange> = merge(
-        audience.changes.transform { change ->
-            when (change) {
-                is AudienceChange.Joined -> emit(
-                    GameViewerChange(change.playerId, null, GameViewer.Spectator(change.playerId))
-                )
-                is AudienceChange.Left -> emit(
-                    GameViewerChange(change.playerId, GameViewer.Spectator(change.playerId), null)
-                )
-            }
-        },
-        gameChanges.participantChanges.transform { difference ->
-            val before = difference.before?.let(::participantViewer)
-            val after = participantViewer(difference.after)
-            if (before?.javaClass != after.javaClass) {
-                emit(GameViewerChange(after.playerId, before, after))
-            }
-        },
-    )
+    val spectating: Set<GameViewer> =
+        all.filterTo(mutableSetOf()) { it !is GameViewer.Playing }
 
     fun find(playerId: PlayerId): GameViewer? {
-        val participant = game.getCurrentParticipants().find { it.playerId == playerId }
+        val participant = game.participants.find { it.playerId == playerId }
         if (participant != null) return participantViewer(participant)
-        if (audience.isSpectator(playerId)) return GameViewer.Spectator(playerId)
+        if (playerId in audience.spectators) return GameViewer.Spectator(playerId)
+
         return null
     }
 

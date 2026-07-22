@@ -1,6 +1,8 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method.ability.protect.notification
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.viewer.GameViewers
+import com.github.tanokun.bakajinrou.game.audience.GameAudienceStore
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.game.ability.knight.GrantProtectResult
 import com.github.tanokun.bakajinrou.game.ability.knight.ProtectAbilityExecutor
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
@@ -23,7 +25,8 @@ import org.koin.core.annotation.Scoped
 class SpectatorProtectionNotifier(
     private val playerProvider: BukkitPlayerProvider,
     private val translator: JinrouTranslator,
-    private val viewers: GameViewers,
+    private val game: GameStore,
+    private val audience: GameAudienceStore,
     mainScope: CoroutineScope,
     executor: ProtectAbilityExecutor,
 ): Observer {
@@ -40,7 +43,7 @@ class SpectatorProtectionNotifier(
         val knightName = PlayerNameCache.get(result.knightId) ?: "unknown"
         val targetName = PlayerNameCache.get(result.targetId) ?: "unknown"
 
-        viewers.spectating
+        GameViewers(game.current, audience.current).spectating
             .mapNotNull { playerProvider.getAllowNull(it.playerId) }
             .forEach {
                 val message = translator.translate(

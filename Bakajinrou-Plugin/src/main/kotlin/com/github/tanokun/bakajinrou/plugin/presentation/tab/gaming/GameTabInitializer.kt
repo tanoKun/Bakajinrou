@@ -5,7 +5,7 @@ import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.game.audience.AudienceChange
-import com.github.tanokun.bakajinrou.game.audience.GameAudience
+import com.github.tanokun.bakajinrou.game.audience.GameAudienceStore
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.whenLaunched
@@ -33,7 +33,7 @@ class GameTabInitializer(
     private val tabHandler: TabHandler,
     private val dummyPlayers: DummyPlayers,
     private val game: GameStore,
-    private val audience: GameAudience,
+    private val audience: GameAudienceStore,
     private val gameScheduler: GameScheduler,
     private val mainScope: CoroutineScope,
 ): Observer {

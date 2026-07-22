@@ -1,6 +1,8 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method.advantage.using.exchange
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.viewer.GameViewers
+import com.github.tanokun.bakajinrou.game.audience.GameAudienceStore
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.game.method.advantage.using.ExchangeInfo
 import com.github.tanokun.bakajinrou.game.method.advantage.using.LocationExchanger
@@ -22,7 +24,8 @@ import org.koin.core.annotation.Scoped
 class SpectatorUsedExchangeNotifier(
     private val playerProvider: BukkitPlayerProvider,
     private val translator: JinrouTranslator,
-    private val viewers: GameViewers,
+    private val game: GameStore,
+    private val audience: GameAudienceStore,
     mainScope: CoroutineScope,
     locationExchanger: LocationExchanger,
 ): Observer {
@@ -38,7 +41,7 @@ class SpectatorUsedExchangeNotifier(
         val userName = PlayerNameCache.get(info.userId) ?: return
         val targetName = PlayerNameCache.get(info.targetId) ?: return
 
-        viewers.spectating
+        GameViewers(game.current, audience.current).spectating
             .mapNotNull { playerProvider.getAllowNull(it.playerId) }
             .forEach {
                 val message = translator.translate(

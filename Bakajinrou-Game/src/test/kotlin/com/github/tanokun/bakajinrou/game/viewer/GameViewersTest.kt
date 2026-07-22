@@ -7,8 +7,6 @@ import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategy
 import com.github.tanokun.bakajinrou.api.player.asPlayerId
 import com.github.tanokun.bakajinrou.game.audience.GameAudience
-import com.github.tanokun.bakajinrou.game.state.GameChanges
-import com.github.tanokun.bakajinrou.game.state.GameStore
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -20,19 +18,20 @@ class GameViewersTest {
     fun `参加状態に応じた閲覧者を検索できる`() = runTest {
         val participant = participant()
         val spectatorId = UUID.randomUUID().asPlayerId()
-        val game = game(participant)
+        val game = JinrouGame(listOf(participant).all())
         val viewers = GameViewers(
             game,
-            GameAudience(game, setOf(spectatorId)),
-            GameChanges(game),
+            GameAudience(setOf(spectatorId)),
         )
 
         viewers.find(participant.playerId) shouldBe GameViewer.Playing(participant)
         viewers.find(spectatorId) shouldBe GameViewer.Spectator(spectatorId)
 
-        game.updateParticipant(participant.participantId) { it.dead() }
-
-        viewers.find(participant.playerId) shouldBe GameViewer.DeadParticipant(participant.dead())
+        val updated = GameViewers(
+            game.updateParticipant(participant.participantId) { it.dead() },
+            GameAudience(setOf(spectatorId)),
+        )
+        updated.find(participant.playerId) shouldBe GameViewer.DeadParticipant(participant.dead())
     }
 
     @Test
@@ -40,14 +39,13 @@ class GameViewersTest {
         val playing = participant()
         val dead = participant().dead()
         val spectatorId = UUID.randomUUID().asPlayerId()
-        val game = game(playing, dead)
+        val game = JinrouGame(listOf(playing, dead).all())
         val viewers = GameViewers(
             game,
-            GameAudience(game, setOf(spectatorId)),
-            GameChanges(game),
+            GameAudience(setOf(spectatorId)),
         )
 
-        viewers.current shouldBe setOf(
+        viewers.all shouldBe setOf(
             GameViewer.Playing(playing),
             GameViewer.DeadParticipant(dead),
             GameViewer.Spectator(spectatorId),
@@ -63,7 +61,4 @@ class GameViewersTest {
         mockk(),
         GrantedStrategy(emptyMap()),
     )
-
-    private fun game(vararg participants: Participant) =
-        GameStore(JinrouGame(participants.asIterable().all()))
 }

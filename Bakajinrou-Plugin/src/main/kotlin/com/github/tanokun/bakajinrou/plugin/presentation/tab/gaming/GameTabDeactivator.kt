@@ -3,6 +3,7 @@ package com.github.tanokun.bakajinrou.plugin.presentation.tab.gaming
 import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.viewer.GameViewers
+import com.github.tanokun.bakajinrou.game.audience.GameAudienceStore
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.coroutine.TopCoroutineScope
@@ -19,7 +20,7 @@ class GameTabDeactivator(
     private val playerProvider: BukkitPlayerProvider,
     private val tabHandler: TabHandler,
     private val game: GameStore,
-    private val viewers: GameViewers,
+    private val audience: GameAudienceStore,
     private val gameSession: JinrouGameSession,
     private val topScope: TopCoroutineScope,
 ): Observer {
@@ -38,7 +39,7 @@ class GameTabDeactivator(
             tabHandler.deleteEngine(TabHandlerType.EachParticipant(participant.participantId))
         }
 
-        viewers.current.forEach { viewer ->
+        GameViewers(game.current, audience.current).all.forEach { viewer ->
             val player = playerProvider.getAllowNull(viewer.playerId) ?: return@forEach
             tabHandler.joinEngine(TabHandlerType.ShareInLobby, player)
         }

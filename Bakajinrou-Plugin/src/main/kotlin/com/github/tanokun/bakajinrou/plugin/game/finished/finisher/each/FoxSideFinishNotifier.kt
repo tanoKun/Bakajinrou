@@ -2,7 +2,7 @@ package com.github.tanokun.bakajinrou.plugin.game.finished.finisher.each
 
 import com.github.tanokun.bakajinrou.api.WonInfo
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
-import com.github.tanokun.bakajinrou.game.audience.GameAudience
+import com.github.tanokun.bakajinrou.game.audience.GameAudienceStore
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
@@ -10,7 +10,7 @@ import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
 class FoxSideFinishNotifier(
     private val playerProvider: BukkitPlayerProvider,
     private val translator: JinrouTranslator,
-    private val audience: GameAudience,
+    private val audience: GameAudienceStore,
 ): EachSideFinishNotifier(translator) {
     override fun notify(wonInfo: WonInfo) {
         if (wonInfo !is WonInfo.Fox) return

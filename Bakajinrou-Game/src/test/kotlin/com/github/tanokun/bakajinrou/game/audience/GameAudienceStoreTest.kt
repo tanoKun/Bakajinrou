@@ -19,25 +19,24 @@ import org.junit.jupiter.api.Test
 import java.util.UUID
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class GameAudienceTest {
+class GameAudienceStoreTest {
     @Test
     fun `参加者は観戦者として登録できない`() = runTest {
         val participant = participant()
         val game = game(participant)
 
         shouldThrow<IllegalArgumentException> {
-            GameAudience(game, setOf(participant.playerId))
+            GameAudienceStore(game, GameAudience(setOf(participant.playerId)))
         }
 
-        val audience = GameAudience(game)
+        val audience = GameAudienceStore(game)
         audience.joinSpectator(participant.playerId) shouldBe JoinSpectatorResult.ParticipantCannotSpectate
     }
 
     @Test
     fun `途中参加と退出を現在状態と変更Flowへ反映する`() = runTest {
-        val game = game()
         val spectatorId = UUID.randomUUID().asPlayerId()
-        val audience = GameAudience(game)
+        val audience = GameAudienceStore(game())
         val emitted = mutableListOf<AudienceChange>()
         val collection = backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
             audience.changes.collect(emitted::add)
@@ -56,7 +55,7 @@ class GameAudienceTest {
     fun `変更Flowは過去の観戦参加を再生しない`() = runTest {
         val spectatorId = UUID.randomUUID().asPlayerId()
         val nextSpectatorId = UUID.randomUUID().asPlayerId()
-        val audience = GameAudience(game())
+        val audience = GameAudienceStore(game())
 
         audience.joinSpectator(spectatorId)
 

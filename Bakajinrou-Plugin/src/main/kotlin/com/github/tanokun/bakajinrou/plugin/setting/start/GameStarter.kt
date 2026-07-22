@@ -7,8 +7,7 @@ import com.github.tanokun.bakajinrou.api.player.asPlayerId
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot.IdiotAsFortunePosition
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot.IdiotAsKnightPosition
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot.IdiotAsMediumPosition
-import com.github.tanokun.bakajinrou.game.audience.GameAudience
-import com.github.tanokun.bakajinrou.game.viewer.GameViewers
+import com.github.tanokun.bakajinrou.game.audience.GameAudienceStore
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.ScheduleState
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
@@ -63,10 +62,9 @@ class GameStarter(
 
             try {
                 get<JinrouGameSession> { parametersOf(participants, plugin.scope, selectedMap.map.startTime) }
-                get<GameAudience> {
+                get<GameAudienceStore> {
                     parametersOf(selectedParticipants.spectators.mapTo(mutableSetOf()) { it.asPlayerId() })
                 }
-                get<GameViewers>()
             } catch (e: Exception) {
                 this.close()
                 return GameBuildResult.Failure("役職配布に問題があります: ${e.message}")
@@ -92,7 +90,7 @@ class GameStarter(
         class SucceedCreation(
             val game: GameStore,
             val gameSession: JinrouGameSession,
-            val audience: GameAudience,
+            val audienceStore: GameAudienceStore,
         ): GameBuildResult
     }
 }
