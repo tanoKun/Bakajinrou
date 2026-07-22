@@ -38,12 +38,12 @@ class OverlookFlow(
             player.teleport(destination)
 
             delay(19.seconds)
-            playerProvider.getAllowNull(participantId)?.addPotionEffect(
+            playerProvider.waitPlayerOnline(participantId).addPotionEffect(
                 PotionEffect(PotionEffectType.INVISIBILITY, 16 * 20, 1, true, false)
             )
 
             delay(1.seconds)
-            playerProvider.getAllowNull(participantId)?.teleport(gameMap.spawnPoint.asBukkit())
+            playerProvider.waitPlayerOnline(participantId).teleport(gameMap.spawnPoint.asBukkit())
         } finally {
             state.leave(participantId)
         }
