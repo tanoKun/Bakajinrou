@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.presentation.tab.gaming.refresher
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleListener
@@ -22,7 +22,7 @@ class GameTabRefresherOnJoin(
     plugin: Plugin,
     mainScope: CoroutineScope,
     tabHandler: TabHandler,
-    game: JinrouGame
+    game: GameStore
 ): LifecycleEventListener(plugin, {
     register<PlayerJoinEvent>(eventPriority = EventPriority.LOWEST) { event -> mainScope.launch {
         delay(100)

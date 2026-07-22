@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.participant.chat
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 import com.github.tanokun.bakajinrou.api.chat.ChatIntegrity
@@ -22,7 +22,7 @@ import plutoproject.adventurekt.text.text
 @Scope(value = GameComponents::class)
 class ParticipantChatEventListener(
     plugin: Plugin,
-    game: JinrouGame,
+    game: GameStore,
     chatIntegrity: ChatIntegrity,
     translator: JinrouTranslator,
     playerProvider: BukkitPlayerProvider

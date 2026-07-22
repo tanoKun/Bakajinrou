@@ -3,7 +3,7 @@ package com.github.tanokun.bakajinrou.plugin.participant.method
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedReason
-import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
+import com.github.tanokun.bakajinrou.game.state.GameChanges
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
 import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
@@ -30,7 +30,7 @@ import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
 
 class GrantedInventorySynchronizerTest {
-    private val grantedStrategiesPublisherMock: GrantedStrategiesPublisher = mockk()
+    private val gameChangesMock: GameChanges = mockk()
     private val playerProviderMock: BukkitPlayerProvider = mockk()
     private val assetKeyMock = mockk<MethodAssetKeys> {
         every { key } returns "test.key"
@@ -50,7 +50,7 @@ class GrantedInventorySynchronizerTest {
 
 
     inner class TestObserverSync(mainScope: CoroutineScope): GrantedInventorySynchronizer(
-        grantedStrategiesPublisherMock, mainScope, playerProviderMock, craftingMock, mockk(relaxed = true), assetKeyMock
+        gameChangesMock, mainScope, playerProviderMock, craftingMock, mockk(relaxed = true), assetKeyMock
     ) {
         override fun createItem(player: Player, add: MethodDifference.Granted): ItemStack { result = true; return mockk() }
     }
@@ -61,8 +61,8 @@ class GrantedInventorySynchronizerTest {
     fun test1() = runTest {
         val flow = MutableSharedFlow<MethodDifference>(replay = 1)
 
-        grantedStrategiesPublisherMock.apply {
-            every { observeDifference() } returns flow.shareIn(testScope, SharingStarted.Eagerly, replay = 1)
+        gameChangesMock.apply {
+            every { methodChanges } returns flow.shareIn(testScope, SharingStarted.Eagerly, replay = 1)
         }
 
         playerProviderMock.apply {
@@ -89,8 +89,8 @@ class GrantedInventorySynchronizerTest {
     fun test2() = runTest {
         val flow = MutableSharedFlow<MethodDifference>(replay = 1)
 
-        grantedStrategiesPublisherMock.apply {
-            every { observeDifference() } returns flow.shareIn(testScope, SharingStarted.Eagerly, replay = 1)
+        gameChangesMock.apply {
+            every { methodChanges } returns flow.shareIn(testScope, SharingStarted.Eagerly, replay = 1)
         }
 
         playerProviderMock.apply {
@@ -126,8 +126,8 @@ class GrantedInventorySynchronizerTest {
         val diffFlow = MutableSharedFlow<MethodDifference>(replay = 1)
         val craftingFlow = MutableSharedFlow<CraftingInfo>(replay = 1)
 
-        grantedStrategiesPublisherMock.apply {
-            every { observeDifference() } returns diffFlow.shareIn(testScope, SharingStarted.Eagerly, replay = 1)
+        gameChangesMock.apply {
+            every { methodChanges } returns diffFlow.shareIn(testScope, SharingStarted.Eagerly, replay = 1)
         }
 
         playerProviderMock.apply {
@@ -135,10 +135,7 @@ class GrantedInventorySynchronizerTest {
         }
 
         craftingMock.apply {
-            every { observeCrafting(any()) } answers {
-                val scope = arg<CoroutineScope>(0)  // 0番目の引数を取得
-                craftingFlow.shareIn(scope, SharingStarted.Eagerly, replay = 1)
-            }
+            every { observeCrafting() } returns craftingFlow
         }
 
         val methodMock = mockk<GrantedMethod> {

@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method.transferring
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.game.method.transferring.TransferMethod
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.getMethodId
@@ -24,7 +24,7 @@ import org.koin.core.annotation.Scoped
 @Scope(value = GameComponents::class)
 class TransferMethodListener(
     plugin: Plugin,
-    game: JinrouGame,
+    game: GameStore,
     transferMethod: TransferMethod,
     mainScope: CoroutineScope,
 ): LifecycleEventListener(plugin, {

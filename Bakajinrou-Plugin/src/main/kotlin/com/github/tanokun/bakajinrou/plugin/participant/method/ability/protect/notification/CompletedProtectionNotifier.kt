@@ -30,7 +30,7 @@ class CompletedProtectionNotifier(
     init {
         mainScope.launch {
             executor
-                .observeProtect(mainScope)
+                .observeProtect()
                 .filterIsInstance<GrantProtectResult.Granted>()
                 .collect(::protected)
         }

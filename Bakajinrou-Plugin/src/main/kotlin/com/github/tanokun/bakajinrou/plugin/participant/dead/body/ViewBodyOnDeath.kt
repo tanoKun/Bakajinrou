@@ -1,9 +1,9 @@
 package com.github.tanokun.bakajinrou.plugin.participant.dead.body
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.participant.distinctUntilChangedByParticipantOf
+import com.github.tanokun.bakajinrou.game.state.distinctUntilChangedByParticipantOf
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.participant.dead.body.DisableHittingBody
@@ -17,7 +17,7 @@ import org.koin.core.annotation.Scoped
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
 class ViewBodyOnDeath(
-    private val game: JinrouGame,
+    private val game: GameStore,
     private val bodyHandler: BukkitBodyHandler,
     private val playerProvider: BukkitPlayerProvider,
     private val mainScope: CoroutineScope,
@@ -25,7 +25,7 @@ class ViewBodyOnDeath(
 ): Observer {
     init {
         mainScope.launch {
-            game.observeParticipants(mainScope)
+            game.participantChanges
                 .distinctUntilChangedByParticipantOf(Participant::isDead)
                 .map { it.after }
                 .collect(::onDeath)

@@ -153,6 +153,9 @@ data class Participant(
      */
     fun getGrantedMethod(uniqueId: MethodId): GrantedMethod? = strategy.getMethod(uniqueId)
 
+    /** 参加者に付与されているすべての手段を取得します。 */
+    fun getGrantedMethods(): Collection<GrantedMethod> = strategy.getMethods()
+
     /**
      * 参加者が指定されたIdの手段を保持しているか確認します。
      *

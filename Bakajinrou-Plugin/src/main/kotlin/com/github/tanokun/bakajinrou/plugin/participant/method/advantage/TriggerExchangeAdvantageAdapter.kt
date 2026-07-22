@@ -3,7 +3,7 @@ package com.github.tanokun.bakajinrou.plugin.participant.method.advantage
 import com.github.tanokun.bakajinrou.api.advantage.ExchangeMethod
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
-import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
+import com.github.tanokun.bakajinrou.game.state.GameChanges
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
 import com.github.tanokun.bakajinrou.game.method.advantage.using.LocationExchanger
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.getMethodId
@@ -33,7 +33,7 @@ import org.koin.core.annotation.Scoped
 @Scope(value = GameComponents::class)
 class TriggerExchangeAdvantageAdapter(
     private val plugin: Plugin,
-    private val grantedStrategiesPublisher: GrantedStrategiesPublisher,
+    private val gameChanges: GameChanges,
     private val locationExchanger: LocationExchanger,
     private val mainScope: CoroutineScope,
 ): Observer {
@@ -41,7 +41,7 @@ class TriggerExchangeAdvantageAdapter(
 
     init {
         mainScope.launch {
-            grantedStrategiesPublisher.observeDifference()
+            gameChanges.methodChanges
                 .filterIsInstance<MethodDifference.Granted>()
                 .map { it.grantedMethod }
                 .filterIsInstance<ExchangeMethod>()
@@ -49,7 +49,7 @@ class TriggerExchangeAdvantageAdapter(
         }
 
         mainScope.launch {
-            grantedStrategiesPublisher.observeDifference()
+            gameChanges.methodChanges
                 .filterIsInstance<MethodDifference.Removed>()
                 .map { it.removedMethod }
                 .filterIsInstance<ExchangeMethod>()

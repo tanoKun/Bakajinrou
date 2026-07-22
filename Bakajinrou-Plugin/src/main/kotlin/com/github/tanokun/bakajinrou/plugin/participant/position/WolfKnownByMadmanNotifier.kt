@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.participant.position
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.participant.position.isMadman
@@ -20,7 +20,7 @@ import org.koin.core.annotation.Scoped
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
 class WolfKnownByMadmanNotifier(
-    private val game: JinrouGame,
+    private val game: GameStore,
     private val translator: JinrouTranslator,
     gameSession: JinrouGameSession,
     private val playerProvider: BukkitPlayerProvider,

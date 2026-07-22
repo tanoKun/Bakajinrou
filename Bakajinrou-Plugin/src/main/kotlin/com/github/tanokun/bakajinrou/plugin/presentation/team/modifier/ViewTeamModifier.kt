@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.presentation.team.modifier
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.position.isMadman
@@ -13,7 +13,7 @@ import net.minecraft.world.scores.Team
 
 
 class ViewTeamModifier(
-    private val game: JinrouGame,
+    private val game: GameStore,
     private val playerProvider: BukkitPlayerProvider,
     participants: ParticipantScope.NonSpectators,
 ) {

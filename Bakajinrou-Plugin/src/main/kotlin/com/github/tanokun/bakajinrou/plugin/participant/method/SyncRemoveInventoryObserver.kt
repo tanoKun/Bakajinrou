@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method
 
 import com.github.tanokun.bakajinrou.api.observing.Observer
-import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
+import com.github.tanokun.bakajinrou.game.state.GameChanges
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
 
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.getRawUuid
@@ -28,13 +28,13 @@ import org.koin.core.annotation.Scoped
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
 class SyncRemoveInventoryObserver(
-    private val grantedStrategiesPublisher: GrantedStrategiesPublisher,
+    private val gameChanges: GameChanges,
     private val mainScope: CoroutineScope,
     private val playerProvider: BukkitPlayerProvider,
 ): Observer {
     init {
         mainScope.launch {
-            grantedStrategiesPublisher.observeDifference()
+            gameChanges.methodChanges
                 .filterIsInstance<MethodDifference.Removed>()
                 .collect(::syncInventory)
         }

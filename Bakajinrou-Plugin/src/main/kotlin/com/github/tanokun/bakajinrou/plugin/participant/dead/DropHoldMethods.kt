@@ -1,10 +1,10 @@
 package com.github.tanokun.bakajinrou.plugin.participant.dead
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.method.asMethodId
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.participant.distinctUntilChangedByParticipantOf
+import com.github.tanokun.bakajinrou.game.state.distinctUntilChangedByParticipantOf
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.getMethodId
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
@@ -19,13 +19,13 @@ import java.util.*
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
 class DropHoldMethods(
-    private val game: JinrouGame,
+    private val game: GameStore,
     private val playerProvider: BukkitPlayerProvider,
     private val mainScope: CoroutineScope,
 ): Observer {
     init {
         mainScope.launch {
-            game.observeParticipants(mainScope)
+            game.participantChanges
                 .distinctUntilChangedByParticipantOf(Participant::isDead)
                 .map { it.after }
                 .collect(::onDeath)

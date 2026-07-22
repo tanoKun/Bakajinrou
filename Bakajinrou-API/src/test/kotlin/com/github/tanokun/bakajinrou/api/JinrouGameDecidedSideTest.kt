@@ -84,7 +84,6 @@ class JinrouGameDecidedSideTest {
     private fun createJinrouGame(
         isDeadCitizen1: Boolean, isDeadCitizen2: Boolean, isDeadFox: Boolean, isDeadWolf: Boolean, isDeadMadman: Boolean,
     ) = JinrouGame(
-        UpdateMutexProvider(),
         setOf(
             Participant(UUID.randomUUID().asParticipantId(), mockk<CitizensPosition>(), mockk<GrantedStrategy>()).let { if (isDeadCitizen1) it.dead() else it },
             Participant(UUID.randomUUID().asParticipantId(), mockk<CitizensPosition>(), mockk<GrantedStrategy>()).let { if (isDeadCitizen2) it.dead() else it },

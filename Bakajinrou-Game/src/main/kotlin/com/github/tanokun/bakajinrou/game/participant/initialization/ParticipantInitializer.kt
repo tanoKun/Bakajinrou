@@ -1,10 +1,10 @@
 package com.github.tanokun.bakajinrou.game.participant.initialization
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.ParticipantFilter
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
  * - フィルターに一致しない参加者には処理されません。
  * - 同一役職を複数収集をすると、多重初期化の可能性があります。
  */
-abstract class ParticipantInitializer(game: JinrouGame, gameSession: JinrouGameSession, filter: ParticipantFilter): Observer {
+abstract class ParticipantInitializer(game: GameStore, gameSession: JinrouGameSession, filter: ParticipantFilter): Observer {
     init {
         gameSession.mainDispatcherScope.launch {
             gameSession.observeParticipantAtLaunched()

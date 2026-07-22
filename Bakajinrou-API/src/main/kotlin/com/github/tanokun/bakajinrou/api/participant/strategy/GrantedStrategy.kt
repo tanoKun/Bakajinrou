@@ -67,6 +67,8 @@ data class GrantedStrategy(
      */
     fun getMethod(methodId: MethodId): GrantedMethod? = strategies[methodId]
 
+    fun getMethods(): Collection<GrantedMethod> = strategies.values
+
     /**
      * 呼び出し時点で、防御可能な手段を取得します。
      * Listのインデックスが若い順に使用優先度が高いです。

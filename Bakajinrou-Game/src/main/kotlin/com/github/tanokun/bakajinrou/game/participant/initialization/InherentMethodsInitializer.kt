@@ -1,8 +1,8 @@
 package com.github.tanokun.bakajinrou.game.participant.initialization
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
+import com.github.tanokun.bakajinrou.game.state.GameStore
 
 /**
  * 参加者の初期化処理の一環として、役職固有の能力を付与するクラスです。
@@ -15,7 +15,7 @@ import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
  * @param gameController ゲームセッション
  */
 class InherentMethodsInitializer(
-    private val game: JinrouGame, gameController: JinrouGameSession
+    private val game: GameStore, gameController: JinrouGameSession
 ) : ParticipantInitializer(game, gameController, { true }) {
 
     /**

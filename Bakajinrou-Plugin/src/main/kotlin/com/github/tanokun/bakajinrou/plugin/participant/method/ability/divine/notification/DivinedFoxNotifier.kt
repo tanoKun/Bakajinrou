@@ -1,5 +1,5 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method.ability.divine.notification
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
 import com.github.tanokun.bakajinrou.game.ability.fortune.DivineAbilityExecutor
@@ -35,7 +35,7 @@ import kotlin.time.Duration.Companion.seconds
 class DivinedFoxNotifier(
     private val playerProvider: BukkitPlayerProvider,
     private val translator: JinrouTranslator,
-    private val game: JinrouGame,
+    private val game: GameStore,
     mainScope: CoroutineScope,
     executor: DivineAbilityExecutor,
 ): Observer {
@@ -44,7 +44,7 @@ class DivinedFoxNotifier(
     init {
         mainScope.launch {
             executor
-                .observeDivine(mainScope)
+                .observeDivine()
                 .filterIsInstance<DivineResult.FoundResult>()
                 .mapNotNull { it to (game.getParticipant(it.targetId) ?: return@mapNotNull null) }
                 .filter { (_, participant) -> participant.isPosition<FoxPosition>() }

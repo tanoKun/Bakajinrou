@@ -33,7 +33,7 @@ class ConsumedTotemByAttackEffector(
 ): Observer {
     init {
         mainScope.launch {
-            attacking.observeAttack(mainScope)
+            attacking.observeAttack()
                 .filter { it.result.consumedProtectiveMethods.any(::isTotem) }
                 .collect(::usedTotem)
         }

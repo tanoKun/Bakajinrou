@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method.advantage.synchronization
 import com.github.tanokun.bakajinrou.api.observing.Observer
-import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
+import com.github.tanokun.bakajinrou.game.state.GameChanges
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
 import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
@@ -26,12 +26,12 @@ import kotlin.time.Duration.Companion.seconds
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
 class GrantedSpeedMethodSynchronizer(
-    grantedStrategiesPublisher: GrantedStrategiesPublisher,
+    gameChanges: GameChanges,
     mainScope: CoroutineScope,
     playerProvider: BukkitPlayerProvider,
     crafting: Crafting,
     private val translator: JinrouTranslator,
-): GrantedInventorySynchronizer(grantedStrategiesPublisher, mainScope, playerProvider, crafting, MethodAssetKeys.Advantage.SPEED) {
+): GrantedInventorySynchronizer(gameChanges, mainScope, playerProvider, crafting, MethodAssetKeys.Advantage.SPEED) {
     private val effectTime = 30.seconds
 
     override fun createItem(player: Player, add: MethodDifference.Granted): ItemStack {

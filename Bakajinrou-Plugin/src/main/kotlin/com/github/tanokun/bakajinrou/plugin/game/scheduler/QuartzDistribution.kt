@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.game.scheduler
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
@@ -24,7 +24,7 @@ import kotlin.time.Duration.Companion.minutes
 @Scope(value = GameComponents::class)
 class QuartzDistribution(
     private val scheduler: GameScheduler,
-    private val game: JinrouGame,
+    private val game: GameStore,
     private val mainScope: CoroutineScope,
     private val playerProvider: BukkitPlayerProvider
 ): Observer {

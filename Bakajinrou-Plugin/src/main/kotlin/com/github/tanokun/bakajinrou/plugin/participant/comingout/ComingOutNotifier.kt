@@ -1,9 +1,9 @@
 package com.github.tanokun.bakajinrou.plugin.participant.comingout
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.participant.distinctUntilChangedByParticipantOf
+import com.github.tanokun.bakajinrou.game.state.distinctUntilChangedByParticipantOf
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
@@ -21,14 +21,14 @@ import org.koin.core.annotation.Scoped
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
 class ComingOutNotifier(
-    private val game: JinrouGame,
+    private val game: GameStore,
     private val mainScope: CoroutineScope,
     private val playerProvider: BukkitPlayerProvider,
     private val translator: JinrouTranslator
 ): Observer {
     init {
         mainScope.launch {
-            game.observeParticipants(mainScope)
+            game.participantChanges
                 .distinctUntilChangedByParticipantOf(Participant::comingOut)
                 .map { it.after }
                 .collect(::onComingOut)

@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.presentation.tab.gaming
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.position.SpectatorPosition
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
@@ -18,14 +18,14 @@ import org.koin.core.annotation.Scoped
 class GameTabDeactivator(
     private val playerProvider: BukkitPlayerProvider,
     private val tabHandler: TabHandler,
-    private val game: JinrouGame,
+    private val game: GameStore,
     private val gameSession: JinrouGameSession,
     private val topScope: TopCoroutineScope,
 ): Observer {
     init {
         topScope.launch {
             gameSession
-                .observeWin(topScope)
+                .observeWin()
                 .collect { tabDeactivate() }
         }
     }

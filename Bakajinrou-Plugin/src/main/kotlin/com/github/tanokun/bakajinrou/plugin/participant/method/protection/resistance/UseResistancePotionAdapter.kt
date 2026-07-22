@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method.protection.resistance
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.api.protection.method.ResistanceMethod
 import com.github.tanokun.bakajinrou.game.method.resistance.activator.ResistanceActivator
@@ -18,7 +18,7 @@ import org.koin.core.annotation.Scoped
 @Scoped(binds = [LifecycleListener::class])
 @Scope(value = GameComponents::class)
 class UseResistancePotionAdapter(
-    plugin: Plugin, game: JinrouGame, mainScope: CoroutineScope, resistanceActivator: ResistanceActivator
+    plugin: Plugin, game: GameStore, mainScope: CoroutineScope, resistanceActivator: ResistanceActivator
 ): LifecycleEventListener(plugin, {
     register<PlayerItemConsumeEvent> { event ->
         val user = game.getParticipant(event.player.uniqueId.asParticipantId()) ?: return@register

@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.participant.dead.body
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
@@ -18,7 +18,7 @@ import java.util.UUID
 class BukkitBodyHandler(
     private val playerProvider: BukkitPlayerProvider,
     private val server: Server,
-    private val game: JinrouGame,
+    private val game: GameStore,
     private val mainScope: CoroutineScope
 ) {
 

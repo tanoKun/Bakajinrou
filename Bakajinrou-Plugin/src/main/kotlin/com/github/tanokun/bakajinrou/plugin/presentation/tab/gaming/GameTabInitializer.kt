@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.presentation.tab.gaming
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
@@ -31,7 +31,7 @@ class GameTabInitializer(
     private val translator: JinrouTranslator,
     private val tabHandler: TabHandler,
     private val dummyPlayers: DummyPlayers,
-    private val game: JinrouGame,
+    private val game: GameStore,
     private val gameScheduler: GameScheduler,
     private val mainScope: CoroutineScope,
 ): Observer {

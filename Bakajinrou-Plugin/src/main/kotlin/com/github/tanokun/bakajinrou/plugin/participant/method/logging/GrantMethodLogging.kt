@@ -4,7 +4,7 @@ import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
 import com.github.ajalt.mordant.rendering.TextColors.white
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.tanokun.bakajinrou.api.observing.Observer
-import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
+import com.github.tanokun.bakajinrou.game.state.GameChanges
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
@@ -18,13 +18,13 @@ import org.koin.core.annotation.Scoped
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
 class GrantMethodLogging(
-    private val grantedStrategiesPublisher: GrantedStrategiesPublisher,
+    private val gameChanges: GameChanges,
     private val mainScope: CoroutineScope,
     private val terminal: Terminal,
 ): Observer {
     init {
         mainScope.launch {
-            grantedStrategiesPublisher.observeDifference()
+            gameChanges.methodChanges
                 .filterIsInstance<MethodDifference.Granted>()
                 .collect(::logging)
         }

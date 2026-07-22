@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.game.scheduler.announcement
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
@@ -21,7 +21,7 @@ import kotlin.time.Duration.Companion.seconds
 @Scope(value = GameComponents::class)
 class TimeAnnouncer(
     private val scheduler: GameScheduler,
-    private val game: JinrouGame,
+    private val game: GameStore,
     private val mainScope: CoroutineScope,
     private val playerProvider: BukkitPlayerProvider,
     private val translator: JinrouTranslator

@@ -30,7 +30,7 @@ class CommuneResultNotifier(
     init {
         mainScope.launch {
             executor
-                .observeCommune(mainScope)
+                .observeCommune()
                 .filterIsInstance<CommuneResult.Success>()
                 .collect(::communed)
         }

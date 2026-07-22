@@ -2,7 +2,7 @@ package com.github.tanokun.bakajinrou.plugin.participant.method
 
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedReason
-import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
+import com.github.tanokun.bakajinrou.game.state.GameChanges
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
 import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
@@ -30,7 +30,7 @@ import kotlin.time.Duration.Companion.seconds
  * - 不正なクラフトアイテムの場合、タイムアウトする場合があります。
  */
 abstract class GrantedInventorySynchronizer(
-    private val grantedStrategiesPublisher: GrantedStrategiesPublisher,
+    private val gameChanges: GameChanges,
     private val mainScope: CoroutineScope,
     private val playerProvider: BukkitPlayerProvider,
     private val crafting: Crafting,
@@ -38,7 +38,7 @@ abstract class GrantedInventorySynchronizer(
 ): Observer {
     init {
         mainScope.launch {
-            grantedStrategiesPublisher.observeDifference()
+            gameChanges.methodChanges
                 .filterIsInstance<MethodDifference.Granted>()
                 .filter { assetKey.contains(it.grantedMethod.assetKey) }
                 .collect(::syncInventory)
@@ -60,7 +60,7 @@ abstract class GrantedInventorySynchronizer(
 
         if (granted.grantedMethod.reason == GrantedReason.CRAFTED) {
             val asyncCraftingInfo = async {
-                crafting.observeCrafting(this@main)
+                crafting.observeCrafting()
                     .filter { it.crafterId == granted.participantId }
                     .filter { it.method == granted.grantedMethod }
                     .timeout(10.seconds)
@@ -131,7 +131,7 @@ abstract class GrantedInventorySynchronizer(
      * @param scope 収集後キャンセルされるスコープ
      * @param granted 付与された手段の差分情報
      */
-    private suspend fun uselessMethodObserver(scope: CoroutineScope, granted: MethodDifference.Granted) = grantedStrategiesPublisher.observeDifference()
+    private suspend fun uselessMethodObserver(scope: CoroutineScope, granted: MethodDifference.Granted) = gameChanges.methodChanges
         .filterIsInstance<MethodDifference.Removed>()
         .collect {
             if (it.removedMethod != granted.grantedMethod) return@collect

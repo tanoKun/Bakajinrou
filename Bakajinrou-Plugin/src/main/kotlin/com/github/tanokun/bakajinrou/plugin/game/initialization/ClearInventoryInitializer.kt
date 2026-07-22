@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.game.initialization
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.whenLaunched
@@ -18,7 +18,7 @@ import org.koin.core.annotation.Scoped
 @Scope(value = GameComponents::class)
 class ClearInventoryInitializer(
     private val playerProvider: BukkitPlayerProvider,
-    private val game: JinrouGame,
+    private val game: GameStore,
     private val gameScheduler: GameScheduler,
     private val mainScope: CoroutineScope,
 ): Observer {

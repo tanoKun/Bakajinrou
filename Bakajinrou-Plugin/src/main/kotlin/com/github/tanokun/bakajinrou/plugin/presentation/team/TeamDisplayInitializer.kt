@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.presentation.team
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.whenLaunched
@@ -15,7 +15,7 @@ import org.koin.core.annotation.Scoped
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
 class TeamDisplayInitializer(
-    private val game: JinrouGame,
+    private val game: GameStore,
     private val gameScheduler: GameScheduler,
     private val mainScope: CoroutineScope,
     private val viewTeamModifier: ViewTeamModifier

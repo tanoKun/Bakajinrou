@@ -37,7 +37,7 @@ class WonPositionAssigner(
     init {
         topScope.launch {
             gameSession
-                .observeWin(topScope)
+                .observeWin()
                 .collect(::observeWin)
         }
 

@@ -30,7 +30,7 @@ class DivineResultNotifier(
     init {
         mainScope.launch {
             executor
-                .observeDivine(mainScope)
+                .observeDivine()
                 .filterIsInstance<DivineResult.FoundResult>()
                 .collect(::divined)
         }

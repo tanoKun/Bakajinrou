@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.presentation.tab.gaming.component
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.api.participant.position.SpectatorPosition
@@ -15,7 +15,7 @@ import kotlin.math.abs
 
 open class SharedInfoBySpectatorComponent(
     override val dummyUuid: DummyUUID,
-    private val jinrouGame: JinrouGame,
+    private val GameStore: GameStore,
     target: Player,
     translator: JinrouTranslator,
 ): ParticipantInfoInGameComponent(translator) {
@@ -34,8 +34,8 @@ open class SharedInfoBySpectatorComponent(
     }
 
     override fun toPacketEntry(viewer: Player): ClientboundPlayerInfoUpdatePacket.Entry {
-        val viewerParticipant = jinrouGame.getParticipant(viewer.uniqueId.asParticipantId()) ?: throw IllegalStateException("Viewer is not a participant")
-        val targetParticipant = jinrouGame.getParticipant(targetId) ?: throw IllegalStateException("Target is not a participant")
+        val viewerParticipant = GameStore.getParticipant(viewer.uniqueId.asParticipantId()) ?: throw IllegalStateException("Viewer is not a participant")
+        val targetParticipant = GameStore.getParticipant(targetId) ?: throw IllegalStateException("Target is not a participant")
 
         val gameType = if (targetParticipant.isDead()) GameType.SPECTATOR else GameType.SURVIVAL
         val order = orderDecider(targetParticipant)

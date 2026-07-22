@@ -1,5 +1,5 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method.advantage.using.exchange
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.or
@@ -25,14 +25,14 @@ import org.koin.core.annotation.Scoped
 class SpectatorUsedExchangeNotifier(
     private val playerProvider: BukkitPlayerProvider,
     private val translator: JinrouTranslator,
-    private val game: JinrouGame,
+    private val game: GameStore,
     mainScope: CoroutineScope,
     locationExchanger: LocationExchanger,
 ): Observer {
     init {
         mainScope.launch {
             locationExchanger
-                .observeExchanging(mainScope)
+                .observeExchanging()
                 .collect(::exchanged)
         }
     }

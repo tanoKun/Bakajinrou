@@ -5,11 +5,9 @@ import com.github.ajalt.mordant.rendering.AnsiLevel
 import com.github.ajalt.mordant.terminal.Terminal
 import com.github.shynixn.mccoroutine.bukkit.scope
 import com.github.tanokun.bakajinrou.api.JinrouGame
-import com.github.tanokun.bakajinrou.api.UpdateMutexProvider
 import com.github.tanokun.bakajinrou.api.advantage.using.ExchangeSelector
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
-import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
 import com.github.tanokun.bakajinrou.game.ability.fortune.DivineAbilityExecutor
 import com.github.tanokun.bakajinrou.game.ability.knight.ProtectAbilityExecutor
 import com.github.tanokun.bakajinrou.game.ability.medium.CommuneAbilityExecutor
@@ -24,6 +22,8 @@ import com.github.tanokun.bakajinrou.game.participant.initialization.InherentMet
 import com.github.tanokun.bakajinrou.game.participant.state.suspended.ChangeSuspended
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
+import com.github.tanokun.bakajinrou.game.state.GameChanges
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.plugin.common.coroutine.TopCoroutineScope
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.BindingListeners
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
@@ -81,7 +81,7 @@ class GameBuilderModule(plugin: Plugin) {
 
     val participantModule = module {
         scope<GameComponents> {
-            scopedOf(::GrantedStrategiesPublisher)
+            scopedOf(::GameChanges)
             scopedOf(::Attacking)
             scopedOf(::ChangeSuspended)
             scopedOf(::ComingOutHandler)
@@ -93,7 +93,7 @@ class GameBuilderModule(plugin: Plugin) {
         single { Terminal(interactive = true, ansiLevel = AnsiLevel.TRUECOLOR) }
 
         scope<GameComponents> {
-            scoped { ViewTeamModifier(get(), get(), get<JinrouGame>().getCurrentParticipants().excludeSpectators()) }
+            scoped { ViewTeamModifier(get(), get(), get<GameStore>().getCurrentParticipants().excludeSpectators()) }
         }
     }
 
@@ -111,13 +111,14 @@ class GameBuilderModule(plugin: Plugin) {
                 JinrouGameScheduler(startTime = timer, bukkitScheduler = get(), plugin = get())
             }
 
-            scoped<JinrouGame> { (participants: ParticipantScope.All) ->
-                JinrouGame(UpdateMutexProvider(), participants)
+            scoped<GameStore> { (participants: ParticipantScope.All) ->
+                GameStore(JinrouGame(participants))
             }
 
             scoped<JinrouGameSession> { (participants: ParticipantScope.All, mainScope: CoroutineScope, timer: Duration) ->
                 JinrouGameSession(
-                    game = get { parametersOf(participants) },
+                    game = get<GameStore> { parametersOf(participants) },
+                    changes = get(),
                     scheduler = get { parametersOf(timer) },
                     debug = get(),
                     topScope = get<TopCoroutineScope>()

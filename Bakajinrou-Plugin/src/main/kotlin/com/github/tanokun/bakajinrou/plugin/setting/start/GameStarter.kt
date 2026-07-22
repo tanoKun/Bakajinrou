@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.setting.start
 
 import com.github.shynixn.mccoroutine.bukkit.scope
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.all
@@ -90,6 +90,6 @@ class GameStarter(
 
     sealed interface GameBuildResult {
         class Failure(val reason: String): GameBuildResult
-        class SucceedCreation(val game: JinrouGame, val gameSession: JinrouGameSession): GameBuildResult
+        class SucceedCreation(val game: GameStore, val gameSession: JinrouGameSession): GameBuildResult
     }
 }

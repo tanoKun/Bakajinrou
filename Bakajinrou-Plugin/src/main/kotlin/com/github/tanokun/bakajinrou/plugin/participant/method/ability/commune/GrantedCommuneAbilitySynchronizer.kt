@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method.ability.commune
 
 import com.github.tanokun.bakajinrou.api.observing.Observer
-import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
+import com.github.tanokun.bakajinrou.game.state.GameChanges
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
 import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
@@ -21,12 +21,12 @@ import org.koin.core.annotation.Scoped
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
 class GrantedCommuneAbilitySynchronizer(
-    grantedStrategiesPublisher: GrantedStrategiesPublisher,
+    gameChanges: GameChanges,
     mainScope: CoroutineScope,
     playerProvider: BukkitPlayerProvider,
     crafting: Crafting,
     private val translator: JinrouTranslator,
-): GrantedInventorySynchronizer(grantedStrategiesPublisher, mainScope, playerProvider, crafting, MethodAssetKeys.Ability.COMMUNE) {
+): GrantedInventorySynchronizer(gameChanges, mainScope, playerProvider, crafting, MethodAssetKeys.Ability.COMMUNE) {
     override fun createItem(player: Player, add: MethodDifference.Granted): ItemStack =
         ItemViewer.createBasicItem(
             Material.HEART_OF_THE_SEA,

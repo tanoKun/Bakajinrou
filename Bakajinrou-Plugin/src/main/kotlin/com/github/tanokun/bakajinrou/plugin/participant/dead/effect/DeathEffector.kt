@@ -1,9 +1,9 @@
 package com.github.tanokun.bakajinrou.plugin.participant.dead.effect
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.participant.distinctUntilChangedByParticipantOf
+import com.github.tanokun.bakajinrou.game.state.distinctUntilChangedByParticipantOf
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
@@ -22,14 +22,14 @@ import org.koin.core.annotation.Scoped
 @Scoped(binds = [Observer::class])
 @Scope(value = GameComponents::class)
 class DeathEffector(
-    game: JinrouGame,
+    game: GameStore,
     private val playerProvider: BukkitPlayerProvider,
     private val translator: JinrouTranslator,
     mainScope: CoroutineScope,
 ): Observer {
     init {
         mainScope.launch {
-            game.observeParticipants(mainScope)
+            game.participantChanges
                 .distinctUntilChangedByParticipantOf(Participant::isDead)
                 .filter { it.after.isDead() }
                 .map { it.after }

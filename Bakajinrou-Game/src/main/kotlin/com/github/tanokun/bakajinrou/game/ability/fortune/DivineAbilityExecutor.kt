@@ -1,13 +1,11 @@
 package com.github.tanokun.bakajinrou.game.ability.fortune
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.ability.DivineAbility
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.asSharedFlow
 
 /**
  * 占い能力の実行をします。
@@ -18,7 +16,7 @@ import kotlinx.coroutines.flow.shareIn
  *
  * @property game 実行中のゲーム
  */
-class DivineAbilityExecutor(private val game: JinrouGame) {
+class DivineAbilityExecutor(private val game: GameStore) {
     private val _divine = MutableSharedFlow<DivineResult>()
 
     /**
@@ -52,6 +50,5 @@ class DivineAbilityExecutor(private val game: JinrouGame) {
         return DivineResult.FoundResult(result, fortuneId, targetId)
     }
 
-    fun observeDivine(scope: CoroutineScope): Flow<DivineResult> =
-        _divine.shareIn(scope, SharingStarted.Companion.Eagerly, replay = 1)
+    fun observeDivine(): Flow<DivineResult> = _divine.asSharedFlow()
 }

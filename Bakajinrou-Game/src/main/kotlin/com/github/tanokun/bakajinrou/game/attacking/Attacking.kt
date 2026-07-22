@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.game.attacking
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.attacking.AttackByMethodResult
 import com.github.tanokun.bakajinrou.api.attacking.AttackVerificator
 import com.github.tanokun.bakajinrou.api.attacking.method.ArrowMethod
@@ -8,12 +8,11 @@ import com.github.tanokun.bakajinrou.api.attacking.method.AttackMethod
 import com.github.tanokun.bakajinrou.api.method.MethodId
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedReason
-import kotlinx.coroutines.CoroutineScope
+import com.github.tanokun.bakajinrou.game.state.GameTransition
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.seconds
 
@@ -27,7 +26,7 @@ import kotlin.time.Duration.Companion.seconds
  * @see com.github.tanokun.bakajinrou.api.attacking.method.ArrowMethod
  * @see com.github.tanokun.bakajinrou.api.attacking.method.GasMethod
  */
-class Attacking(private val game: JinrouGame) {
+class Attacking(private val game: GameStore) {
     private val _attackResolution = MutableSharedFlow<AttackResolution>()
 
     /**
@@ -47,30 +46,36 @@ class Attacking(private val game: JinrouGame) {
     }
 
     suspend fun <T: AttackMethod> attack(by: ParticipantId, victims: List<ParticipantId>, withId: MethodId, klass: KClass<T>) {
-        val attackerParticipant = game.getParticipant(by) ?: return
+        val attackResolutions = game.transact { currentGame ->
+            val attacker = currentGame.getParticipant(by)
+                ?: return@transact GameTransition(currentGame, emptyList())
+            val attackMethod = attacker.getGrantedMethod(withId) as? AttackMethod
+                ?: return@transact GameTransition(currentGame, emptyList())
 
-        val attackMethod = attackerParticipant.getGrantedMethod(withId) as? AttackMethod ?: return
-
-        if (attackMethod::class != klass) return
-
-        val attackResolutions = victims.mapNotNull { victim ->
-            val result = AttackVerificator.attack(attackMethod, game.getParticipant(victim) ?: return@mapNotNull null)
-
-            when (result) {
-                is AttackByMethodResult.SucceedAttack -> AttackResolution.Killed(attackerId = by, victim, result)
-                is AttackByMethodResult.Protected -> AttackResolution.Alive(attackerId = by, victim, result)
-            }
-        }
-
-        attackResolutions.forEach {
-            game.updateParticipant(it.victimId) { victim ->
-                val victimAfterConsumption = victim.removeAll(it.result.consumedProtectiveMethods)
-                if (it is AttackResolution.Killed) victimAfterConsumption.dead() else victimAfterConsumption
+            if (attackMethod::class != klass) {
+                return@transact GameTransition(currentGame, emptyList())
             }
 
-            game.updateParticipant(it.attackerId) { attacker ->
-                attacker.removeMethod(attackMethod)
+            val resolutions = victims.mapNotNull { victimId ->
+                val victim = currentGame.getParticipant(victimId) ?: return@mapNotNull null
+                when (val result = AttackVerificator.attack(attackMethod, victim)) {
+                    is AttackByMethodResult.SucceedAttack -> AttackResolution.Killed(by, victimId, result)
+                    is AttackByMethodResult.Protected -> AttackResolution.Alive(by, victimId, result)
+                }
             }
+
+            val afterVictims = resolutions.fold(currentGame) { updating, resolution ->
+                updating.updateParticipant(resolution.victimId) { victim ->
+                    val consumed = victim.removeAll(resolution.result.consumedProtectiveMethods)
+                    if (resolution is AttackResolution.Killed) consumed.dead() else consumed
+                }
+            }
+
+            val updated = if (resolutions.isEmpty()) afterVictims else {
+                afterVictims.updateParticipant(by) { it.removeMethod(attackMethod) }
+            }
+
+            GameTransition(updated, resolutions)
         }
 
         attackResolutions.forEach { _attackResolution.emit(it) }
@@ -83,11 +88,19 @@ class Attacking(private val game: JinrouGame) {
      * @param shooter 矢を発射した参加者の Id
      */
     suspend fun shootArrow(shooter: ParticipantId) {
-        if (!game.existParticipant(shooter)) return
-
         delay(3.seconds)
-        game.updateParticipant(shooter) { current ->
-            current.grantMethod(ArrowMethod(reason = GrantedReason.SYSTEM))
+
+        game.transact { currentGame ->
+            if (!currentGame.existParticipant(shooter)) {
+                return@transact GameTransition(currentGame, Unit)
+            }
+
+            GameTransition(
+                currentGame.updateParticipant(shooter) { current ->
+                    current.grantMethod(ArrowMethod(reason = GrantedReason.SYSTEM))
+                },
+                Unit,
+            )
         }
     }
 
@@ -99,15 +112,19 @@ class Attacking(private val game: JinrouGame) {
      * @param arrowId 剥奪する矢の手段の Id
      */
     suspend fun consumeArrow(shooter: ParticipantId, arrowId: MethodId) {
-        val target = game.getParticipant(shooter) ?: return
-        val arrowMethod = target.getGrantedMethod(arrowId) as? ArrowMethod ?: return
+        game.transact { currentGame ->
+            val target = currentGame.getParticipant(shooter)
+                ?: return@transact GameTransition(currentGame, Unit)
+            val arrowMethod = target.getGrantedMethod(arrowId) as? ArrowMethod
+                ?: return@transact GameTransition(currentGame, Unit)
 
-        game.updateParticipant(shooter) { current ->
-            current.removeMethod(arrowMethod)
+            GameTransition(
+                currentGame.updateParticipant(shooter) { it.removeMethod(arrowMethod) },
+                Unit,
+            )
         }
     }
 
-    fun observeAttack(scope: CoroutineScope): Flow<AttackResolution> =
-        _attackResolution.shareIn(scope, SharingStarted.Eagerly, replay = 1)
+    fun observeAttack(): Flow<AttackResolution> = _attackResolution.asSharedFlow()
 
 }

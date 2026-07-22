@@ -1,13 +1,13 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method.ability
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.ability.Ability
 import com.github.tanokun.bakajinrou.api.ability.CommuneAbility
 import com.github.tanokun.bakajinrou.api.ability.DivineAbility
 import com.github.tanokun.bakajinrou.api.ability.ProtectAbility
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
-import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategiesPublisher
+import com.github.tanokun.bakajinrou.game.state.GameChanges
 import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
 import com.github.tanokun.bakajinrou.game.ability.fortune.DivineAbilityExecutor
 import com.github.tanokun.bakajinrou.game.ability.knight.ProtectAbilityExecutor
@@ -33,19 +33,19 @@ import org.koin.core.annotation.Scoped
 @Scope(value = GameComponents::class)
 class TriggerAdapter(
     private val plugin: Plugin,
-    private val grantedStrategiesPublisher: GrantedStrategiesPublisher,
+    private val gameChanges: GameChanges,
     private val mainScope: CoroutineScope,
     private val divineExecutor: DivineAbilityExecutor,
     private val communeExecutor: CommuneAbilityExecutor,
     private val protectExecutor: ProtectAbilityExecutor,
     private val translator: JinrouTranslator,
-    private val game: JinrouGame
+    private val game: GameStore
 ): Observer {
     private val listeners = hashMapOf<Ability, ClickListener<*>>()
 
     init {
         mainScope.launch {
-            grantedStrategiesPublisher.observeDifference()
+            gameChanges.methodChanges
                 .filterIsInstance<MethodDifference.Granted>()
                 .map { it.grantedMethod }
                 .filterIsInstance<Ability>()
@@ -53,7 +53,7 @@ class TriggerAdapter(
         }
 
         mainScope.launch {
-            grantedStrategiesPublisher.observeDifference()
+            gameChanges.methodChanges
                 .filterIsInstance<MethodDifference.Removed>()
                 .map { it.removedMethod }
                 .filterIsInstance<Ability>()

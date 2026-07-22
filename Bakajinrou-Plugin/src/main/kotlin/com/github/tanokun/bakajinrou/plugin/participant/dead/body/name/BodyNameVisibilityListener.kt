@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.participant.dead.body.name
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleListener
@@ -17,7 +17,7 @@ import org.koin.core.annotation.Scoped
 @Scope(value = GameComponents::class)
 class BodyNameVisibilityListener(
     plugin: Plugin,
-    game: JinrouGame,
+    game: GameStore,
     bodyHandler: BukkitBodyHandler
 ) : LifecycleEventListener(plugin, {
     fun refresh(event: PlayerMoveEvent) {

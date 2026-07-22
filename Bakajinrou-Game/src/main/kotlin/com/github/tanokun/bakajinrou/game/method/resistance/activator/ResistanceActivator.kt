@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.game.method.resistance.activator
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.protection.method.ResistanceMethod
 import com.github.tanokun.bakajinrou.game.protection.ProtectVerificatorProvider
@@ -14,7 +14,7 @@ import kotlin.time.Duration.Companion.seconds
  * @property provider 防御手段の有効性を検証するインスタンスを提供するためのProvider
  */
 class ResistanceActivator(
-    private val game: JinrouGame,
+    private val game: GameStore,
     private val provider: ProtectVerificatorProvider
 ) {
 

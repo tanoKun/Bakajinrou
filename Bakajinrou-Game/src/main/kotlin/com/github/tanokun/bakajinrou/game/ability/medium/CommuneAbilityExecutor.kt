@@ -1,14 +1,12 @@
 package com.github.tanokun.bakajinrou.game.ability.medium
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.ability.CommuneAbility
 import com.github.tanokun.bakajinrou.api.ability.medium.CommuneResultSource
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.asSharedFlow
 
 /**
  * 霊媒能力の実行をします。
@@ -19,7 +17,7 @@ import kotlinx.coroutines.flow.shareIn
  *
  * @property game 実行中のゲーム
  */
-class CommuneAbilityExecutor(private val game: JinrouGame) {
+class CommuneAbilityExecutor(private val game: GameStore) {
     private val _commune = MutableSharedFlow<CommuneResult>()
 
     /**
@@ -56,6 +54,5 @@ class CommuneAbilityExecutor(private val game: JinrouGame) {
         }
     }
 
-    fun observeCommune(scope: CoroutineScope): Flow<CommuneResult>  =
-        _commune.shareIn(scope, SharingStarted.Eagerly, replay = 1)
+    fun observeCommune(): Flow<CommuneResult> = _commune.asSharedFlow()
 }

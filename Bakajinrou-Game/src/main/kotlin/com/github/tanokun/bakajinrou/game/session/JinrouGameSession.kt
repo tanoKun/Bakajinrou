@@ -1,73 +1,74 @@
 package com.github.tanokun.bakajinrou.game.session
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
 import com.github.tanokun.bakajinrou.api.WonInfo
-import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
-import com.github.tanokun.bakajinrou.game.scheduler.ScheduleState
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import com.github.tanokun.bakajinrou.game.state.GameChanges
+import com.github.tanokun.bakajinrou.game.state.GameStore
+import kotlinx.coroutines.CompletableJob
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.launch
 import java.util.logging.Logger
 
 class JinrouGameSession(
-    private val game: JinrouGame,
+    private val game: GameStore,
+    private val changes: GameChanges,
     private val scheduler: GameScheduler,
     debug: Logger,
-    topScope: CoroutineScope
+    topScope: CoroutineScope,
 ) {
     private val job: CompletableJob = SupervisorJob()
-
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         debug.severe(throwable.stackTraceToString())
     }
 
-    val mainDispatcherScope: CoroutineScope = CoroutineScope(topScope.coroutineContext + exceptionHandler + job)
+    val mainDispatcherScope: CoroutineScope =
+        CoroutineScope(topScope.coroutineContext + exceptionHandler + job)
 
-    private val _initFlow: MutableSharedFlow<ParticipantId> = MutableSharedFlow()
+    private val _initFlow = MutableSharedFlow<ParticipantId>()
+    private val _lifecycle = MutableStateFlow<GameLifecycle>(GameLifecycle.Preparing)
 
-    private var stopped = false
+    val lifecycle: StateFlow<GameLifecycle> = _lifecycle.asStateFlow()
 
     init {
-        require(game.judge() == null) {
+        require(game.current.judge() == null) {
             "始めるにあたって、不十分な役職配布です。"
         }
 
-        topScope.launch {
-            game.observeWin(topScope)
-                .collect { finish() }
+        mainDispatcherScope.launch(start = CoroutineStart.UNDISPATCHED) {
+            changes.naturalWinner.collect(::finish)
         }
     }
 
-    /**
-     * ゲームを終了、スケジューラの停止処理を行います。
-     * 基本的に、1つのゲームに対して1度しか呼び出されません。
-     *
-     * 前提条件:
-     * - ゲームがアクティブであること
-     */
-    fun finish() {
-        if (stopped) return
+    private fun finish(result: WonInfo) {
+        if (_lifecycle.value is GameLifecycle.Finished) return
+
+        _lifecycle.value = GameLifecycle.Finished(result)
 
         if (scheduler.isActive()) scheduler.abort()
         job.complete()
         job.cancel()
         mainDispatcherScope.cancel()
-
-        stopped = true
     }
 
-    /**
-     * ゲームを開始、参加者の初期化を行います。
-     * 基本的に、1つのゲームに対して1度しか呼び出されません。
-     *
-     * 副作用：
-     * - ゲームスケジューラの開始
-     * - 各参加者の初期化処理
-     */
     fun launch() {
         if (scheduler.isActive()) return
 
+        _lifecycle.value = GameLifecycle.Running
         mainDispatcherScope.launch {
             game.getCurrentParticipants().forEach {
                 _initFlow.emit(it.participantId)
@@ -77,41 +78,22 @@ class JinrouGameSession(
         scheduler.launch()
     }
 
-    fun isFinished() = scheduler.getCurrentState() is ScheduleState.Cancelled
+    fun isFinished(): Boolean = _lifecycle.value is GameLifecycle.Finished
 
-    /**
-     * ゲームを強制終了することを通知します。
-     */
-    fun notifyWonBySystem() = mainDispatcherScope.launch { game.notifyWonBySystem() }
+    fun notifyWonBySystem() = mainDispatcherScope.launch {
+        finish(WonInfo.System(game.getCurrentParticipants()))
+    }
 
-    /**
-     * ゲームを市民の勝利で終了することを通知します。
-     */
-    fun notifyWonCitizen() = mainDispatcherScope.launch { game.notifyWonCitizen() }
+    fun notifyWonCitizen() = mainDispatcherScope.launch {
+        finish(WonInfo.Citizens(game.getCurrentParticipants()))
+    }
 
-    /**
-     * 勝利条件が成立したタイミングで、勝者情報を通知するFlowを返します。
-     *
-     * このFlowは、参加者の状態が変化するたび評価し、
-     * 勝者が決定した場合は、その情報を1回だけ通知します。
-     * また、複数の購読者に対して同じ勝者情報を同時に共有します。
-     *
-     * 強制終了の場合、それを通知します。
-     *
-     * @param scope 監視するコルーチンスコープ
-     *
-     * @see JinrouGame.observeWin
-     */
-    fun observeWin(scope: CoroutineScope = mainDispatcherScope): Flow<WonInfo> = game.observeWin(scope)
+    fun observeWin(): Flow<WonInfo> = lifecycle
+        .filterIsInstance<GameLifecycle.Finished>()
+        .map { it.result }
+        .take(1)
 
-    /**
-     * 全参加者の初期化完了までの通知を返す [kotlinx.coroutines.flow.Flow] を提供します。
-     *
-     * この Flow は、全参加者を1度購読すると、自動的に購読を終了します。
-     *
-     * @return 初期化される各 [Participant] を通知する[kotlinx.coroutines.flow.Flow]
-     */
-    fun observeParticipantAtLaunched() = _initFlow
+    fun observeParticipantAtLaunched(): Flow<ParticipantId> = _initFlow
         .take(game.getCurrentParticipants().size)
         .shareIn(mainDispatcherScope, SharingStarted.Eagerly, replay = 1)
 }

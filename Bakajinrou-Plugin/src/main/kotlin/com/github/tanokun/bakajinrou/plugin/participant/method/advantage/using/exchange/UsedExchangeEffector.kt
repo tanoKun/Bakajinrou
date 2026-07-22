@@ -30,7 +30,7 @@ class UsedExchangeEffector(
     init {
         mainScope.launch {
             locationExchanger
-                .observeExchanging(mainScope)
+                .observeExchanging()
                 .collect(::exchanged)
         }
     }

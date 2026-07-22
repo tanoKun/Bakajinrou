@@ -33,7 +33,7 @@ class ConsumedShieldByAttackEffector(
 ): Observer {
     init {
         mainScope.launch {
-            attacking.observeAttack(mainScope)
+            attacking.observeAttack()
                 .filter { it.result.consumedProtectiveMethods.any(::isShield) }
                 .collect(::usedShield)
         }

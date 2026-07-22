@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.presentation.tab.gaming.refresher
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
@@ -12,7 +12,7 @@ import com.github.tanokun.bakajinrou.plugin.presentation.tab.handler.TabHandler
 import com.github.tanokun.bakajinrou.plugin.presentation.tab.handler.TabHandlerType
 
 abstract class GameTabRefresher(
-    private val game: JinrouGame,
+    private val game: GameStore,
     private val tabHandler: TabHandler,
     private val dummyPlayers: DummyPlayers,
     private val playerProvider: BukkitPlayerProvider,

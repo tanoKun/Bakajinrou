@@ -25,7 +25,7 @@ class AllPositionsNotifier(
 ): Observer {
     init {
         topScope.launch {
-            gameSession.observeWin(topScope)
+            gameSession.observeWin()
                 .take(1)
                 .collect(::notifyAllPositions)
         }
