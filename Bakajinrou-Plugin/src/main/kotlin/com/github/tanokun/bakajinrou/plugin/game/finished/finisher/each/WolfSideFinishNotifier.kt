@@ -1,0 +1,39 @@
+package com.github.tanokun.bakajinrou.plugin.game.finished.finisher.each
+
+import com.github.tanokun.bakajinrou.api.WonInfo
+import com.github.tanokun.bakajinrou.api.participant.position.Side
+import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
+import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
+import com.github.tanokun.bakajinrou.game.audience.GameAudienceStore
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
+import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
+
+class WolfSideFinishNotifier(
+    private val playerProvider: BukkitPlayerProvider,
+    private val translator: JinrouTranslator,
+    private val audience: GameAudienceStore,
+): EachSideFinishNotifier(translator) {
+    override fun notify(wonInfo: WonInfo) {
+        if (wonInfo !is WonInfo.Won || wonInfo.side != Side.WEREWOLF) return
+
+        wonInfo.participants.forEach { participant ->
+            val bukkitPlayer = playerProvider.getAllowNull(participant) ?: return@forEach
+
+            showVictorySideTitle(
+                player = bukkitPlayer,
+                text = translator.translate(GameKeys.Finish.Wolf.TITLE, bukkitPlayer.locale())
+            )
+
+            if (participant.isPosition<WolfPosition>() || participant.isPosition<MadmanPosition>()) sendVictoryMessage(bukkitPlayer)
+            else sendLoseMessage(bukkitPlayer)
+
+            bukkitPlayer.sendMessage(translator.translate(GameKeys.Finish.Wolf.MESSAGE, bukkitPlayer.locale()))
+        }
+
+        audience.current.spectators.forEach { playerId ->
+            val player = playerProvider.getAllowNull(playerId) ?: return@forEach
+            showVictorySideTitle(player, translator.translate(GameKeys.Finish.Wolf.TITLE, player.locale()))
+        }
+    }
+}

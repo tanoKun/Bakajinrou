@@ -4,8 +4,8 @@
     "ability.result.fox": "<fox>妖狐</fox>",
     "ability.result.citizens": "<citizen>村人</citizen>",
 
-    "method.attack.damage.potion.display.name": "ダメージポーション",
-    "method.attack.damage.potion.lore": "<white><bold>即死ダメージを与えます。</bold></white><newline><white>自分をまきこまないように注意しましょう。</white>",
+    "method.attack.gas.display.name": "ガス",
+    "method.attack.gas.lore": "<white><bold>即死ダメージを与えます。</bold></white><newline><white>自分をまきこまないように注意しましょう。</white>",
     "method.attack.sword.display.name": "ダイヤの剣",
     "method.attack.sword.lore": "<white><bold>相手を一撃で倒すことができます。</bold></white><newline><white>一度使用すると壊れます。</white>",
     "method.attack.arrow.display.name": "矢",

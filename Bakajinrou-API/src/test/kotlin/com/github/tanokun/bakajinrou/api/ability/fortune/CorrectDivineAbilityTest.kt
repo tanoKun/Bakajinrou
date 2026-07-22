@@ -16,7 +16,7 @@ class CorrectDivineAbilityTest : ShouldSpec({
         should("役職にあった正しい結果を返すべき") {
             val participant = mockk<Participant>()
             every { participant.position } returns mockk<Position> {
-                every { abilityResult } returns ResultSource.FOX
+                every { divinedAs } returns ResultSource.FOX
             }
 
             val result = ability.divine(participant)

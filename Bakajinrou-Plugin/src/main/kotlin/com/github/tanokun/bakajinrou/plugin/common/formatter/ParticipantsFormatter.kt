@@ -24,7 +24,7 @@ import java.util.*
  * を目的の形とするフォーマッター
  */
 class ParticipantsFormatter(
-    private val participants: ParticipantScope.NonSpectators,
+    private val participants: ParticipantScope.All,
     private val translator: JinrouTranslator
 ) {
 

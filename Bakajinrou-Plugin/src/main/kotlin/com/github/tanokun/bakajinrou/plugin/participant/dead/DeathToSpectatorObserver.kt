@@ -1,0 +1,37 @@
+package com.github.tanokun.bakajinrou.plugin.participant.dead
+
+import com.github.tanokun.bakajinrou.game.state.GameStore
+import com.github.tanokun.bakajinrou.api.observing.Observer
+import com.github.tanokun.bakajinrou.api.participant.Participant
+import com.github.tanokun.bakajinrou.game.state.distinctUntilChangedByParticipantOf
+import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import org.bukkit.GameMode
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
+
+@Scoped(binds = [Observer::class])
+@Scope(value = GameComponents::class)
+class DeathToSpectatorObserver(
+    private val game: GameStore,
+    private val playerProvider: BukkitPlayerProvider,
+    private val mainScope: CoroutineScope,
+): Observer {
+    init {
+        mainScope.launch {
+            game.participantChanges
+                .distinctUntilChangedByParticipantOf(Participant::isDead)
+                .map { it.after }
+                .collect(::onDeath)
+        }
+    }
+
+    private fun onDeath(dead: Participant) {
+        val player = playerProvider.getAllowNull(dead) ?: return
+
+        player.gameMode = GameMode.SPECTATOR
+    }
+}

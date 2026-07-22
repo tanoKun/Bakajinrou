@@ -1,0 +1,47 @@
+package com.github.tanokun.bakajinrou.plugin.participant.method.logging
+
+import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
+import com.github.ajalt.mordant.rendering.TextColors.white
+import com.github.ajalt.mordant.terminal.Terminal
+import com.github.tanokun.bakajinrou.api.observing.Observer
+import com.github.tanokun.bakajinrou.game.state.GameChanges
+import com.github.tanokun.bakajinrou.api.participant.strategy.MethodDifference
+import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.launch
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
+
+@Scoped(binds = [Observer::class])
+@Scope(value = GameComponents::class)
+class RemoveMethodLogging(
+    private val gameChanges: GameChanges,
+    private val mainScope: CoroutineScope,
+    private val terminal: Terminal,
+): Observer {
+    init {
+        mainScope.launch {
+            gameChanges.methodChanges
+                .filterIsInstance<MethodDifference.Removed>()
+                .collect(::logging)
+        }
+    }
+
+    @OptIn(FlowPreview::class)
+    private fun logging(granted: MethodDifference.Removed) = mainScope.launch {
+        val header = white("Debug - Removed Method")
+        terminal.println(header)
+
+        val details = listOf(
+            "Target -> ${PlayerNameCache.get(granted.participantId)} (${granted.participantId.uniqueId})",
+            "Method -> ${granted.removedMethod}",
+        )
+
+        details.forEach {
+            terminal.println("  " + rgb("#909090")("- $it"))
+        }
+    }
+}

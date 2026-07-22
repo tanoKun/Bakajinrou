@@ -1,17 +1,15 @@
 package com.github.tanokun.bakajinrou.game.method.advantage.using
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.advantage.ExchangeMethod
 import com.github.tanokun.bakajinrou.api.advantage.using.ExchangeSelector
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.asSharedFlow
 
-class LocationExchanger(private val game: JinrouGame, private val selector: ExchangeSelector) {
-    private val _exchanging = MutableSharedFlow<ExchangeInfo>(replay = 1)
+class LocationExchanger(private val game: GameStore, private val selector: ExchangeSelector) {
+    private val _exchanging = MutableSharedFlow<ExchangeInfo>()
 
     /**
      * 指定された参加者の位置を、ランダムに選定された別の参加者と交換します。
@@ -24,7 +22,7 @@ class LocationExchanger(private val game: JinrouGame, private val selector: Exch
     suspend fun exchange(method: ExchangeMethod, sideId: ParticipantId) {
         if (!game.existParticipant(sideId)) return
 
-        val targetId = selector.select(sideId, game.getCurrentParticipants().excludeSpectators())
+        val targetId = selector.select(sideId, game.getCurrentParticipants())
 
         game.updateParticipant(sideId) { current ->
             current.removeMethod(method)
@@ -36,8 +34,7 @@ class LocationExchanger(private val game: JinrouGame, private val selector: Exch
     /**
      * 位置交換のストリームを購読するためのFlowを公開します。
      *
-     * @param scope Flowの共有を管理するためのコルーチンスコープ
      * @return 位置交換情報 [ExchangeInfo] を放出するFlow
      */
-    fun observeExchanging(scope: CoroutineScope): Flow<ExchangeInfo> = _exchanging.shareIn(scope, SharingStarted.Eagerly, replay = 1)
+    fun observeExchanging(): Flow<ExchangeInfo> = _exchanging.asSharedFlow()
 }

@@ -21,7 +21,7 @@ class ExchangeSelector(private val random: Random) {
      *
      * @return 選定された参加者のId
      */
-    fun select(sideId: ParticipantId, candidates: ParticipantScope.NonSpectators): ParticipantId =
+    fun select(sideId: ParticipantId, candidates: ParticipantScope.All): ParticipantId =
         candidates
             .excludes(Participant::isSuspended or Participant::isDead)
             .excludes(sideId)

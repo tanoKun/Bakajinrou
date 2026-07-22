@@ -3,6 +3,7 @@ package com.github.tanokun.bakajinrou.api.participant.position.wolf
 import com.github.tanokun.bakajinrou.api.ability.ResultSource
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.position.Position
+import com.github.tanokun.bakajinrou.api.participant.position.Side
 import com.github.tanokun.bakajinrou.api.participant.position.isMadman
 import com.github.tanokun.bakajinrou.api.participant.prefix.PrefixSource
 import com.github.tanokun.bakajinrou.api.participant.prefix.WolfPrefix
@@ -16,7 +17,7 @@ import com.github.tanokun.bakajinrou.api.participant.prefix.WolfPrefix
  *
  * @throws IllegalStateException [knownByMadmans]に狂人以外の役職が含まれていた場合
  */
-class WolfPosition(knownByMadmans: ParticipantScope.NonSpectators): Position {
+class WolfPosition(knownByMadmans: ParticipantScope.All): Position {
     val knownByMadmans = knownByMadmans.map { it.participantId }
 
     init {
@@ -26,7 +27,9 @@ class WolfPosition(knownByMadmans: ParticipantScope.NonSpectators): Position {
 
     override val prefixSource: PrefixSource = WolfPrefix(knownByMadmans)
 
-    override val abilityResult: ResultSource = ResultSource.WOLF
+    override val side: Side = Side.WEREWOLF
+
+    override val divinedAs: ResultSource = ResultSource.WOLF
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -34,7 +37,7 @@ class WolfPosition(knownByMadmans: ParticipantScope.NonSpectators): Position {
 
         if (knownByMadmans != other.knownByMadmans) return false
         if (prefixSource != other.prefixSource) return false
-        if (abilityResult != other.abilityResult) return false
+        if (divinedAs != other.divinedAs) return false
 
         return true
     }
@@ -42,7 +45,7 @@ class WolfPosition(knownByMadmans: ParticipantScope.NonSpectators): Position {
     override fun hashCode(): Int {
         var result = knownByMadmans.hashCode()
         result = 31 * result + prefixSource.hashCode()
-        result = 31 * result + abilityResult.hashCode()
+        result = 31 * result + divinedAs.hashCode()
         return result
     }
 }

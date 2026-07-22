@@ -1,89 +1,96 @@
 package com.github.tanokun.bakajinrou.game.attacking
 
 import com.github.tanokun.bakajinrou.api.JinrouGame
-import com.github.tanokun.bakajinrou.api.attacking.AttackVerificator
+import com.github.tanokun.bakajinrou.api.ParticipantStates
 import com.github.tanokun.bakajinrou.api.attacking.method.AttackMethod
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.method.MethodId
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
+import com.github.tanokun.bakajinrou.api.participant.all
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedReason
+import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategy
 import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
-
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import io.kotest.core.spec.style.StringSpec
-import io.mockk.*
+import io.kotest.matchers.shouldBe
+import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import java.util.*
+import java.util.UUID
 
 class AttackingTest : StringSpec({
-
-    val game = mockk<JinrouGame>(relaxed = true)
-    val attacking = Attacking(game)
+    fun participant(id: ParticipantId, method: GrantedMethod? = null): Participant = Participant(
+        id,
+        mockk(),
+        GrantedStrategy(method?.let { mapOf(it.methodId to it) }.orEmpty()),
+        ParticipantStates.ALIVE,
+    )
 
     val attackerId = ParticipantId(UUID.randomUUID())
     val victimId = ParticipantId(UUID.randomUUID())
     val methodId = MethodId(UUID.randomUUID())
 
-    val attacker = mockk<Participant>(relaxed = true)
-    val victim = mockk<Participant>(relaxed = true)
-
-    beforeTest {
-        clearMocks(game, attacker, victim)
-    }
-
-    "攻撃ID を持つ 手段 が <T> と型が違う場合は処理しない" {
-        val wrongMethod = mockk<AttackMethod>(relaxed = true)
-        every { game.getParticipant(attackerId) } returns attacker
-        every { game.getParticipant(victimId) } returns victim
-        every { attacker.getGrantedMethod(methodId) } returns wrongMethod
+    "攻撃IDを持つ手段の型が指定と違う場合は状態を変更しない" {
+        val wrongMethod = OtherAttackMethod(methodId, mockk(), GrantedReason.SYSTEM)
+        val store = GameStore(JinrouGame(listOf(
+            participant(attackerId, wrongMethod),
+            participant(victimId),
+        ).all()))
 
         runBlocking {
-            attacking.attack(attackerId, listOf(victimId), methodId, DummyAttackMethod::class)
+            Attacking(store).attack(attackerId, listOf(victimId), methodId, DummyAttackMethod::class)
         }
 
-        coVerify(exactly = 0) { AttackVerificator.attack(wrongMethod, victim) }
-        coVerify(exactly = 0) { game.updateParticipant(attackerId, any()) }
-        coVerify(exactly = 0) { game.updateParticipant(victimId, any()) }
+        store.getParticipant(attackerId)?.hasGrantedMethod(methodId) shouldBe true
+        store.getParticipant(victimId)?.isAlive() shouldBe true
     }
 
-    "攻撃ID を持つ 手段 が <T> と同じ型なら処理を続ける" {
-        val correctMethod = mockk<DummyAttackMethod>(relaxed = true)
-        val removedAttacker = mockk<Participant>(relaxed = true)
-
-        every { game.getParticipant(attackerId) } returns attacker
-        every { game.getParticipant(victimId) } returns victim
-        every { attacker.getGrantedMethod(methodId) } returns correctMethod
-        every { attacker.removeMethod(correctMethod) } returns removedAttacker
-        mockkObject(AttackVerificator)
+    "攻撃IDを持つ手段の型が指定と同じなら攻撃結果を一括反映する" {
+        val method = DummyAttackMethod(methodId, mockk(), GrantedReason.SYSTEM)
+        val store = GameStore(JinrouGame(listOf(
+            participant(attackerId, method),
+            participant(victimId),
+        ).all()))
 
         runBlocking {
-            attacking.attack(attackerId, listOf(victimId), methodId, DummyAttackMethod::class)
+            Attacking(store).attack(attackerId, listOf(victimId), methodId, DummyAttackMethod::class)
         }
 
-        coVerify(exactly = 1) { AttackVerificator.attack(correctMethod, victim) }
-        coVerify(exactly = 1) { game.updateParticipant(attackerId, any()) }
-        coVerify(exactly = 1) { game.updateParticipant(victimId, any()) }
+        store.getParticipant(attackerId)?.hasGrantedMethod(methodId) shouldBe false
+        store.getParticipant(victimId)?.isDead() shouldBe true
     }
 
-    "攻撃手段でない場合は処理をしない" {
-        val notAttackMethod = mockk<GrantedMethod>()
-        every { game.getParticipant(attackerId) } returns attacker
-        every { attacker.getGrantedMethod(methodId) } returns notAttackMethod
+    "攻撃手段でない場合は状態を変更しない" {
+        val notAttackMethod = mockk<GrantedMethod> {
+            every { this@mockk.methodId } returns methodId
+        }
+        val store = GameStore(JinrouGame(listOf(
+            participant(attackerId, notAttackMethod),
+            participant(victimId),
+        ).all()))
 
         runBlocking {
-            attacking.attack(attackerId, listOf(victimId), methodId, DummyAttackMethod::class)
+            Attacking(store).attack(attackerId, listOf(victimId), methodId, DummyAttackMethod::class)
         }
 
-        coVerify(exactly = 0) { game.updateParticipant(attackerId, any()) }
-        coVerify(exactly = 0) { game.updateParticipant(victimId, any()) }
+        store.getParticipant(attackerId)?.hasGrantedMethod(methodId) shouldBe true
+        store.getParticipant(victimId)?.isAlive() shouldBe true
     }
 }) {
-
     class DummyAttackMethod(
         override val methodId: MethodId,
         override val assetKey: MethodAssetKeys.Attack,
-        override val reason: GrantedReason
+        override val reason: GrantedReason,
     ) : AttackMethod() {
-        override fun asTransferred(): GrantedMethod = throw Error()
+        override fun asTransferred(): GrantedMethod = error("このテストでは譲渡しない")
+    }
+
+    class OtherAttackMethod(
+        override val methodId: MethodId,
+        override val assetKey: MethodAssetKeys.Attack,
+        override val reason: GrantedReason,
+    ) : AttackMethod() {
+        override fun asTransferred(): GrantedMethod = error("このテストでは譲渡しない")
     }
 }

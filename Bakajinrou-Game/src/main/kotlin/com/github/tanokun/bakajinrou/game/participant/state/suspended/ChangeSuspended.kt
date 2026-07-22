@@ -1,9 +1,9 @@
 package com.github.tanokun.bakajinrou.game.participant.state.suspended
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 
-class ChangeSuspended(private val game: JinrouGame) {
+class ChangeSuspended(private val game: GameStore) {
     suspend fun changeToAlive(targetId: ParticipantId) {
         val current = game.getParticipant(targetId) ?: return
         if (!current.isSuspended()) return

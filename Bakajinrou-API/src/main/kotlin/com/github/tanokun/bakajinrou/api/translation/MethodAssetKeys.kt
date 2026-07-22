@@ -2,7 +2,7 @@ package com.github.tanokun.bakajinrou.api.translation
 
 sealed class MethodAssetKeys(key: String): TranslationKey("method.$key") {
     class Attack private constructor(key: String) : MethodAssetKeys("attack.$key") { companion object {
-        val DAMAGE_POTION = Attack("damage.potion")
+        val GAS = Attack("gas")
         val SWORD = Attack("sword")
         val ARROW = Attack("arrow")
     }}

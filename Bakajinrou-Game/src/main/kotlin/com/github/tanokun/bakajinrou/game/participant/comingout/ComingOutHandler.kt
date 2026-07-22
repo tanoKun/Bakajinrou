@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.game.participant.comingout
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.participant.prefix.ComingOut
 
@@ -9,7 +9,7 @@ import com.github.tanokun.bakajinrou.api.participant.prefix.ComingOut
  *
  * @param game 操作対象となるゲーム
  */
-class ComingOutHandler(private val game: JinrouGame) {
+class ComingOutHandler(private val game: GameStore) {
 
     /**
      * 指定された参加者のカミングアウトの状態を更新します。

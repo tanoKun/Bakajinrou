@@ -3,6 +3,7 @@ package com.github.tanokun.bakajinrou.api
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.all
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
+import com.github.tanokun.bakajinrou.api.participant.position.Side
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizensPosition
 import com.github.tanokun.bakajinrou.api.participant.position.fox.FoxPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
@@ -12,7 +13,9 @@ import io.mockk.mockk
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.util.*
-import kotlin.test.assertTrue
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
+import kotlin.test.assertNull
 
 class JinrouGameDecidedSideTest {
     @Test
@@ -23,7 +26,7 @@ class JinrouGameDecidedSideTest {
         )
         val judge = game.judge()
 
-        assertTrue("勝利サイドは市民なはず") { judge is WonInfo.Citizens }
+        assertEquals(Side.VILLAGE, assertIs<WonInfo.Won>(judge).side, "勝利サイドは市民なはず")
     }
 
     @Test
@@ -34,7 +37,7 @@ class JinrouGameDecidedSideTest {
         )
         val judge = game.judge()
 
-        assertTrue("勝利サイドは人狼なはず") { judge is WonInfo.Wolfs }
+        assertEquals(Side.WEREWOLF, assertIs<WonInfo.Won>(judge).side, "勝利サイドは人狼なはず")
     }
 
     @Test
@@ -45,7 +48,7 @@ class JinrouGameDecidedSideTest {
         )
         val judge = game.judge()
 
-        assertTrue("勝利サイドは妖狐なはず") { judge is WonInfo.Fox }
+        assertEquals(Side.FOX, assertIs<WonInfo.Won>(judge).side, "勝利サイドは妖狐なはず")
     }
 
     @Test
@@ -56,7 +59,7 @@ class JinrouGameDecidedSideTest {
         )
         val judge = game.judge()
 
-        assertTrue("勝利サイドは妖狐なはず") { judge is WonInfo.Fox }
+        assertEquals(Side.FOX, assertIs<WonInfo.Won>(judge).side, "勝利サイドは妖狐なはず")
     }
 
     @Test
@@ -66,25 +69,24 @@ class JinrouGameDecidedSideTest {
             isDeadCitizen1 = false, isDeadCitizen2 = false, isDeadWolf = false, isDeadMadman = false, isDeadFox = false
         )
         val judge = game.judge()
-        assertTrue("勝利者がいないので、Nullのはず") { judge == null }
+        assertNull(judge, "勝利者がいないので、Nullのはず")
 
         val game2 = createJinrouGame(
             isDeadCitizen1 = false, isDeadCitizen2 = false, isDeadWolf = false, isDeadMadman = true, isDeadFox = false
         )
         val judge2 = game2.judge()
-        assertTrue("勝利者がいないので、Nullのはず") { judge2 == null }
+        assertNull(judge2, "勝利者がいないので、Nullのはず")
 
         val game3 = createJinrouGame(
             isDeadCitizen1 = true, isDeadCitizen2 = false, isDeadWolf = false, isDeadMadman = true, isDeadFox = true
         )
         val judge3 = game3.judge()
-        assertTrue("勝利者がいないので、Nullのはず") { judge3 == null }
+        assertNull(judge3, "勝利者がいないので、Nullのはず")
     }
 
     private fun createJinrouGame(
         isDeadCitizen1: Boolean, isDeadCitizen2: Boolean, isDeadFox: Boolean, isDeadWolf: Boolean, isDeadMadman: Boolean,
     ) = JinrouGame(
-        UpdateMutexProvider(),
         setOf(
             Participant(UUID.randomUUID().asParticipantId(), mockk<CitizensPosition>(), mockk<GrantedStrategy>()).let { if (isDeadCitizen1) it.dead() else it },
             Participant(UUID.randomUUID().asParticipantId(), mockk<CitizensPosition>(), mockk<GrantedStrategy>()).let { if (isDeadCitizen2) it.dead() else it },

@@ -27,6 +27,7 @@ dependencies {
     testImplementation(libs.bundles.kotest)
     testImplementation(libs.bundles.junit)
     testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(kotlin("test"))
 }
 

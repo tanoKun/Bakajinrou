@@ -1,10 +1,10 @@
 package com.github.tanokun.bakajinrou.game.crafting
 
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.advantage.ExchangeMethod
 import com.github.tanokun.bakajinrou.api.advantage.InvisibilityMethod
 import com.github.tanokun.bakajinrou.api.advantage.SpeedMethod
-import com.github.tanokun.bakajinrou.api.attacking.method.DamagePotionMethod
+import com.github.tanokun.bakajinrou.api.attacking.method.GasMethod
 import com.github.tanokun.bakajinrou.api.attacking.method.SwordMethod
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.method.asMethodId
@@ -13,11 +13,9 @@ import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedReason
 import com.github.tanokun.bakajinrou.api.protection.method.ResistanceMethod
 import com.github.tanokun.bakajinrou.api.protection.method.ShieldMethod
 import com.github.tanokun.bakajinrou.game.protection.ProtectVerificatorProvider
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.asSharedFlow
 import java.util.*
 import kotlin.random.Random
 
@@ -30,7 +28,7 @@ import kotlin.random.Random
  * @param random 手段選択に使う乱数インスタンス
  */
 class Crafting(
-    private val game: JinrouGame,
+    private val game: GameStore,
     private val random: Random,
     private val provider: ProtectVerificatorProvider,
 ) {
@@ -42,15 +40,13 @@ class Crafting(
      *
      * 複数の購読者に対しては、同一インスタンスが共有されます。
      *
-     * @param scope この Flow を共有するスコープ
-     *
      * @return クラフト情報の Flow
      */
-    fun observeCrafting(scope: CoroutineScope): Flow<CraftingInfo> = _crafting.shareIn(scope, SharingStarted.Eagerly, replay = 1)
+    fun observeCrafting(): Flow<CraftingInfo> = _crafting.asSharedFlow()
 
     private val crafting = listOf<(ParticipantId) -> GrantedMethod>(
         { SwordMethod(reason = GrantedReason.CRAFTED) },
-        { DamagePotionMethod(reason = GrantedReason.CRAFTED) },
+        { GasMethod(reason = GrantedReason.CRAFTED) },
         { id -> ResistanceMethod(reason = GrantedReason.CRAFTED, verificator = provider.getResistanceVerificator(false)) },
         { id ->
             val methodId = UUID.randomUUID().asMethodId()

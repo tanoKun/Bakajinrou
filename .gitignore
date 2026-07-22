@@ -44,4 +44,4 @@ bin/
 .vscode/
 
 ### Mac OS ###
-.DS_Storep
+.DS_Storephs_err_pid*.log

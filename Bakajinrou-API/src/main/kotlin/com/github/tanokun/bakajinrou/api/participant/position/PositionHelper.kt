@@ -97,14 +97,6 @@ fun isWolf(participant: Participant): Boolean = participant.isPosition<WolfPosit
  */
 fun isMadman(participant: Participant): Boolean = participant.isPosition<MadmanPosition>()
 
-/**
- * 指定された参加者が「観戦者」であるかを確認します。
- * 
- * @param participant 判定対象の参加者
- */
-fun isSpectator(participant: Participant): Boolean = participant.isPosition<SpectatorPosition>()
-
-
 // --- バカ(Idiot)系の複合役職 ---
 
 /**

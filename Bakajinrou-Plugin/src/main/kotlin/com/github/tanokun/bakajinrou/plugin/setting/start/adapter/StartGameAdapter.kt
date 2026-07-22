@@ -1,8 +1,8 @@
 package com.github.tanokun.bakajinrou.plugin.setting.start.adapter
 
-import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.adapter.getSelectedData
+import com.github.tanokun.bakajinrou.plugin.setting.prepare.desided.getSelectedData
 import com.github.tanokun.bakajinrou.plugin.setting.start.GameStarter
-import com.github.tanokun.bakajinrou.plugin.setting.start.adapter.gui.FinalDecisionGui
+import com.github.tanokun.bakajinrou.plugin.setting.start.adapter.FinalDecisionGui
 import org.bukkit.Material
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

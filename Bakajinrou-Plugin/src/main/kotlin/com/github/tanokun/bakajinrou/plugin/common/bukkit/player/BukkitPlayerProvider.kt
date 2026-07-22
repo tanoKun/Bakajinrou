@@ -2,6 +2,7 @@ package com.github.tanokun.bakajinrou.plugin.common.bukkit.player
 
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
+import com.github.tanokun.bakajinrou.api.player.PlayerId
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListener
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.bukkit.Bukkit
@@ -18,15 +19,23 @@ class BukkitPlayerProvider(private val plugin: Plugin) {
 
     fun getAllowNull(participantId: ParticipantId) = Bukkit.getPlayer(participantId.uniqueId)
 
+    fun getAllowNull(playerId: PlayerId) = Bukkit.getPlayer(playerId.uniqueId)
+
     suspend fun waitPlayerOnline(participant: Participant) = waitPlayerOnline(participant.participantId)
 
+    suspend fun waitPlayerOnline(playerId: PlayerId): Player = waitPlayerOnline(playerId.uniqueId)
+
     suspend fun waitPlayerOnline(participantId: ParticipantId): Player {
-        Bukkit.getPlayer(participantId.uniqueId)?.let { return it }
+        return waitPlayerOnline(participantId.uniqueId)
+    }
+
+    private suspend fun waitPlayerOnline(uniqueId: java.util.UUID): Player {
+        Bukkit.getPlayer(uniqueId)?.let { return it }
 
         return suspendCancellableCoroutine { continuation ->
             val listener = object : LifecycleEventListener(plugin, {
                 register<PlayerJoinEvent> { event ->
-                    if (event.player.uniqueId != participantId.uniqueId) return@register
+                    if (event.player.uniqueId != uniqueId) return@register
 
                     continuation.resume(event.player)
                 }

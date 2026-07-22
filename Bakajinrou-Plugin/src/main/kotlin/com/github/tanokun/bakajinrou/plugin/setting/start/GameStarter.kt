@@ -1,16 +1,13 @@
 package com.github.tanokun.bakajinrou.plugin.setting.start
 
 import com.github.shynixn.mccoroutine.bukkit.scope
-import com.github.tanokun.bakajinrou.api.JinrouGame
+import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
-import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.participant.all
-import com.github.tanokun.bakajinrou.api.participant.asParticipantId
-import com.github.tanokun.bakajinrou.api.participant.position.SpectatorPosition
+import com.github.tanokun.bakajinrou.api.player.asPlayerId
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot.IdiotAsFortunePosition
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot.IdiotAsKnightPosition
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot.IdiotAsMediumPosition
-import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategy
+import com.github.tanokun.bakajinrou.game.audience.GameAudienceStore
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.ScheduleState
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
@@ -61,10 +58,13 @@ class GameStarter(
                 .assignIdiots(IdiotAsFortunePosition, IdiotAsMediumPosition, IdiotAsKnightPosition)
                 .assignAbilityUsers()
                 .assignFox()
-                .assignCitizens() + createSpectators(selectedParticipants.spectators)
+                .assignCitizens()
 
             try {
-                get<JinrouGameSession> { parametersOf(participants.all(), plugin.scope, selectedMap.map.startTime) }
+                get<JinrouGameSession> { parametersOf(participants, plugin.scope, selectedMap.map.startTime) }
+                get<GameAudienceStore> {
+                    parametersOf(selectedParticipants.spectators.mapTo(mutableSetOf()) { it.asPlayerId() })
+                }
             } catch (e: Exception) {
                 this.close()
                 return GameBuildResult.Failure("役職配布に問題があります: ${e.message}")
@@ -82,14 +82,15 @@ class GameStarter(
             }
         }
 
-        return GameBuildResult.SucceedCreation(scope.get(), scope.get())
+        return GameBuildResult.SucceedCreation(scope.get(), scope.get(), scope.get())
     }
-
-    private fun createSpectators(spectators: Set<UUID>) =
-        spectators.map { Participant(it.asParticipantId(), SpectatorPosition, GrantedStrategy(mapOf())) }
 
     sealed interface GameBuildResult {
         class Failure(val reason: String): GameBuildResult
-        class SucceedCreation(val game: JinrouGame, val gameSession: JinrouGameSession): GameBuildResult
+        class SucceedCreation(
+            val game: GameStore,
+            val gameSession: JinrouGameSession,
+            val audienceStore: GameAudienceStore,
+        ): GameBuildResult
     }
 }

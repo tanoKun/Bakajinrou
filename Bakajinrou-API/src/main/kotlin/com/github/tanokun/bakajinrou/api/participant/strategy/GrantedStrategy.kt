@@ -57,7 +57,7 @@ data class GrantedStrategy(
      */
     fun removeAll(methods: Collection<GrantedMethod>): GrantedStrategy =
         methods.fold(this) { acc, method ->
-            this.remove(method)
+            acc.remove(method)
         }
 
     /**
@@ -66,6 +66,8 @@ data class GrantedStrategy(
      * @return 対応する手段
      */
     fun getMethod(methodId: MethodId): GrantedMethod? = strategies[methodId]
+
+    fun getMethods(): Collection<GrantedMethod> = strategies.values
 
     /**
      * 呼び出し時点で、防御可能な手段を取得します。
