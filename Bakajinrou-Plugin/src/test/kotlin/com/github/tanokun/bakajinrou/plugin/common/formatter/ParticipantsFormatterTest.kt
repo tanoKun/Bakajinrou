@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.common.formatter 
 import com.github.tanokun.bakajinrou.api.participant.Participant
-import com.github.tanokun.bakajinrou.api.participant.excludeSpectators
+import com.github.tanokun.bakajinrou.api.participant.all
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.localization.keys.FormatKeys
@@ -34,7 +34,7 @@ class ParticipantsFormatterTest : FunSpec({
     val filter2 = { p: Participant -> p === p2 } to participantKey2
     val filter3 = { p: Participant -> p === p3 } to participantKey3
 
-    val pList = listOf(p1, p2, p3).excludeSpectators()
+    val pList = listOf(p1, p2, p3).all()
 
     val miniMessage = MiniMessage.miniMessage()
 

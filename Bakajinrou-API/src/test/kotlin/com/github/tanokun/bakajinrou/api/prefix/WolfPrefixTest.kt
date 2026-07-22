@@ -14,7 +14,7 @@ import io.mockk.mockk
 class WolfPrefixTest : ShouldSpec({
 
     val prefixKey = PrefixKeys.Companion.WOLF
-    val knownByMadmans = mockk<ParticipantScope.NonSpectators>()
+    val knownByMadmans = mockk<ParticipantScope.All>()
     val source = WolfPrefix(knownByMadmans)
 
     val viewer = mockk<Participant>()
