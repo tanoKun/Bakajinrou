@@ -2,8 +2,6 @@ package com.github.tanokun.bakajinrou.plugin.game.finished
 
 import com.github.tanokun.bakajinrou.api.WonInfo
 import com.github.tanokun.bakajinrou.api.observing.Observer
-import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
-import com.github.tanokun.bakajinrou.game.scheduler.whenOvertime
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
 import com.github.tanokun.bakajinrou.game.audience.GameAudienceStore
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
@@ -30,10 +28,9 @@ import org.koin.core.annotation.Scoped
 @Scope(value = GameComponents::class)
 class WonPositionAssigner(
     private val playerProvider: BukkitPlayerProvider,
-    private val gameSession: JinrouGameSession,
+    gameSession: JinrouGameSession,
     private val translator: JinrouTranslator,
     private val audience: GameAudienceStore,
-    gameScheduler: GameScheduler,
     topScope: TopCoroutineScope
 ): Observer {
     init {
@@ -41,13 +38,6 @@ class WonPositionAssigner(
             gameSession
                 .observeWin()
                 .collect(::observeWin)
-        }
-
-        gameSession.mainDispatcherScope.launch {
-            gameScheduler
-                .observe(gameSession.mainDispatcherScope)
-                .whenOvertime()
-                .collect { winAtOvertime() }
         }
     }
 
@@ -62,6 +52,4 @@ class WonPositionAssigner(
 
         finisher.notify(wonInfo)
     }
-
-    fun winAtOvertime() = gameSession.notifyWonCitizen()
 }

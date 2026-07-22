@@ -3,6 +3,7 @@ package com.github.tanokun.bakajinrou.game.session
 import com.github.tanokun.bakajinrou.api.WonInfo
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
+import com.github.tanokun.bakajinrou.game.scheduler.whenOvertime
 import com.github.tanokun.bakajinrou.game.state.GameChanges
 import com.github.tanokun.bakajinrou.game.state.GameStore
 import kotlinx.coroutines.CompletableJob
@@ -52,6 +53,13 @@ class JinrouGameSession(
         mainDispatcherScope.launch(start = CoroutineStart.UNDISPATCHED) {
             changes.naturalWinner.collect(::finish)
         }
+
+        // 時間切れは市民陣営の勝利で終了する。
+        mainDispatcherScope.launch(start = CoroutineStart.UNDISPATCHED) {
+            scheduler.observe(mainDispatcherScope)
+                .whenOvertime()
+                .collect { finish(WonInfo.Citizens(game.getCurrentParticipants())) }
+        }
     }
 
     private fun finish(result: WonInfo) {
@@ -82,10 +90,6 @@ class JinrouGameSession(
 
     fun notifyWonBySystem() = mainDispatcherScope.launch {
         finish(WonInfo.System(game.getCurrentParticipants()))
-    }
-
-    fun notifyWonCitizen() = mainDispatcherScope.launch {
-        finish(WonInfo.Citizens(game.getCurrentParticipants()))
     }
 
     fun observeWin(): Flow<WonInfo> = lifecycle

@@ -9,6 +9,7 @@ import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizensPo
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategy
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
+import com.github.tanokun.bakajinrou.game.scheduler.ScheduleState
 import com.github.tanokun.bakajinrou.game.state.GameChanges
 import com.github.tanokun.bakajinrou.game.state.GameStore
 import io.kotest.matchers.shouldBe
@@ -17,6 +18,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -71,6 +73,41 @@ class JinrouGameSessionTest {
 
         result.await().shouldBeInstanceOf<WonInfo.System>()
         session.lifecycle.value.shouldBeInstanceOf<GameLifecycle.Finished>()
+        session.isFinished() shouldBe true
+    }
+
+    @Test
+    fun `時間切れは市民陣営の勝利で終了する`() = runTest {
+        val citizen = Participant(
+            UUID.randomUUID().asParticipantId(),
+            mockk<CitizensPosition>(),
+            GrantedStrategy(emptyMap()),
+        )
+        val wolf = Participant(
+            UUID.randomUUID().asParticipantId(),
+            mockk<WolfPosition>(),
+            GrantedStrategy(emptyMap()),
+        )
+        val store = GameStore(JinrouGame(listOf(citizen, wolf).all()))
+
+        val scheduleFlow = MutableStateFlow<ScheduleState>(mockk<ScheduleState>())
+        val scheduler = mockk<GameScheduler>(relaxed = true) {
+            every { isActive() } returns false
+            every { observe(any()) } returns scheduleFlow
+        }
+        val session = JinrouGameSession(
+            game = store,
+            changes = GameChanges(store),
+            scheduler = scheduler,
+            debug = mockk<Logger>(relaxed = true),
+            topScope = backgroundScope,
+        )
+        val result = async { session.observeWin().first() }
+
+        scheduleFlow.value = mockk<ScheduleState.Cancelled.Overtime>()
+        runCurrent()
+
+        result.await().shouldBeInstanceOf<WonInfo.Citizens>()
         session.isFinished() shouldBe true
     }
 
