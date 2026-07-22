@@ -19,16 +19,28 @@ class LocationExchanger(private val game: GameStore, private val selector: Excha
      * @param method 使用された交換手段
      * @param sideId 能力を使用した参加者のId
      */
-    suspend fun exchange(method: ExchangeMethod, sideId: ParticipantId) {
+    suspend fun exchange(
+        method: ExchangeMethod,
+        sideId: ParticipantId,
+        excludedParticipantIds: Set<ParticipantId> = emptySet(),
+    ) {
         if (!game.existParticipant(sideId)) return
 
-        val targetId = selector.select(sideId, game.getCurrentParticipants())
+        val candidates = game.getCurrentParticipants()
+            .filter { !it.isSuspended() && !it.isDead() }
+            .mapTo(mutableSetOf()) { it.participantId } - excludedParticipantIds
 
         game.updateParticipant(sideId) { current ->
             current.removeMethod(method)
         }
 
-        _exchanging.emit(ExchangeInfo(sideId, targetId))
+        val info = if (candidates.any { it != sideId }) {
+            ExchangeInfo.Succeeded(sideId, selector.select(sideId, candidates))
+        } else {
+            ExchangeInfo.NoTarget(sideId)
+        }
+
+        _exchanging.emit(info)
     }
 
     /**

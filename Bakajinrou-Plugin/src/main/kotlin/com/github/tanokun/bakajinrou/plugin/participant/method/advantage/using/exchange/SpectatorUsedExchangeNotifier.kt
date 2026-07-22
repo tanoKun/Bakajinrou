@@ -11,6 +11,7 @@ import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponent
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.localization.keys.DisplayLoggingKeys
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
 import net.kyori.adventure.text.Component
 import org.koin.core.annotation.Scope
@@ -33,11 +34,12 @@ class SpectatorUsedExchangeNotifier(
         mainScope.launch {
             locationExchanger
                 .observeExchanging()
+                .filterIsInstance<ExchangeInfo.Succeeded>()
                 .collect(::exchanged)
         }
     }
 
-    private fun exchanged(info: ExchangeInfo) {
+    private fun exchanged(info: ExchangeInfo.Succeeded) {
         val userName = PlayerNameCache.get(info.userId) ?: return
         val targetName = PlayerNameCache.get(info.targetId) ?: return
 

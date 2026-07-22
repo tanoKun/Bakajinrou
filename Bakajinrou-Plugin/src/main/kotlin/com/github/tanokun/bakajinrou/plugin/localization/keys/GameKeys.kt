@@ -79,6 +79,7 @@ sealed class GameKeys(key: String): TranslationKey("game.$key") {
     open class Advantage private constructor(key: String): GameKeys("advantage.$key") {
         class Using private constructor(key: String): Advantage("using.$key") { companion object {
             val EXCHANGE_MESSAGE = Using("exchange.message")
+            val FAILED_EXCHANGE_MESSAGE = Using("failed.exchange.message")
         } }
     }
 

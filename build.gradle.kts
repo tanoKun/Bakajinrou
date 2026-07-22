@@ -1,5 +1,10 @@
 group = "com.github.tanokun"
-version = "1.0.0-SNAPSHOT"
+
+val projectVersion = "1.2.0-SNAPSHOT"
+
+allprojects {
+    version = projectVersion
+}
 
 plugins {
     kotlin("jvm") version "2.2.0"

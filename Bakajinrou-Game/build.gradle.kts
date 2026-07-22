@@ -1,7 +1,6 @@
 import org.gradle.api.tasks.testing.logging.TestLogEvent.*
 
 group = "com.github.tanokun"
-version = "1.0.0-SNAPSHOT"
 
 plugins {
     kotlin("jvm")
