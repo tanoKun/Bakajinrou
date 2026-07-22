@@ -4,9 +4,9 @@ import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.map.GameMap
-import com.github.tanokun.bakajinrou.plugin.map.gimmick.MapGimmick
 import com.github.tanokun.bakajinrou.plugin.map.gimmick.MapGimmickContext
 import com.github.tanokun.bakajinrou.plugin.map.gimmick.MapGimmickId
+import com.github.tanokun.bakajinrou.plugin.map.gimmick.lifecycle.MapGimmick
 import com.github.tanokun.bakajinrou.plugin.participant.method.advantage.ExchangeTargetExclusions
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.annotation.Scope

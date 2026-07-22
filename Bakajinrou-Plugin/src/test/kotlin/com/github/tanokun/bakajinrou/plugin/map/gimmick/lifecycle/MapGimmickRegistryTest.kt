@@ -1,4 +1,6 @@
-package com.github.tanokun.bakajinrou.plugin.map.gimmick
+package com.github.tanokun.bakajinrou.plugin.map.gimmick.lifecycle
+
+import com.github.tanokun.bakajinrou.plugin.map.gimmick.MapGimmickId
 
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertSame

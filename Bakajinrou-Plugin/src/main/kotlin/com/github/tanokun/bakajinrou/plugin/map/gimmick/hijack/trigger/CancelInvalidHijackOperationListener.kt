@@ -1,6 +1,7 @@
-package com.github.tanokun.bakajinrou.plugin.map.gimmick.hijack
+package com.github.tanokun.bakajinrou.plugin.map.gimmick.hijack.trigger
 
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListener
+import com.github.tanokun.bakajinrou.plugin.map.gimmick.hijack.item.HijackItems
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryDragEvent

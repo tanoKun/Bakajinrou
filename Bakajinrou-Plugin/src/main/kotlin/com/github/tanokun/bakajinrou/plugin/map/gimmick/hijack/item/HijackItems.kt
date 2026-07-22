@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.map.gimmick.hijack
+package com.github.tanokun.bakajinrou.plugin.map.gimmick.hijack.item
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor

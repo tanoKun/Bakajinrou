@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.map.gimmick
+package com.github.tanokun.bakajinrou.plugin.map.gimmick.lifecycle
 
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents

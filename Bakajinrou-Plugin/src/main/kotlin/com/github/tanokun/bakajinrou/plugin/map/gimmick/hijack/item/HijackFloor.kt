@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.map.gimmick.hijack
+package com.github.tanokun.bakajinrou.plugin.map.gimmick.hijack.item
 
 enum class HijackFloor(
     val slot: Int,

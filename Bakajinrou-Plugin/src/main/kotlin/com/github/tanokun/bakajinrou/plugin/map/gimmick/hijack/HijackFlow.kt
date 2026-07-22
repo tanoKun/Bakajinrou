@@ -3,6 +3,7 @@ package com.github.tanokun.bakajinrou.plugin.map.gimmick.hijack
 import com.github.tanokun.bakajinrou.api.participant.position.isWolf
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.map.gimmick.MapGimmickContext
+import com.github.tanokun.bakajinrou.plugin.map.gimmick.hijack.item.HijackFloor
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.entity.Player

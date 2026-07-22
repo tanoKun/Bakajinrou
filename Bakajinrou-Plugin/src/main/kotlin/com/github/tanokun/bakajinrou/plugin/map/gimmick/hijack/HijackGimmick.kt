@@ -4,9 +4,13 @@ import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.whenLaunched
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
-import com.github.tanokun.bakajinrou.plugin.map.gimmick.MapGimmick
 import com.github.tanokun.bakajinrou.plugin.map.gimmick.MapGimmickContext
 import com.github.tanokun.bakajinrou.plugin.map.gimmick.MapGimmickId
+import com.github.tanokun.bakajinrou.plugin.map.gimmick.hijack.item.HijackItemInitializer
+import com.github.tanokun.bakajinrou.plugin.map.gimmick.hijack.item.HijackItems
+import com.github.tanokun.bakajinrou.plugin.map.gimmick.hijack.trigger.CancelInvalidHijackOperationListener
+import com.github.tanokun.bakajinrou.plugin.map.gimmick.hijack.trigger.TriggerHijackByInventoryClick
+import com.github.tanokun.bakajinrou.plugin.map.gimmick.lifecycle.MapGimmick
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.take

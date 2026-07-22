@@ -1,4 +1,4 @@
-package com.github.tanokun.bakajinrou.plugin.map.gimmick.hijack
+package com.github.tanokun.bakajinrou.plugin.map.gimmick.hijack.item
 
 import com.github.tanokun.bakajinrou.api.participant.position.isWolf
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
