@@ -29,15 +29,18 @@ class LocationExchanger(private val game: GameStore, private val selector: Excha
         val candidates = game.getCurrentParticipants()
             .filter { !it.isSuspended() && !it.isDead() }
             .mapTo(mutableSetOf()) { it.participantId } - excludedParticipantIds
-        if (candidates.none { it != sideId }) return
-
-        val targetId = selector.select(sideId, candidates)
 
         game.updateParticipant(sideId) { current ->
             current.removeMethod(method)
         }
 
-        _exchanging.emit(ExchangeInfo(sideId, targetId))
+        val info = if (candidates.any { it != sideId }) {
+            ExchangeInfo.Succeeded(sideId, selector.select(sideId, candidates))
+        } else {
+            ExchangeInfo.NoTarget(sideId)
+        }
+
+        _exchanging.emit(info)
     }
 
     /**
