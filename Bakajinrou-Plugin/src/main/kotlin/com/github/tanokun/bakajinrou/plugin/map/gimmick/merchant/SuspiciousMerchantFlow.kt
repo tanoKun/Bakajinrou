@@ -10,6 +10,8 @@ import org.bukkit.entity.Villager
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.MerchantRecipe
 
+internal const val SUSPICIOUS_MERCHANT_ENTITY_TAG = "jinrou_gimmick_suspicious_merchant"
+
 class SuspiciousMerchantFlow(
     private val context: MapGimmickContext,
 ) {
@@ -27,7 +29,7 @@ class SuspiciousMerchantFlow(
             villager.villagerLevel = 5
             villager.getAttribute(Attribute.MAX_HEALTH)?.baseValue = 2.0
             villager.health = 2.0
-            villager.addScoreboardTag(ENTITY_TAG)
+            villager.addScoreboardTag(SUSPICIOUS_MERCHANT_ENTITY_TAG)
             villager.recipes = listOf(
                 MerchantRecipe(ItemStack(Material.QUARTZ_BLOCK), Int.MAX_VALUE).apply {
                     addIngredient(ItemStack(Material.QUARTZ, QUARTZ_COST))
@@ -43,12 +45,11 @@ class SuspiciousMerchantFlow(
     fun removeMerchant() {
         context.legacyLocation(0.0, 0.0, 0.0).world
             ?.getEntitiesByClass(Villager::class.java)
-            ?.filter { ENTITY_TAG in it.scoreboardTags }
+            ?.filter { SUSPICIOUS_MERCHANT_ENTITY_TAG in it.scoreboardTags }
             ?.forEach(Villager::remove)
     }
 
     private companion object {
-        const val ENTITY_TAG = "jinrou_gimmick_suspicious_merchant"
         const val QUARTZ_COST = 3
     }
 }
