@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method.ability.divine.notification
 import com.github.tanokun.bakajinrou.api.observing.Observer
-import com.github.tanokun.bakajinrou.game.audience.GameViewers
+import com.github.tanokun.bakajinrou.game.viewer.GameViewers
 import com.github.tanokun.bakajinrou.game.ability.fortune.DivineAbilityExecutor
 import com.github.tanokun.bakajinrou.game.ability.fortune.DivineResult
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
@@ -40,8 +40,8 @@ class SpectatorDivinationNotifier(
         val fortuneName = PlayerNameCache.get(result.fortuneId) ?: "unknown"
         val targetName = PlayerNameCache.get(result.targetId) ?: "unknown"
 
-        viewers.observerPlayerIds()
-            .mapNotNull(playerProvider::getAllowNull)
+        viewers.spectating
+            .mapNotNull { playerProvider.getAllowNull(it.playerId) }
             .forEach {
                 val resultComponent = translator.translate(result.source.resultKey, it.locale())
                 val message = translator.translate(

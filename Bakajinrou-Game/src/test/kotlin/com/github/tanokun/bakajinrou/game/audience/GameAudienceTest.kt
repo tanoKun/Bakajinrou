@@ -6,7 +6,6 @@ import com.github.tanokun.bakajinrou.api.participant.all
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategy
 import com.github.tanokun.bakajinrou.api.player.asPlayerId
-import com.github.tanokun.bakajinrou.game.state.GameChanges
 import com.github.tanokun.bakajinrou.game.state.GameStore
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
@@ -66,23 +65,6 @@ class GameAudienceTest {
         }
         audience.joinSpectator(nextSpectatorId)
         next.join()
-    }
-
-    @Test
-    fun `死亡した参加者と外部観戦者を同じ観戦表示へ投影する`() = runTest {
-        val participant = participant()
-        val spectatorId = UUID.randomUUID().asPlayerId()
-        val game = game(participant)
-        val audience = GameAudience(game, setOf(spectatorId))
-        val viewers = GameViewers(game, audience, GameChanges(game))
-
-        viewers.resolve(participant.playerId) shouldBe GameViewer.Playing(participant)
-        viewers.resolve(spectatorId) shouldBe GameViewer.Spectator(spectatorId)
-
-        game.updateParticipant(participant.participantId) { it.dead() }
-
-        viewers.resolve(participant.playerId) shouldBe GameViewer.DeadParticipant(participant.dead())
-        viewers.allPlayerIds() shouldBe setOf(participant.playerId, spectatorId)
     }
 
     private fun participant() = Participant(

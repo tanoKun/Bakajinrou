@@ -4,7 +4,7 @@ import com.github.tanokun.bakajinrou.api.WonInfo
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.position.*
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession
-import com.github.tanokun.bakajinrou.game.audience.GameViewers
+import com.github.tanokun.bakajinrou.game.viewer.GameViewers
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.coroutine.TopCoroutineScope
 import com.github.tanokun.bakajinrou.plugin.common.formatter.ParticipantsFormatter
@@ -36,8 +36,8 @@ class AllPositionsNotifier(
     private fun notifyAllPositions(wonInfo: WonInfo) {
         val formatter = ParticipantsFormatter(wonInfo.participants, translator)
 
-        viewers.allPlayerIds().forEach { playerId ->
-            val player = playerProvider.getAllowNull(playerId) ?: return@forEach
+        viewers.current.forEach { viewer ->
+            val player = playerProvider.getAllowNull(viewer.playerId) ?: return@forEach
             val locale = player.locale()
 
             player.sendMessage(formatter.format(locale, FormatKeys.Category.WOLF, ::isWolf to FormatKeys.Participant.WOLF))

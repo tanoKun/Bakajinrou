@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method.ability.protect.notification
 import com.github.tanokun.bakajinrou.api.observing.Observer
-import com.github.tanokun.bakajinrou.game.audience.GameViewers
+import com.github.tanokun.bakajinrou.game.viewer.GameViewers
 import com.github.tanokun.bakajinrou.game.ability.knight.GrantProtectResult
 import com.github.tanokun.bakajinrou.game.ability.knight.ProtectAbilityExecutor
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
@@ -40,8 +40,8 @@ class SpectatorProtectionNotifier(
         val knightName = PlayerNameCache.get(result.knightId) ?: "unknown"
         val targetName = PlayerNameCache.get(result.targetId) ?: "unknown"
 
-        viewers.observerPlayerIds()
-            .mapNotNull(playerProvider::getAllowNull)
+        viewers.spectating
+            .mapNotNull { playerProvider.getAllowNull(it.playerId) }
             .forEach {
                 val message = translator.translate(
                     DisplayLoggingKeys.Use.PROTECT, it.locale(), Component.text(knightName), Component.text(targetName))

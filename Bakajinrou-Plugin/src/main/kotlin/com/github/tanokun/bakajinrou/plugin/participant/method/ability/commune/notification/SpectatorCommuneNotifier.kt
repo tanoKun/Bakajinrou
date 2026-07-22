@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method.ability.commune.notification
 import com.github.tanokun.bakajinrou.api.observing.Observer
-import com.github.tanokun.bakajinrou.game.audience.GameViewers
+import com.github.tanokun.bakajinrou.game.viewer.GameViewers
 import com.github.tanokun.bakajinrou.game.ability.medium.CommuneAbilityExecutor
 import com.github.tanokun.bakajinrou.game.ability.medium.CommuneResult
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
@@ -46,8 +46,8 @@ class SpectatorCommuneNotifier(
             is CommuneResult.IsNotDead -> GameKeys.Ability.Using.COMMUNE_FAILURE_MESSAGE
         }
 
-        viewers.observerPlayerIds()
-            .mapNotNull(playerProvider::getAllowNull)
+        viewers.spectating
+            .mapNotNull { playerProvider.getAllowNull(it.playerId) }
             .forEach {
                 val resultComponent = translator.translate(result, it.locale())
                 val message = translator.translate(

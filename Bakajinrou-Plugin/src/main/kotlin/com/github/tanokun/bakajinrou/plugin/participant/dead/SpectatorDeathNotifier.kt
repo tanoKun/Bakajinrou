@@ -1,7 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.participant.dead
 
 import com.github.tanokun.bakajinrou.api.observing.Observer
-import com.github.tanokun.bakajinrou.game.audience.GameViewers
+import com.github.tanokun.bakajinrou.game.viewer.GameViewers
 import com.github.tanokun.bakajinrou.game.attacking.AttackResolution
 import com.github.tanokun.bakajinrou.game.attacking.Attacking
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
@@ -41,8 +41,8 @@ class SpectatorDeathNotifier(
         val attackerName = PlayerNameCache.get(result.attackerId) ?: "unknown"
         val victimName = PlayerNameCache.get(result.victimId) ?: "unknown"
 
-        viewers.observerPlayerIds()
-            .mapNotNull(playerProvider::getAllowNull)
+        viewers.spectating
+            .mapNotNull { playerProvider.getAllowNull(it.playerId) }
             .forEach {
                 val message = translator.translate(
                     DisplayLoggingKeys.KILL, it.locale(), Component.text(attackerName), Component.text(victimName))

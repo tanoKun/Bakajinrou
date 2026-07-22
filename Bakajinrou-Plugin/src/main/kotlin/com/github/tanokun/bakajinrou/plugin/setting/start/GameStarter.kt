@@ -8,7 +8,7 @@ import com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot.Idio
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot.IdiotAsKnightPosition
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.idiot.IdiotAsMediumPosition
 import com.github.tanokun.bakajinrou.game.audience.GameAudience
-import com.github.tanokun.bakajinrou.game.audience.GameViewers
+import com.github.tanokun.bakajinrou.game.viewer.GameViewers
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.ScheduleState
 import com.github.tanokun.bakajinrou.game.session.JinrouGameSession

@@ -11,21 +11,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
-data class GameAudienceState(val spectators: Set<PlayerId>)
-
-sealed interface AudienceChange {
-    val playerId: PlayerId
-
-    data class Joined(override val playerId: PlayerId): AudienceChange
-    data class Left(override val playerId: PlayerId): AudienceChange
-}
-
-sealed interface JoinSpectatorResult {
-    data object Joined: JoinSpectatorResult
-    data object AlreadySpectating: JoinSpectatorResult
-    data object ParticipantCannotSpectate: JoinSpectatorResult
-}
-
 /** ゲーム外から観戦しているプレイヤーの、動的な所属を管理します。 */
 class GameAudience(
     private val game: GameStore,

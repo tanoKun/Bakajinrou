@@ -1,6 +1,6 @@
 package com.github.tanokun.bakajinrou.plugin.participant.method.advantage.using.exchange
 import com.github.tanokun.bakajinrou.api.observing.Observer
-import com.github.tanokun.bakajinrou.game.audience.GameViewers
+import com.github.tanokun.bakajinrou.game.viewer.GameViewers
 import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.game.method.advantage.using.ExchangeInfo
 import com.github.tanokun.bakajinrou.game.method.advantage.using.LocationExchanger
@@ -38,8 +38,8 @@ class SpectatorUsedExchangeNotifier(
         val userName = PlayerNameCache.get(info.userId) ?: return
         val targetName = PlayerNameCache.get(info.targetId) ?: return
 
-        viewers.observerPlayerIds()
-            .mapNotNull(playerProvider::getAllowNull)
+        viewers.spectating
+            .mapNotNull { playerProvider.getAllowNull(it.playerId) }
             .forEach {
                 val message = translator.translate(
                     DisplayLoggingKeys.Use.EXCHANGE_METHOD, it.locale(), Component.text(userName), Component.text(targetName))
