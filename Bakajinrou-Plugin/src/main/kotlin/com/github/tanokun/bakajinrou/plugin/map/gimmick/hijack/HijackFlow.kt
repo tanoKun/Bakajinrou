@@ -6,6 +6,8 @@ import com.github.tanokun.bakajinrou.plugin.map.gimmick.MapGimmickContext
 import com.github.tanokun.bakajinrou.plugin.map.gimmick.hijack.item.HijackFloor
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
+import org.bukkit.Sound
+import org.bukkit.SoundCategory
 import org.bukkit.entity.Player
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
@@ -32,6 +34,7 @@ class HijackFlow(
         context.broadcast(
             Component.text("何者かが${floor.displayName}をハイジャックした。", NamedTextColor.RED)
         )
+        context.playSound(Sound.BLOCK_END_PORTAL_SPAWN, SoundCategory.BLOCKS, 0.3f, 1.0f)
     }
 
     private companion object {

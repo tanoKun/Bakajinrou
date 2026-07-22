@@ -10,6 +10,8 @@ import net.kyori.adventure.text.Component
 import org.bukkit.Material
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.Sound
+import org.bukkit.SoundCategory
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -31,6 +33,13 @@ class MapGimmickContext(
     fun broadcast(message: Component) {
         GameViewers(game.current, audience.current).all.forEach { viewer ->
             playerProvider.getAllowNull(viewer.playerId)?.sendMessage(message)
+        }
+    }
+
+    fun playSound(sound: Sound, category: SoundCategory, volume: Float, pitch: Float) {
+        GameViewers(game.current, audience.current).all.forEach { viewer ->
+            val player = playerProvider.getAllowNull(viewer.playerId) ?: return@forEach
+            player.playSound(player.location, sound, category, volume, pitch)
         }
     }
 
