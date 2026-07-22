@@ -14,6 +14,7 @@ import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -80,6 +81,7 @@ class PreparedGameTabRefresher(
 
             show(participants)
             try {
+                yield()
                 while (coroutineContext.isActive && isViewingPreparedGame(ownerId)) {
                     delay(1.seconds)
                 }
