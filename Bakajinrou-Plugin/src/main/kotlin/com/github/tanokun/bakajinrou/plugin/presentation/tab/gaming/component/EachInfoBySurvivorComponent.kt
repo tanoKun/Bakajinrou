@@ -31,13 +31,12 @@ open class EachInfoBySurvivorComponent(
         val viewerParticipant = GameStore.getParticipant(viewer.uniqueId.asParticipantId()) ?: throw IllegalStateException("Viewer is not a participant")
         val targetParticipant = GameStore.getParticipant(targetId) ?: throw IllegalStateException("Target is not a participant")
 
-        val gameType = if (targetParticipant.isDead()) GameType.SPECTATOR else GameType.SURVIVAL
         val order = orderDecider(targetParticipant)
 
         val displayName = createDisplayName(viewerParticipant, targetParticipant, gameProfile.name, viewer.locale())
 
         return ClientboundPlayerInfoUpdatePacket.Entry(
-            dummyUuid.uuid, gameProfile, true, latency, gameType, PaperAdventure.asVanilla(displayName), true, order, null
+            dummyUuid.uuid, gameProfile, true, latency, GameType.SURVIVAL, PaperAdventure.asVanilla(displayName), true, order, null
         )
     }
 }
