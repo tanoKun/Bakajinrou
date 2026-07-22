@@ -4,6 +4,7 @@ import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
+import com.github.tanokun.bakajinrou.api.participant.position.isIdiot
 import com.github.tanokun.bakajinrou.api.translation.PrefixKeys
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.whenLaunched
@@ -64,8 +65,8 @@ class InGameSidebarRenderer(
         lines.add(component { text("役職分配: ") color gray deco bold })
 
         val positionCounts = game.getCurrentParticipants()
-            .mapNotNull { participant -> participant.getOwnPrefix()?.let { it to participant } }
-            .groupingBy { (prefix) -> prefix }
+            .mapNotNull(Participant::getDistributionPrefix)
+            .groupingBy { prefix -> prefix }
             .eachCount()
 
         positionCounts.forEach { (prefix, amount) ->
@@ -99,3 +100,6 @@ class InGameSidebarRenderer(
 
     private fun Participant.getOwnPrefix(): PrefixKeys? = getPrefix(this)
 }
+
+internal fun Participant.getDistributionPrefix(): PrefixKeys? =
+    if (isIdiot(this)) PrefixKeys.IDIOT else getPrefix(this)

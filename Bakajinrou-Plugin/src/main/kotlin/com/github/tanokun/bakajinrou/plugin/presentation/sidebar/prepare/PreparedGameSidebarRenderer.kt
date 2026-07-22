@@ -31,13 +31,17 @@ data class PreparedGameSidebarRenderer(
 
     private fun createOverview(player: Player): SidebarContent {
         val lines = mutableListOf<Component>()
+        lines.add(component {
+            text("マップ: ") color gray deco bold
+            text(selectedMap?.map?.mapName?.name ?: "未選択") color white deco bold
+        })
         lines.add(component { text("役職分配: ") color gray deco bold })
         selectedPositions.positions.forEach { (position, amount) ->
             lines.add(createPositionLine(position, amount, player))
         }
 
         return SidebarContent(
-            title = component { text("役職分配") color green deco bold },
+            title = component { text("ゲーム設定") color green deco bold },
             lines = lines,
         )
     }
