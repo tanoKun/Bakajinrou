@@ -10,8 +10,9 @@ import com.github.tanokun.bakajinrou.plugin.presentation.tab.handler.TabHandler
 import com.github.tanokun.bakajinrou.plugin.presentation.tab.handler.TabHandlerType
 import com.github.tanokun.bakajinrou.plugin.presentation.tab.handler.lifecycle.RendererLifecycle
 import com.github.tanokun.bakajinrou.plugin.presentation.tab.lobby.LobbyTabRefresher
+import com.github.tanokun.bakajinrou.plugin.presentation.tab.prepare.PreparedGameTabRefresher
 import com.github.tanokun.bakajinrou.plugin.setting.command.MapSettingCommand
-import com.github.tanokun.bakajinrou.plugin.presentation.prepare.PreparedGamePresentationAdapter
+import com.github.tanokun.bakajinrou.plugin.presentation.sidebar.prepare.RenderingSidebarAdapter
 import com.github.tanokun.bakajinrou.plugin.setting.prepare.command.PrepareCommand
 import com.github.tanokun.bakajinrou.plugin.setting.start.adapter.StartGameAdapter
 import kotlinx.coroutines.Dispatchers
@@ -61,10 +62,8 @@ open class BakaJinrou(): JavaPlugin() {
             koin.get<PrepareCommand>()
             koin.get<MapSettingCommand>()
 
-            Bukkit.getPluginManager().registerEvents(
-                PreparedGamePresentationAdapter(koin.get(), koin.get(), koin.get(), koin.get()),
-                this@BakaJinrou,
-            )
+            Bukkit.getPluginManager().registerEvents(RenderingSidebarAdapter(koin.get(), koin.get()), this@BakaJinrou)
+            Bukkit.getPluginManager().registerEvents(PreparedGameTabRefresher(koin.get(), koin.get(), koin.get()), this@BakaJinrou)
             Bukkit.getPluginManager().registerEvents(StartGameAdapter(koin.get()), this@BakaJinrou)
 
             Bukkit.getPluginManager().registerEvents(PutPlayerToCacheListener(), this@BakaJinrou)
