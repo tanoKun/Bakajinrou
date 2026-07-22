@@ -9,12 +9,9 @@ import com.github.tanokun.bakajinrou.game.cache.PlayerNameCache
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
-import com.github.tanokun.bakajinrou.plugin.localization.keys.DisplayLoggingKeys
-import com.github.tanokun.bakajinrou.plugin.localization.keys.GameKeys
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.launch
-import net.kyori.adventure.text.Component
 import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
 
@@ -25,12 +22,14 @@ import org.koin.core.annotation.Scoped
 @Scope(value = GameComponents::class)
 class SpectatorCommuneNotifier(
     private val playerProvider: BukkitPlayerProvider,
-    private val translator: JinrouTranslator,
+    translator: JinrouTranslator,
     private val game: GameStore,
     private val audience: GameAudienceStore,
     mainScope: CoroutineScope,
     executor: CommuneAbilityExecutor
 ): Observer {
+    private val messageFormatter = SpectatorCommuneMessageFormatter(translator)
+
     init {
         mainScope.launch {
             executor
@@ -44,17 +43,10 @@ class SpectatorCommuneNotifier(
         val mediumName = PlayerNameCache.get(result.mediumId) ?: "unknown"
         val targetName = PlayerNameCache.get(result.targetId) ?: "unknown"
 
-        val result = when (result) {
-            is CommuneResult.FoundResult -> result.source.resultKey
-            is CommuneResult.IsNotDead -> GameKeys.Ability.Using.COMMUNE_FAILURE_MESSAGE
-        }
-
         GameViewers(game.current, audience.current).spectating
             .mapNotNull { playerProvider.getAllowNull(it.playerId) }
             .forEach {
-                val resultComponent = translator.translate(result, it.locale())
-                val message = translator.translate(
-                    DisplayLoggingKeys.Use.COMMUNE, it.locale(), Component.text(mediumName), Component.text(targetName), resultComponent)
+                val message = messageFormatter.format(result, mediumName, targetName, it.locale())
 
                 it.sendMessage(message)
             }
