@@ -1,6 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.game.finished.finisher.each
 
 import com.github.tanokun.bakajinrou.api.WonInfo
+import com.github.tanokun.bakajinrou.api.participant.position.Side
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.MadmanPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.game.audience.GameAudienceStore
@@ -14,7 +15,7 @@ class WolfSideFinishNotifier(
     private val audience: GameAudienceStore,
 ): EachSideFinishNotifier(translator) {
     override fun notify(wonInfo: WonInfo) {
-        if (wonInfo !is WonInfo.Wolfs) return
+        if (wonInfo !is WonInfo.Won || wonInfo.side != Side.WEREWOLF) return
 
         wonInfo.participants.forEach { participant ->
             val bukkitPlayer = playerProvider.getAllowNull(participant) ?: return@forEach

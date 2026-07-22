@@ -5,6 +5,7 @@ import com.github.tanokun.bakajinrou.api.WonInfo
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.all
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
+import com.github.tanokun.bakajinrou.api.participant.position.Side
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizensPosition
 import com.github.tanokun.bakajinrou.api.participant.position.wolf.WolfPosition
 import com.github.tanokun.bakajinrou.api.participant.strategy.GrantedStrategy
@@ -47,7 +48,7 @@ class JinrouGameSessionTest {
         store.updateParticipant(wolf.participantId) { it.dead() }
         runCurrent()
 
-        result.await().shouldBeInstanceOf<WonInfo.Citizens>()
+        result.await().shouldBeInstanceOf<WonInfo.Won>().side shouldBe Side.VILLAGE
         session.lifecycle.value.shouldBeInstanceOf<GameLifecycle.Finished>()
         session.isFinished() shouldBe true
     }
@@ -107,7 +108,7 @@ class JinrouGameSessionTest {
         scheduleFlow.value = mockk<ScheduleState.Cancelled.Overtime>()
         runCurrent()
 
-        result.await().shouldBeInstanceOf<WonInfo.Citizens>()
+        result.await().shouldBeInstanceOf<WonInfo.Won>().side shouldBe Side.VILLAGE
         session.isFinished() shouldBe true
     }
 

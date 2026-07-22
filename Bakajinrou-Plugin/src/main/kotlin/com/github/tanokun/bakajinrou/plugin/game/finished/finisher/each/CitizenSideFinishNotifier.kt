@@ -1,6 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.game.finished.finisher.each
 
 import com.github.tanokun.bakajinrou.api.WonInfo
+import com.github.tanokun.bakajinrou.api.participant.position.Side
 import com.github.tanokun.bakajinrou.api.participant.position.citizen.CitizensPosition
 import com.github.tanokun.bakajinrou.game.audience.GameAudienceStore
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
@@ -13,7 +14,7 @@ class CitizenSideFinishNotifier(
     private val audience: GameAudienceStore,
 ): EachSideFinishNotifier(translator) {
     override fun notify(wonInfo: WonInfo) {
-        if (wonInfo !is WonInfo.Citizens) return
+        if (wonInfo !is WonInfo.Won || wonInfo.side != Side.VILLAGE) return
 
         wonInfo.participants.forEach { participant ->
             val bukkitPlayer = playerProvider.getAllowNull(participant) ?: return@forEach

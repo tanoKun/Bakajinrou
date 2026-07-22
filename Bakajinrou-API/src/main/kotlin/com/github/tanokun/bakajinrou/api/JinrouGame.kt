@@ -4,6 +4,7 @@ import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
 import com.github.tanokun.bakajinrou.api.participant.all
+import com.github.tanokun.bakajinrou.api.participant.position.Side
 import com.github.tanokun.bakajinrou.api.participant.position.isCitizens
 import com.github.tanokun.bakajinrou.api.participant.position.isFox
 import com.github.tanokun.bakajinrou.api.participant.position.isWolf
@@ -51,9 +52,9 @@ class JinrouGame(
         val wolfs = survivors.includes(::isWolf)
         val fox = survivors.includes(::isFox)
 
-        if (wolfs.isEmpty() && fox.isEmpty()) return WonInfo.Citizens(participants)
-        if (citizens.isEmpty() && fox.isEmpty()) return WonInfo.Wolfs(participants)
-        if (wolfs.isEmpty() || citizens.isEmpty()) return WonInfo.Fox(participants)
+        if (wolfs.isEmpty() && fox.isEmpty()) return WonInfo.Won(Side.VILLAGE, participants)
+        if (citizens.isEmpty() && fox.isEmpty()) return WonInfo.Won(Side.WEREWOLF, participants)
+        if (wolfs.isEmpty() || citizens.isEmpty()) return WonInfo.Won(Side.FOX, participants)
 
         return null
     }

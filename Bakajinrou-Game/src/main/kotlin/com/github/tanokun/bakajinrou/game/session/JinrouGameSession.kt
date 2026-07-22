@@ -2,6 +2,7 @@ package com.github.tanokun.bakajinrou.game.session
 
 import com.github.tanokun.bakajinrou.api.WonInfo
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
+import com.github.tanokun.bakajinrou.api.participant.position.Side
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.whenOvertime
 import com.github.tanokun.bakajinrou.game.state.GameChanges
@@ -58,7 +59,7 @@ class JinrouGameSession(
         mainDispatcherScope.launch(start = CoroutineStart.UNDISPATCHED) {
             scheduler.observe(mainDispatcherScope)
                 .whenOvertime()
-                .collect { finish(WonInfo.Citizens(game.getCurrentParticipants())) }
+                .collect { finish(WonInfo.Won(Side.VILLAGE, game.getCurrentParticipants())) }
         }
     }
 
