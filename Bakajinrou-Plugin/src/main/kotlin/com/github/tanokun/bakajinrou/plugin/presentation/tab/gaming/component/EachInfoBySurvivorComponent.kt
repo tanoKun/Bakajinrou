@@ -14,7 +14,7 @@ import kotlin.math.abs
 
 open class EachInfoBySurvivorComponent(
     override val dummyUuid: DummyUUID,
-    private val GameStore: GameStore,
+    private val gameStore: GameStore,
     target: Player,
     translator: JinrouTranslator,
 ): ParticipantInfoInGameComponent(translator) {
@@ -28,8 +28,8 @@ open class EachInfoBySurvivorComponent(
     }
 
     override fun toPacketEntry(viewer: Player): ClientboundPlayerInfoUpdatePacket.Entry {
-        val viewerParticipant = GameStore.getParticipant(viewer.uniqueId.asParticipantId()) ?: throw IllegalStateException("Viewer is not a participant")
-        val targetParticipant = GameStore.getParticipant(targetId) ?: throw IllegalStateException("Target is not a participant")
+        val viewerParticipant = gameStore.getParticipant(viewer.uniqueId.asParticipantId()) ?: throw IllegalStateException("Viewer is not a participant")
+        val targetParticipant = gameStore.getParticipant(targetId) ?: throw IllegalStateException("Target is not a participant")
 
         val order = orderDecider(targetParticipant)
 
