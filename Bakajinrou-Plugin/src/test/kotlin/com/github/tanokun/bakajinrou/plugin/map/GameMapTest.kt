@@ -1,6 +1,7 @@
 package com.github.tanokun.bakajinrou.plugin.map
 
 import kotlinx.serialization.json.Json
+import com.github.tanokun.bakajinrou.plugin.map.gimmick.MapGimmickId
 import org.bukkit.Material
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -12,17 +13,24 @@ class GameMapTest {
 
     @Test
     fun serializeTest() {
-        val gameMap = GameMap(MapName("testMap"), point1, point2, 15.minutes, Material.STONE)
+        val gameMap = GameMap(MapName("testMap"), point1, point2, 15.minutes, Material.STONE, MapGimmickId.HIJACK)
         val encode = Json.encodeToString(gameMap)
 
         assertEquals(
-            "{\"mapName\":{\"name\":\"testMap\"},\"spawnPoint\":{\"worldName\":\"testWorld\",\"x\":1,\"y\":1,\"z\":1},\"lobbyPoint\":{\"worldName\":\"testWorld2\",\"x\":2,\"y\":2,\"z\":2},\"startTime\":\"PT15M\",\"icon\":\"STONE\"}",
+            "{\"mapName\":{\"name\":\"testMap\"},\"spawnPoint\":{\"worldName\":\"testWorld\",\"x\":1,\"y\":1,\"z\":1},\"lobbyPoint\":{\"worldName\":\"testWorld2\",\"x\":2,\"y\":2,\"z\":2},\"startTime\":\"PT15M\",\"icon\":\"STONE\",\"gimmickId\":\"HIJACK\"}",
             encode
         )
 
         val decode = Json.decodeFromString<GameMap>(encode)
         assertEquals(gameMap, decode)
 
+    }
+
+    @Test
+    fun deserializeLegacyMapWithoutGimmick() {
+        val legacy = "{\"mapName\":{\"name\":\"testMap\"},\"spawnPoint\":{\"worldName\":\"testWorld\",\"x\":1,\"y\":1,\"z\":1},\"lobbyPoint\":{\"worldName\":\"testWorld2\",\"x\":2,\"y\":2,\"z\":2},\"startTime\":\"PT15M\",\"icon\":\"STONE\"}"
+
+        assertEquals(MapGimmickId.NONE, Json.decodeFromString<GameMap>(legacy).gimmickId)
     }
 }
 

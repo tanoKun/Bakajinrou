@@ -35,6 +35,7 @@ class TriggerExchangeAdvantageAdapter(
     private val plugin: Plugin,
     private val gameChanges: GameChanges,
     private val locationExchanger: LocationExchanger,
+    private val exchangeTargetExclusions: ExchangeTargetExclusions,
     private val mainScope: CoroutineScope,
 ): Observer {
     private val listeners = hashMapOf<ExchangeMethod, ClickListener>()
@@ -58,7 +59,6 @@ class TriggerExchangeAdvantageAdapter(
     }
 
     private fun trigger(ability: ExchangeMethod) {
-
         listeners[ability] = ClickListener(ability).apply { registerAll() }
     }
 
@@ -76,7 +76,13 @@ class TriggerExchangeAdvantageAdapter(
 
             event.isCancelled = true
 
-            mainScope.launch { locationExchanger.exchange(exchange, event.player.uniqueId.asParticipantId()) }
+            mainScope.launch {
+                locationExchanger.exchange(
+                    exchange,
+                    event.player.uniqueId.asParticipantId(),
+                    exchangeTargetExclusions.snapshot(),
+                )
+            }
         }
 
         register<ProjectileLaunchEvent> { event ->

@@ -1,9 +1,6 @@
 package com.github.tanokun.bakajinrou.api.advantage.using
 
-import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
-import com.github.tanokun.bakajinrou.api.participant.ParticipantScope
-import com.github.tanokun.bakajinrou.api.participant.or
 import kotlin.random.Random
 
 /**
@@ -17,14 +14,13 @@ class ExchangeSelector(private val random: Random) {
      * 自身と同じ、死んでいる参加者は対象外です。
      *
      * @param sideId 能力を使用する参加者のId
-     * @param candidates 交換相手の候補となる参加者のリスト
+     * @param candidates 交換相手の候補となる参加者Id
      *
      * @return 選定された参加者のId
      */
-    fun select(sideId: ParticipantId, candidates: ParticipantScope.All): ParticipantId =
-        candidates
-            .excludes(Participant::isSuspended or Participant::isDead)
-            .excludes(sideId)
-            .random(random)
-            .participantId
+    fun select(
+        sideId: ParticipantId,
+        candidates: Set<ParticipantId>,
+    ): ParticipantId =
+        (candidates - sideId).random(random)
 }

@@ -6,6 +6,7 @@ import com.github.tanokun.bakajinrou.plugin.map.GameMap
 import com.github.tanokun.bakajinrou.plugin.map.GameMapRegistry
 import com.github.tanokun.bakajinrou.plugin.map.MapName
 import com.github.tanokun.bakajinrou.plugin.map.PointLocation
+import com.github.tanokun.bakajinrou.plugin.map.gimmick.MapGimmickId
 import com.github.tanokun.bakajinrou.plugin.map.result.MapCreationResult
 import com.github.tanokun.bakajinrou.plugin.map.result.MapDeletionResult
 import com.github.tanokun.bakajinrou.plugin.map.result.MapUpdateResult
@@ -28,16 +29,17 @@ import kotlin.time.Duration.Companion.seconds
 /**
  * マップ設定に関する操作を行う管理者向けコマンド `/mapsetting` を定義します。
  *
- * このコマンドは、ゲームに使用されるマップ情報(スポーン地点、ロビー地点、開始時間、クオーツ配布時間)を
+ * このコマンドは、ゲームに使用されるマップ情報(スポーン地点、ロビー地点、開始時間、ギミック)を
  * 登録・編集・削除するために使用されます。
  * 操作は非同期で行われ、ファイルやデータベースへの書き込みを伴います。
  *
  * ## コマンドの構文
- * ### `/mapsetting create <mapName> <spawn> <lobby>`
+ * ### `/mapsetting create <mapName> <spawn> <lobby> <gimmick>`
  * 新しいマップを作成します。
  * - `mapName`: 作成するマップの名前(文字列)
  * - `spawn`: スポーン地点のロケーション
  * - `lobby`: ロビー地点のロケーション
+ * - `gimmick`: マップで使用するギミック
  *
  * ### `/mapsetting delete <mapName>`
  * 指定されたマップを削除します。
@@ -51,11 +53,11 @@ import kotlin.time.Duration.Companion.seconds
  * ### `/mapsetting update time <mapName> <seconds>`
  * 指定マップのゲーム開始後の制限時間(秒)を変更します。
  *
- * ### `/mapsetting update quartztime <mapName> <seconds>`
- * 指定マップにおいて、ゲーム開始からクオーツを配布するまでの時間(秒)を設定します。
- *
  * ### `/mapsetting update icon <mapName> <material>`
  * 指定マップのアイコンを更新します。
+ *
+ * ### `/mapsetting update gimmick <mapName> <gimmick>`
+ * 指定マップのギミックを更新します。
  *
  * ## パーミッション
  * - `bakajinrou.command.mapsetting`
@@ -73,12 +75,14 @@ class MapSettingCommand(private val gameMapRegistry: GameMapRegistry, private va
                 .withArguments(TextArgument("mapName"))
                 .withArguments(LocationArgument("spawn"))
                 .withArguments(LocationArgument("lobby"))
+                .withArguments(argumentGimmick())
                 .executes(CommandExecutor { sender, args ->
                     val mapName = MapName(args["mapName"] as String)
                     val spawnPoint = (args["spawn"] as Location).toPoint()
                     val lobbyPoint = (args["lobby"] as Location).toPoint()
+                    val gimmickId = args["gimmick"] as MapGimmickId
 
-                    val map = GameMap(mapName, spawnPoint, lobbyPoint, 15.minutes, Material.STONE)
+                    val map = GameMap(mapName, spawnPoint, lobbyPoint, 15.minutes, Material.STONE, gimmickId)
 
                     sender.info("「${map.mapName.name}」マップを作成中...")
 
@@ -156,6 +160,18 @@ class MapSettingCommand(private val gameMapRegistry: GameMapRegistry, private va
                         update(map.copy(icon = material), sender)
                     })
                 )
+                .withSubcommand(CommandAPICommand("gimmick")
+                    .withArguments(argumentMap())
+                    .withArguments(argumentGimmick())
+                    .executes(CommandExecutor { sender, args ->
+                        val map = args["map"] as GameMap
+                        val gimmickId = args["gimmick"] as MapGimmickId
+
+                        sender.info("「${map.mapName.name}」マップのギミックを修正中...")
+
+                        update(map.copy(gimmickId = gimmickId), sender)
+                    })
+                )
             )
             .register()
     }
@@ -185,6 +201,16 @@ class MapSettingCommand(private val gameMapRegistry: GameMapRegistry, private va
         })
         .replaceSuggestions(
             ArgumentSuggestions.stringCollection { materials }
+        )
+
+    private fun argumentGimmick(): Argument<MapGimmickId> = CustomArgument(
+        TextArgument("gimmick"),
+        CustomArgumentInfoParser { info: CustomArgumentInfo<String> ->
+            MapGimmickId.entries.find { it.name.equals(info.input.replace("\"", ""), ignoreCase = true) }
+                ?: throw CustomArgumentException.fromMessageBuilder(MessageBuilder("存在しないギミック: ").appendArgInput())
+        })
+        .replaceSuggestions(
+            ArgumentSuggestions.stringCollection { MapGimmickId.entries.map { it.name.lowercase() } }
         )
 
     private fun update(map: GameMap, sender: CommandSender) {
