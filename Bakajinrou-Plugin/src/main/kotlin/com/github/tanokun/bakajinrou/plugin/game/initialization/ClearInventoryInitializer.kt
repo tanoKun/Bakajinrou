@@ -4,7 +4,7 @@ import com.github.tanokun.bakajinrou.game.state.GameStore
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.game.scheduler.GameScheduler
 import com.github.tanokun.bakajinrou.game.scheduler.whenLaunched
-import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.getMethodId
+import com.github.tanokun.bakajinrou.plugin.common.item.ItemPersistent.getMethodId
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import com.github.tanokun.bakajinrou.plugin.participant.comingout.adapting.COMING_OUT_ADAPTER_KEY

@@ -5,6 +5,7 @@ import com.github.tanokun.bakajinrou.api.advantage.ExchangeMethod
 import com.github.tanokun.bakajinrou.api.advantage.InvisibilityMethod
 import com.github.tanokun.bakajinrou.api.advantage.SpeedMethod
 import com.github.tanokun.bakajinrou.api.attacking.method.GasMethod
+import com.github.tanokun.bakajinrou.api.attacking.method.ScatterCrossbowMethod
 import com.github.tanokun.bakajinrou.api.attacking.method.SwordMethod
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.method.asMethodId
@@ -32,6 +33,8 @@ class Crafting(
     private val random: Random,
     private val provider: ProtectVerificatorProvider,
 ) {
+    private val randomCraftingProducts = CraftingProduct.entries
+        .filterNot { it == CraftingProduct.SCATTER_CROSSBOW }
 
     private val _crafting = MutableSharedFlow<CraftingInfo>(replay = 1)
 
@@ -44,19 +47,6 @@ class Crafting(
      */
     fun observeCrafting(): Flow<CraftingInfo> = _crafting.asSharedFlow()
 
-    private val crafting = listOf<(ParticipantId) -> GrantedMethod>(
-        { SwordMethod(reason = GrantedReason.CRAFTED) },
-        { GasMethod(reason = GrantedReason.CRAFTED) },
-        { id -> ResistanceMethod(reason = GrantedReason.CRAFTED, verificator = provider.getResistanceVerificator(false)) },
-        { id ->
-            val methodId = UUID.randomUUID().asMethodId()
-            ShieldMethod(methodId = methodId, reason = GrantedReason.CRAFTED, verificator = provider.getShieldVerificator(id, methodId))
-        },
-        { SpeedMethod(reason = GrantedReason.CRAFTED) },
-        { InvisibilityMethod(reason = GrantedReason.CRAFTED) },
-        { ExchangeMethod(reason = GrantedReason.CRAFTED) }
-    )
-
     /**
      * 指定参加者に対して、ランダムに1つの手段が追加されます。
      *
@@ -66,13 +56,50 @@ class Crafting(
     suspend fun randomlyCraftMethod(participantId: ParticipantId, style: CraftingStyle) {
         if (!game.existParticipant(participantId)) return
 
-        val method = crafting.random(random).invoke(participantId)
+        val product = randomCraftingProducts.random(random)
 
-        game.updateParticipant(participantId) { current ->
-            current.grantMethod(method)
-        }
+        craftMethod(participantId, product, style)
+    }
 
+    /**
+     * 指定した商品に対応する手段を参加者へ追加します。
+     *
+     * @return 追加した手段。参加者が存在しない場合は null
+     */
+    suspend fun craftMethod(
+        participantId: ParticipantId,
+        product: CraftingProduct,
+        style: CraftingStyle,
+    ): GrantedMethod? {
+        if (!game.existParticipant(participantId)) return null
+
+        val method = createMethod(product, participantId)
+
+        game.updateParticipant(participantId) { current -> current.grantMethod(method) }
         _crafting.emit(CraftingInfo(participantId, style, method))
+
+        return method
+    }
+
+    private fun createMethod(product: CraftingProduct, participantId: ParticipantId): GrantedMethod = when (product) {
+        CraftingProduct.SWORD -> SwordMethod(reason = GrantedReason.CRAFTED)
+        CraftingProduct.GAS -> GasMethod(reason = GrantedReason.CRAFTED)
+        CraftingProduct.RESISTANCE -> ResistanceMethod(
+            reason = GrantedReason.CRAFTED,
+            verificator = provider.getResistanceVerificator(false),
+        )
+        CraftingProduct.SHIELD -> {
+            val methodId = UUID.randomUUID().asMethodId()
+            ShieldMethod(
+                methodId = methodId,
+                reason = GrantedReason.CRAFTED,
+                verificator = provider.getShieldVerificator(participantId, methodId),
+            )
+        }
+        CraftingProduct.SPEED -> SpeedMethod(reason = GrantedReason.CRAFTED)
+        CraftingProduct.INVISIBILITY -> InvisibilityMethod(reason = GrantedReason.CRAFTED)
+        CraftingProduct.EXCHANGE -> ExchangeMethod(reason = GrantedReason.CRAFTED)
+        CraftingProduct.SCATTER_CROSSBOW -> ScatterCrossbowMethod(reason = GrantedReason.CRAFTED)
     }
 
     /**

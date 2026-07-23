@@ -18,7 +18,9 @@ class HijackFlow(
 ) {
     fun activate(player: Player, floor: HijackFloor) {
         if (!context.consumeQuartz(player, QUARTZ_COST)) {
-            player.sendMessage(Component.text("水晶が足りません。", NamedTextColor.RED))
+            player.sendMessage(
+                Component.text("実行できません。クォーツが${QUARTZ_COST}個必要です。", NamedTextColor.RED)
+            )
             return
         }
 

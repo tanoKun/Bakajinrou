@@ -10,4 +10,5 @@ enum class MapGimmickId {
     OVERLOOK,
     SUSPICIOUS_MERCHANT,
     TRANSFER_GATE,
+    WANDERING_TRADER,
 }

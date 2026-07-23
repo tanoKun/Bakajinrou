@@ -1,12 +1,12 @@
-package com.github.tanokun.bakajinrou.plugin.common.bukkit.item
+package com.github.tanokun.bakajinrou.plugin.presentation.item
 
-import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
-import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.setMetadata
+import com.github.tanokun.bakajinrou.plugin.common.item.ItemPersistent
 import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.localization.keys.displayName
 import com.github.tanokun.bakajinrou.plugin.localization.keys.lore
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage.miniMessage
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -22,14 +22,17 @@ object ItemViewer {
      * 基本的な表示アイテムを作成します。
      *
      * @param material 表示上のマテリアル
-     * @param isVisible 他参加者から表示するか
      * @param isGlowing エンチャント状態にするか
-     * @param method 元となる
+     * @param assetKey 表示名と説明文の翻訳に使うアセットキー
      * @param locale 翻訳先
      * @param translator 人狼用の翻訳機
      */
     fun createBasicItem(
-        material: Material, isGlowing: Boolean, isVisible: Boolean, method: GrantedMethod, translator: JinrouTranslator, locale: Locale
+        material: Material,
+        isGlowing: Boolean,
+        assetKey: MethodAssetKeys,
+        translator: JinrouTranslator,
+        locale: Locale,
     ): ItemStack {
         val item = ItemStack.of(material).apply {
             editMeta {
@@ -37,8 +40,7 @@ object ItemViewer {
                 if (isGlowing) it.addEnchant(Enchantment.UNBREAKING, 1, true)
             }
 
-            translateBasic(method.assetKey, translator, locale)
-            setMetadata(method, isVisible = isVisible)
+            translateBasic(assetKey, translator, locale)
         }
 
         return item
@@ -54,7 +56,9 @@ object ItemViewer {
      */
     fun ItemStack.translateBasic(assetKey: MethodAssetKeys, translator: JinrouTranslator, locale: Locale) {
         this.editMeta {
-            val displayName = translator.translate(assetKey.displayName(), locale)
+            val displayName = translator
+                .translate(assetKey.displayName(), locale)
+                .decoration(TextDecoration.ITALIC, false)
             it.displayName(displayName)
 
             val lore = splitLore(translator.translate(assetKey.lore(), locale))
@@ -73,7 +77,9 @@ object ItemViewer {
         val serialized = miniMessage.serialize(lore)
 
         return serialized.split("<newline>", "<br>").map {
-            miniMessage.deserialize(it)
+            miniMessage
+                .deserialize(it)
+                .decoration(TextDecoration.ITALIC, false)
         }
     }
 

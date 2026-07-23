@@ -5,7 +5,7 @@ import com.github.tanokun.bakajinrou.api.method.asMethodId
 import com.github.tanokun.bakajinrou.api.observing.Observer
 import com.github.tanokun.bakajinrou.api.participant.Participant
 import com.github.tanokun.bakajinrou.game.state.distinctUntilChangedByParticipantOf
-import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.getMethodId
+import com.github.tanokun.bakajinrou.plugin.common.item.ItemPersistent.getMethodId
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
 import kotlinx.coroutines.CoroutineScope
