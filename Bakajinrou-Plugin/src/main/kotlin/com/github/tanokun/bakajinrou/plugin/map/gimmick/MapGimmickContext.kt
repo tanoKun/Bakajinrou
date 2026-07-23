@@ -58,7 +58,7 @@ class MapGimmickContext(
     fun markers(tag: String): List<ArmorStand> {
         val world = Bukkit.getWorld(gameMap.spawnPoint.worldName) ?: return emptyList()
         return world.getEntitiesByClass(ArmorStand::class.java)
-            .filter { GimmickMarkerTags.contains(it.scoreboardTags, tag) }
+            .filter { tag in it.scoreboardTags }
     }
 
     fun markerLocation(tag: String, legacy: Location): Location =

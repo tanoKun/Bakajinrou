@@ -26,7 +26,7 @@ class TransferGateFlow(
             notifyFailure(player, "このゲートは現在使用できません。", now)
             return
         }
-        if (GimmickMarkerTags.contains(source.scoreboardTags, GimmickMarkerTags.TRANSFER_GATE_FOX_ONLY) && !isFox(participant)) {
+        if (GimmickMarkerTags.TRANSFER_GATE_FOX_ONLY in source.scoreboardTags && !isFox(participant)) {
             notifyFailure(player, "このゲートは妖狐専用です。", now)
             return
         }

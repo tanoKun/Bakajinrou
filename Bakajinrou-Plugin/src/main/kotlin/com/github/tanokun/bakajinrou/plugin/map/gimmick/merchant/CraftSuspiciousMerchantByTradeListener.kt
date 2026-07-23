@@ -4,6 +4,8 @@ import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
 import com.github.tanokun.bakajinrou.game.crafting.CraftingStyle
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListener
+import com.github.tanokun.bakajinrou.plugin.map.gimmick.shared.consumeQuartz
+import com.github.tanokun.bakajinrou.plugin.map.gimmick.shared.quartzAmount
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.bukkit.Material
@@ -61,25 +63,5 @@ class CraftSuspiciousMerchantByTradeListener(
             ClickType.SHIFT_RIGHT,
         )
 
-        fun MerchantInventory.quartzAmount(): Int = (0..1)
-            .mapNotNull(::getItem)
-            .filter { it.type == Material.QUARTZ }
-            .sumOf { it.amount }
-
-        fun MerchantInventory.consumeQuartz(amount: Int) {
-            var remaining = amount
-
-            for (slot in 0..1) {
-                val item = getItem(slot) ?: continue
-                if (item.type != Material.QUARTZ) continue
-
-                val consumed = min(item.amount, remaining)
-                item.amount -= consumed
-                remaining -= consumed
-
-                if (item.amount <= 0) setItem(slot, null)
-                if (remaining == 0) return
-            }
-        }
     }
 }
