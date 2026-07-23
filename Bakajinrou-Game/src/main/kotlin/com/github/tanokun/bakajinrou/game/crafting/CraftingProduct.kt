@@ -1,8 +1,6 @@
 package com.github.tanokun.bakajinrou.game.crafting
 
-enum class CraftingProduct(
-    val availableInRandomCrafting: Boolean = true,
-) {
+enum class CraftingProduct {
     SWORD,
     GAS,
     RESISTANCE,
@@ -10,5 +8,5 @@ enum class CraftingProduct(
     SPEED,
     INVISIBILITY,
     EXCHANGE,
-    SCATTER_CROSSBOW(availableInRandomCrafting = false),
+    SCATTER_CROSSBOW,
 }

@@ -11,7 +11,6 @@ import com.github.tanokun.bakajinrou.game.protection.ProtectVerificatorProvider
 import com.github.tanokun.bakajinrou.game.state.GameStore
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.collections.shouldHaveSize
-import io.kotest.matchers.collections.shouldNotContain
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
@@ -49,10 +48,24 @@ class CraftingTest : StringSpec({
         store.getParticipant(participantId)!!.getGrantedMethods() shouldHaveSize 1
     }
 
-    "ランダムクラフトの商品候補には行商人限定品を含めない" {
-        val randomProducts = CraftingProduct.entries
-            .filter(CraftingProduct::availableInRandomCrafting)
+    "ランダムクラフトでは行商人限定品を付与しない" {
+        val participantId = ParticipantId(UUID.randomUUID())
+        val store = store(participantId)
+        val crafting = Crafting(
+            store,
+            object : Random() {
+                override fun nextBits(bitCount: Int): Int = 0
+                override fun nextInt(until: Int): Int = until - 1
+            },
+            mockk<ProtectVerificatorProvider>(relaxed = true),
+        )
 
-        randomProducts shouldNotContain CraftingProduct.SCATTER_CROSSBOW
+        runBlocking {
+            crafting.randomlyCraftMethod(participantId, CraftingStyle.SINGLE)
+        }
+
+        store.getParticipant(participantId)!!
+            .getGrantedMethods()
+            .filterIsInstance<ScatterCrossbowMethod>() shouldHaveSize 0
     }
 })

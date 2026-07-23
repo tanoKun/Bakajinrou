@@ -33,6 +33,8 @@ class Crafting(
     private val random: Random,
     private val provider: ProtectVerificatorProvider,
 ) {
+    private val randomCraftingProducts = CraftingProduct.entries
+        .filterNot { it == CraftingProduct.SCATTER_CROSSBOW }
 
     private val _crafting = MutableSharedFlow<CraftingInfo>(replay = 1)
 
@@ -54,9 +56,7 @@ class Crafting(
     suspend fun randomlyCraftMethod(participantId: ParticipantId, style: CraftingStyle) {
         if (!game.existParticipant(participantId)) return
 
-        val product = CraftingProduct.entries
-            .filter(CraftingProduct::availableInRandomCrafting)
-            .random(random)
+        val product = randomCraftingProducts.random(random)
 
         craftMethod(participantId, product, style)
     }
