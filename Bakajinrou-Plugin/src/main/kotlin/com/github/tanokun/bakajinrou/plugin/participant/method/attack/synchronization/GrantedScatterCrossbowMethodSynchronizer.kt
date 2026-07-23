@@ -12,8 +12,11 @@ import com.github.tanokun.bakajinrou.plugin.localization.JinrouTranslator
 import com.github.tanokun.bakajinrou.plugin.participant.method.GrantedInventorySynchronizer
 import kotlinx.coroutines.CoroutineScope
 import org.bukkit.Material
+import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.CrossbowMeta
+import org.bukkit.inventory.meta.Damageable
 import org.koin.core.annotation.Scope
 import org.koin.core.annotation.Scoped
 
@@ -40,5 +43,23 @@ class GrantedScatterCrossbowMethodSynchronizer(
             method = add.grantedMethod,
             translator = translator,
             locale = player.locale(),
-        ).configureAsOneShotScatterCrossbow()
+        ).apply {
+            editMeta { meta ->
+                (meta as CrossbowMeta).apply {
+                    addEnchant(Enchantment.MULTISHOT, 1, true)
+                    setChargedProjectiles(
+                        List(SCATTER_PROJECTILE_COUNT) { ItemStack(Material.ARROW) }
+                    )
+                    setEnchantmentGlintOverride(true)
+                }
+
+                // Paper は拡散した矢ごとに耐久を1消費するため、3本目で壊れる値にする。
+                (meta as Damageable).damage =
+                    type.maxDurability.toInt() - SCATTER_PROJECTILE_COUNT
+            }
+        }
+
+    private companion object {
+        const val SCATTER_PROJECTILE_COUNT = 3
+    }
 }
