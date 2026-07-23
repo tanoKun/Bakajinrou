@@ -1,6 +1,6 @@
 group = "com.github.tanokun"
 
-val projectVersion = "1.2.0-SNAPSHOT"
+val projectVersion = "1.3.0-SNAPSHOT"
 
 allprojects {
     version = projectVersion
