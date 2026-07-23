@@ -8,7 +8,10 @@ import com.github.tanokun.bakajinrou.api.translation.MethodAssetKeys
 import com.github.tanokun.bakajinrou.game.crafting.Crafting
 import com.github.tanokun.bakajinrou.game.crafting.CraftingInfo
 import com.github.tanokun.bakajinrou.game.crafting.CraftingStyle
+import com.github.tanokun.bakajinrou.plugin.common.item.ItemPersistent.setMetadata
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
+import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
+import com.github.tanokun.bakajinrou.plugin.presentation.item.MethodItemPresenter
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
@@ -16,12 +19,14 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.timeout
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.koin.core.annotation.Scope
+import org.koin.core.annotation.Scoped
 import kotlin.time.Duration.Companion.seconds
 
 /**
- * 特定の手段が付与されたときに、プレイヤーのインベントリと同期します。
+ * 手段が付与されたときに、プレイヤーのインベントリと同期します。
  *
- * 対象となる手段(MethodAssetKeys)が追加されると、自動的に同期処理を開始します。
+ * [MethodAssetKeys] と表示用アイテムを結び付け、追加されたすべての手段を同期します。
  * CRAFTING が理由の場合は、クラフト状況に応じて追加方法を変えます。
  * また、同期前に同じ手段が削除されると、その処理は中断されます。
  *
@@ -29,18 +34,19 @@ import kotlin.time.Duration.Companion.seconds
  * - 同期はサスペンドで行われ、オンライン状態になるまで待機します。
  * - 不正なクラフトアイテムの場合、タイムアウトする場合があります。
  */
-abstract class GrantedInventorySynchronizer(
+@Scoped(binds = [Observer::class])
+@Scope(value = GameComponents::class)
+class GrantedInventorySynchronizer(
     private val gameChanges: GameChanges,
     private val mainScope: CoroutineScope,
     private val playerProvider: BukkitPlayerProvider,
     private val crafting: Crafting,
-    vararg assetKey: MethodAssetKeys
+    private val methodItemPresenter: MethodItemPresenter,
 ): Observer {
     init {
         mainScope.launch {
             gameChanges.methodChanges
                 .filterIsInstance<MethodDifference.Granted>()
-                .filter { assetKey.contains(it.grantedMethod.assetKey) }
                 .collect(::syncInventory)
         }
     }
@@ -149,5 +155,29 @@ abstract class GrantedInventorySynchronizer(
      *
      * @return 表示用のアイテム
      */
-    abstract fun createItem(player: Player, add: MethodDifference.Granted): ItemStack
+    private fun createItem(player: Player, add: MethodDifference.Granted): ItemStack {
+        val assetKey = add.grantedMethod.assetKey
+        val locale = player.locale()
+        val item = when (assetKey) {
+            MethodAssetKeys.Attack.GAS -> methodItemPresenter.gas(locale)
+            MethodAssetKeys.Attack.SWORD -> methodItemPresenter.sword(locale)
+            MethodAssetKeys.Attack.ARROW -> methodItemPresenter.arrow(locale)
+            MethodAssetKeys.Attack.SCATTER_CROSSBOW -> methodItemPresenter.scatterCrossbow(locale)
+            MethodAssetKeys.Protective.TOTEM -> methodItemPresenter.totem(locale)
+            MethodAssetKeys.Protective.FAKE_TOTEM -> methodItemPresenter.fakeTotem(locale)
+            MethodAssetKeys.Protective.SHIELD -> methodItemPresenter.shield(locale)
+            MethodAssetKeys.Protective.RESISTANCE -> methodItemPresenter.resistance(locale)
+            MethodAssetKeys.Advantage.EXCHANGE -> methodItemPresenter.exchange(locale)
+            MethodAssetKeys.Advantage.SPEED -> methodItemPresenter.speed(locale)
+            MethodAssetKeys.Advantage.INVISIBILITY -> methodItemPresenter.invisibility(locale)
+            MethodAssetKeys.Ability.DIVINE -> methodItemPresenter.divine(locale)
+            MethodAssetKeys.Ability.COMMUNE -> methodItemPresenter.commune(locale)
+            MethodAssetKeys.Ability.PROTECT -> methodItemPresenter.protect(locale)
+            else -> error("未対応の手段表示です: ${assetKey.key}")
+        }
+
+        return item.apply {
+            setMetadata(add.grantedMethod, isVisible = assetKey !is MethodAssetKeys.Ability)
+        }
+    }
 }

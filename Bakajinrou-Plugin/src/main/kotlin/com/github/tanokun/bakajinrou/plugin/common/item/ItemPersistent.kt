@@ -1,13 +1,12 @@
-package com.github.tanokun.bakajinrou.plugin.common.bukkit.item
+package com.github.tanokun.bakajinrou.plugin.common.item
 
 import com.github.tanokun.bakajinrou.api.method.GrantedMethod
 import com.github.tanokun.bakajinrou.api.method.MethodId
 import com.github.tanokun.bakajinrou.api.method.asMethodId
-import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemViewer.isTransportable
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataType
-import java.util.*
+import java.util.UUID
 
 /**
  * アイテムのメタデータ操作や翻訳表示を行うためのユーティリティ。
@@ -23,7 +22,7 @@ object ItemPersistent {
     /**
      * アイテムに手段情報と表示・ドロップ可否のメタデータを設定します。
      *
-     * @receiver 設定対象の [ItemStack]
+     * @receiver 設定対象の [org.bukkit.inventory.ItemStack]
      * @param method 手段
      * @param isVisible アイテムが可視であるかどうか
      * @param isTransportable アイテムをドロップ可能かどうか

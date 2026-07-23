@@ -2,8 +2,8 @@ package com.github.tanokun.bakajinrou.plugin.participant.method.attack.adapting
 import com.github.tanokun.bakajinrou.api.attacking.method.ArrowMethod
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.game.attacking.Attacking
-import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.getMethodId
-import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemViewer.hasPossibilityOfMethod
+import com.github.tanokun.bakajinrou.plugin.common.item.ItemPersistent.getMethodId
+import com.github.tanokun.bakajinrou.plugin.presentation.item.ItemViewer.hasPossibilityOfMethod
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleListener
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
