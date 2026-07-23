@@ -5,7 +5,6 @@ import com.github.tanokun.bakajinrou.plugin.map.gimmick.MapGimmickContext
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.Material
-import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Villager
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.MerchantRecipe
@@ -25,10 +24,10 @@ class SuspiciousMerchantFlow(
             villager.isCustomNameVisible = true
             villager.isSilent = true
             villager.setAI(false)
+            villager.isInvulnerable = true
+            villager.isPersistent = true
             villager.profession = Villager.Profession.FARMER
             villager.villagerLevel = 5
-            villager.getAttribute(Attribute.MAX_HEALTH)?.baseValue = 2.0
-            villager.health = 2.0
             villager.addScoreboardTag(SUSPICIOUS_MERCHANT_ENTITY_TAG)
             villager.recipes = listOf(
                 MerchantRecipe(ItemStack(Material.QUARTZ_BLOCK), Int.MAX_VALUE).apply {

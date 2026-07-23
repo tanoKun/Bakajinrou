@@ -34,7 +34,7 @@ class TransferGateFlow(
         val destinations = gates.filter { it.uniqueId != source.uniqueId }
         if (destinations.isEmpty()) return
         if (!context.consumeQuartz(player, QUARTZ_COST)) {
-            notifyFailure(player, "水晶が足りません。", now)
+            notifyFailure(player, "実行できません。クォーツが${QUARTZ_COST}個必要です。", now)
             return
         }
 

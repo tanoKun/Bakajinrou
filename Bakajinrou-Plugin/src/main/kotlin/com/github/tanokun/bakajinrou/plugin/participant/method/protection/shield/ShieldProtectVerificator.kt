@@ -3,7 +3,7 @@ package com.github.tanokun.bakajinrou.plugin.participant.method.protection.shiel
 import com.github.tanokun.bakajinrou.api.method.MethodId
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
 import com.github.tanokun.bakajinrou.api.protection.ProtectVerificator
-import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.getMethodId
+import com.github.tanokun.bakajinrou.plugin.common.item.ItemPersistent.getMethodId
 import com.github.tanokun.bakajinrou.plugin.common.bukkit.player.BukkitPlayerProvider
 
 class ShieldProtectVerificator(

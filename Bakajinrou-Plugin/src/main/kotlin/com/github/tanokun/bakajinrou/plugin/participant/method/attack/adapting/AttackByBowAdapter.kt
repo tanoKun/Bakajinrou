@@ -2,8 +2,8 @@ package com.github.tanokun.bakajinrou.plugin.participant.method.attack.adapting
 import com.github.tanokun.bakajinrou.api.attacking.method.ArrowMethod
 import com.github.tanokun.bakajinrou.api.participant.asParticipantId
 import com.github.tanokun.bakajinrou.game.attacking.Attacking
-import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemPersistent.getMethodId
-import com.github.tanokun.bakajinrou.plugin.common.bukkit.item.ItemViewer.hasPossibilityOfMethod
+import com.github.tanokun.bakajinrou.plugin.common.item.ItemPersistent.getMethodId
+import com.github.tanokun.bakajinrou.plugin.presentation.item.ItemViewer.hasPossibilityOfMethod
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleEventListener
 import com.github.tanokun.bakajinrou.plugin.common.listener.LifecycleListener
 import com.github.tanokun.bakajinrou.plugin.common.setting.builder.GameComponents
@@ -29,17 +29,18 @@ import org.koin.core.annotation.Scoped
 @Scoped(binds = [LifecycleListener::class])
 @Scope(value = GameComponents::class)
 class AttackByBowAdapter(
-    plugin: Plugin, attacking: Attacking, mainScope: CoroutineScope
+    plugin: Plugin,
+    attacking: Attacking,
+    mainScope: CoroutineScope,
 ): LifecycleEventListener(plugin, {
     register<EntityDamageByEntityEvent> { event ->
-        val arrow = (event.damager as? Arrow) ?: return@register
+        val arrow = event.damager as? Arrow ?: return@register
+        val attackMethod = arrow.itemStack.getMethodId() ?: return@register
 
         val attacker = arrow.shooter as? Player ?: return@register
         val victim = event.entity as? Player ?: return@register
 
         event.damage = 0.01
-
-        val attackMethod = arrow.itemStack.getMethodId() ?: return@register
 
         mainScope.launch {
             attacking.attack<ArrowMethod>(by = attacker.uniqueId.asParticipantId(), victims = listOf(victim.uniqueId.asParticipantId()), attackMethod)
@@ -48,8 +49,7 @@ class AttackByBowAdapter(
 
     register<ProjectileHitEvent> { event ->
         if (event.hitEntity != null) return@register
-
-        val arrow = (event.entity as? Arrow) ?: return@register
+        val arrow = event.entity as? Arrow ?: return@register
         val methodId = arrow.itemStack.getMethodId() ?: return@register
 
         val attacker = arrow.shooter as? Player ?: return@register

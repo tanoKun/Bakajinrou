@@ -41,11 +41,18 @@ class Attacking(private val game: GameStore) {
      * @see AttackVerificator
      * @see AttackMethod
      */
-    suspend inline fun <reified T: AttackMethod> attack(by: ParticipantId, victims: List<ParticipantId>, withId: MethodId) {
-        attack(by, victims, withId, T::class)
-    }
+    suspend inline fun <reified T: AttackMethod> attack(
+        by: ParticipantId,
+        victims: List<ParticipantId>,
+        withId: MethodId,
+    ): List<AttackResolution> = attack(by, victims, withId, T::class)
 
-    suspend fun <T: AttackMethod> attack(by: ParticipantId, victims: List<ParticipantId>, withId: MethodId, klass: KClass<T>) {
+    suspend fun <T: AttackMethod> attack(
+        by: ParticipantId,
+        victims: List<ParticipantId>,
+        withId: MethodId,
+        klass: KClass<T>,
+    ): List<AttackResolution> {
         val attackResolutions = game.transact { currentGame ->
             val attacker = currentGame.getParticipant(by)
                 ?: return@transact GameTransition(currentGame, emptyList())
@@ -79,6 +86,7 @@ class Attacking(private val game: GameStore) {
         }
 
         attackResolutions.forEach { _attackResolution.emit(it) }
+        return attackResolutions
     }
 
     /**
@@ -111,15 +119,31 @@ class Attacking(private val game: GameStore) {
      * @param shooter 矢を発射した参加者の Id
      * @param arrowId 剥奪する矢の手段の Id
      */
-    suspend fun consumeArrow(shooter: ParticipantId, arrowId: MethodId) {
+    suspend fun consumeArrow(shooter: ParticipantId, arrowId: MethodId) =
+        consumeAttackMethod<ArrowMethod>(shooter, arrowId)
+
+    /**
+     * 指定した型と一致する攻撃手段を参加者から剥奪します。
+     */
+    suspend inline fun <reified T : AttackMethod> consumeAttackMethod(
+        participantId: ParticipantId,
+        methodId: MethodId,
+    ) = consumeAttackMethod(participantId, methodId, T::class)
+
+    suspend fun <T : AttackMethod> consumeAttackMethod(
+        participantId: ParticipantId,
+        methodId: MethodId,
+        klass: KClass<T>,
+    ) {
         game.transact { currentGame ->
-            val target = currentGame.getParticipant(shooter)
+            val target = currentGame.getParticipant(participantId)
                 ?: return@transact GameTransition(currentGame, Unit)
-            val arrowMethod = target.getGrantedMethod(arrowId) as? ArrowMethod
+            val attackMethod = target.getGrantedMethod(methodId) as? AttackMethod
                 ?: return@transact GameTransition(currentGame, Unit)
+            if (attackMethod::class != klass) return@transact GameTransition(currentGame, Unit)
 
             GameTransition(
-                currentGame.updateParticipant(shooter) { it.removeMethod(arrowMethod) },
+                currentGame.updateParticipant(participantId) { it.removeMethod(attackMethod) },
                 Unit,
             )
         }

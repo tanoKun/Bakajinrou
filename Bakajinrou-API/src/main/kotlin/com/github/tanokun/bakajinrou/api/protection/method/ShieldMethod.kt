@@ -2,6 +2,7 @@ package com.github.tanokun.bakajinrou.api.protection.method
 
 import com.github.tanokun.bakajinrou.api.attacking.method.ArrowMethod
 import com.github.tanokun.bakajinrou.api.attacking.method.AttackMethod
+import com.github.tanokun.bakajinrou.api.attacking.method.ScatterCrossbowMethod
 import com.github.tanokun.bakajinrou.api.method.MethodId
 import com.github.tanokun.bakajinrou.api.method.asMethodId
 import com.github.tanokun.bakajinrou.api.participant.ParticipantId
@@ -14,7 +15,7 @@ import java.util.*
 
 /**
  * 盾を表します。
- * 「Arrow」のみ防御することが可能です。
+ * 飛翔体による攻撃のみ防御することが可能です。
  */
 data class ShieldMethod(
     override val methodId: MethodId = UUID.randomUUID().asMethodId(),
@@ -29,7 +30,7 @@ data class ShieldMethod(
         get() = verificator.isValid()
 
     override fun verifyProtect(method: AttackMethod): ProtectResult = when (method) {
-        is ArrowMethod -> ProtectResult.PROTECTED
+        is ArrowMethod, is ScatterCrossbowMethod -> ProtectResult.PROTECTED
         else -> ProtectResult.FAILURE
     }
 
