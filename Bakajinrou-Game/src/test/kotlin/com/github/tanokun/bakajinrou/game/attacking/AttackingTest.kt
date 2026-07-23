@@ -77,6 +77,22 @@ class AttackingTest : StringSpec({
         store.getParticipant(attackerId)?.hasGrantedMethod(methodId) shouldBe true
         store.getParticipant(victimId)?.isAlive() shouldBe true
     }
+
+    "指定した型と一致する攻撃手段だけを消費する" {
+        val method = DummyAttackMethod(methodId, mockk(), GrantedReason.SYSTEM)
+        val store = GameStore(JinrouGame(listOf(participant(attackerId, method)).all()))
+        val attacking = Attacking(store)
+
+        runBlocking {
+            attacking.consumeAttackMethod(attackerId, methodId, OtherAttackMethod::class)
+        }
+        store.getParticipant(attackerId)?.hasGrantedMethod(methodId) shouldBe true
+
+        runBlocking {
+            attacking.consumeAttackMethod(attackerId, methodId, DummyAttackMethod::class)
+        }
+        store.getParticipant(attackerId)?.hasGrantedMethod(methodId) shouldBe false
+    }
 }) {
     class DummyAttackMethod(
         override val methodId: MethodId,

@@ -256,6 +256,7 @@ classDiagram
 | `SwordMethod` | 剣 | 可 |
 | `GasMethod` | ガス | 可 |
 | `ArrowMethod` | 一撃弓 | 不可 |
+| `ScatterCrossbowMethod` | 拡散クロスボウ | 不可 |
 
 ### 防御手段 — ProtectiveMethod
 
@@ -264,7 +265,7 @@ classDiagram
 
 | API 型 | 用語 | 優先度 | 防御規則 |
 | --- | --- | --- | --- |
-| `ShieldMethod` | 盾 | `HIGH` | `ArrowMethod` だけを防ぐ |
+| `ShieldMethod` | 盾 | `HIGH` | 一撃弓と拡散クロスボウを防ぐ |
 | `FakeTotemMethod` | 偽トーテム | `HIGH` | すべての攻撃に失敗する |
 | `ResistanceMethod` | 耐性 | `NORMAL` | すべての攻撃を防ぐ |
 | `TotemMethod` | トーテム | `LOW` | すべての攻撃を防ぐ |
@@ -373,4 +374,4 @@ API では手段の存在と識別を定義し、効果時間、Minecraft の Po
 
 これらは現在 `Bakajinrou-Plugin` など外側の層で扱います。
 今後、複数のマップや UI から共通利用する純粋なゲーム規則が生じた場合は、Minecraft 型に依存しない形で API に追加します。
-例えば拡散クロスボウを攻撃手段として扱う場合、個体と攻撃種別は API、発射物・装填・耐久値・三方向への射出は Plugin 層、という分離を検討します。
+拡散クロスボウでは、手段の個体と攻撃種別を API、発射物・装填・耐久値・三方向への射出を Plugin 層で扱います。

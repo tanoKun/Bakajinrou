@@ -39,6 +39,7 @@
 | `overlook` | 城下町の展望台 |
 | `suspicious_merchant` | 遺跡の怪しい村人 |
 | `transfer_gate` | 時計塔の転送ゲート |
+| `botanical_garden` | 植物園の行商人 |
 
 ## ギミック用ArmorStand
 
@@ -50,9 +51,12 @@
 | `jinrou_gimmick_overlook_entry` | 展望台の入口 |
 | `jinrou_gimmick_overlook_destination` | 展望台上の転送先 |
 | `jinrou_gimmick_merchant` | 怪しい村人の召喚位置 |
-| `4_tp` | 転送ゲート |
-| `4_all` | 全役職が使用できる転送ゲート |
-| `4_foxOnly` | 妖狐専用の転送ゲート |
+| `jinrou_gimmick_botanical_merchant` | 植物園の行商人の召喚候補位置（複数可） |
+| `jinrou_gimmick_transfer_gate` | 転送ゲート |
+| `jinrou_gimmick_transfer_gate_all` | 全役職が使用できる転送ゲート |
+| `jinrou_gimmick_transfer_gate_fox_only` | 妖狐専用の転送ゲート |
+
+既存マップとの互換性のため、`4_tp`、`4_all`、`4_foxOnly` も引き続き読み取れます。新規設定では `jinrou_gimmick_` 接頭辞のタグを使用してください。
 
 ## パーミッション
 - `bakajinrou.command.mapsetting`

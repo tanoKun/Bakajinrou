@@ -10,6 +10,8 @@
     "method.attack.sword.lore": "<white><bold>相手を一撃で倒すことができます。</bold></white><newline><white>一度使用すると壊れます。</white>",
     "method.attack.arrow.display.name": "矢",
     "method.attack.arrow.lore": "<white>一度撃つと再装填までに時間がかかります。</white>",
+    "method.attack.scatter.crossbow.display.name": "ボロボロの拡散クロスボウ",
+    "method.attack.scatter.crossbow.lore": "<white><bold>装填済みの矢を三方向へ放ち、相手を一撃で倒します。</bold></white><newline><white>一度発射すると壊れます。</white>",
 
     "method.protective.totem.display.name": "トーテム",
     "method.protective.totem.lore": "<white><bold>即死ダメージを受けた際に一度だけ復活します。</bold></white>",

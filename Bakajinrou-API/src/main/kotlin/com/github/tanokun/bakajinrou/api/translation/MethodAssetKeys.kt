@@ -5,6 +5,7 @@ sealed class MethodAssetKeys(key: String): TranslationKey("method.$key") {
         val GAS = Attack("gas")
         val SWORD = Attack("sword")
         val ARROW = Attack("arrow")
+        val SCATTER_CROSSBOW = Attack("scatter.crossbow")
     }}
 
     class Protective private constructor(key: String) : MethodAssetKeys("protective.$key") { companion object {
